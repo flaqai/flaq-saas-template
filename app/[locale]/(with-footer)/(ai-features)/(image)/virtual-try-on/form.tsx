@@ -29,6 +29,11 @@ const TRYON_VERSION_LIST: ImageModelVersionConfig[] = [
   ...SEEDREAM_PROVIDER.versions,
 ].filter((v) => ALLOWED_VERSIONS.has(v.modelVersion));
 
+const TRYON_DEFAULT_PRIORITY = {
+  aspectRatio: ['9:16', '1:1'],
+  resolution: ['2k', '4k', '1k'],
+};
+
 interface FormProps {
   hintsPresets?: HintPreset[];
 }
@@ -90,11 +95,12 @@ export default function Form({ hintsPresets }: FormProps) {
       requireImageUpload
       imageUploadMode='none'
       customVersionList={TRYON_VERSION_LIST}
+      defaultValuePriority={TRYON_DEFAULT_PRIORITY}
       defaultValues={{
         prompt: '',
         images: [],
         modelVersion: 'nano-banana-pro-edit',
-        aspectRatio: '-',
+        aspectRatio: '9:16',
         resolution: '2k',
       }}
       slotNodeAfterModel={<TryOnModalContent hintsPresets={hintsPresets} />}

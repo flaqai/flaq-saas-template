@@ -52,7 +52,7 @@ export function useFieldDefaults() {
 
     const aspectRatio = selectBestOption(
       ratioOptions,
-      priorityRules?.aspectRatio || ['auto', '1:1']
+      priorityRules?.aspectRatio || ['16:9', '1:1']
     );
 
     const resolution = selectBestOption(

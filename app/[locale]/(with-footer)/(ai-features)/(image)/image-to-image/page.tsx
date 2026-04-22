@@ -9,7 +9,7 @@ import ImageForm from '@/components/image-ui-form/image-form';
 import Heading from '@/components/internal-page/heading';
 
 const DEFAULT_PRIORITY = {
-  aspectRatio: ['-', '1:1'],
+  aspectRatio: ['16:9', '1:1'],
   resolution: ['2k'],
 };
 
@@ -17,7 +17,7 @@ const DEFAULT_VALUES = {
   prompt: '',
   images: [],
   modelVersion: 'nano-banana-pro-edit',
-  aspectRatio: '-',
+  aspectRatio: '16:9',
   resolution: '2k',
 };
 

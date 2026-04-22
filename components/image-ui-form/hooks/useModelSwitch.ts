@@ -102,7 +102,7 @@ export function useFieldReset(params: {
 
     const newAspectRatio = selectBestOption(
       ratioOptions,
-      priorityRules?.aspectRatio || ['auto', '-', '1:1']
+      priorityRules?.aspectRatio || ['1:1']
     );
 
     const newResolution = selectBestOption(
@@ -110,11 +110,24 @@ export function useFieldReset(params: {
       priorityRules?.resolution || ['2k', '4k', '1k']
     );
 
-    if (newAspectRatio) {
+    const currentAspectRatio = form.getValues('aspectRatio');
+    const currentResolution = form.getValues('resolution');
+
+    const canKeepCurrentAspectRatio = !!currentAspectRatio &&
+      ratioOptions.some((option) => option.value === currentAspectRatio);
+
+    const canKeepCurrentResolution = !!currentResolution &&
+      resolutionOptions.some((option) => option.value === currentResolution);
+
+    if (canKeepCurrentAspectRatio) {
+      form.setValue('aspectRatio', currentAspectRatio);
+    } else if (newAspectRatio) {
       form.setValue('aspectRatio', newAspectRatio);
     }
 
-    if (newResolution) {
+    if (canKeepCurrentResolution) {
+      form.setValue('resolution', currentResolution);
+    } else if (newResolution) {
       form.setValue('resolution', newResolution);
     } else if (resolutionOptions.length === 0) {
       // 当模型没有 resolution 配置时，清空字段
