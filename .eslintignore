@@ -1,0 +1,9 @@
+dist
+node_modules
+.next
+.vscode
+build
+messages
+components.json
+components/ui/
+components/magicui/

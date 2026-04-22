@@ -1,0 +1,18 @@
+.react-colorful-component .react-colorful__alpha,
+.react-colorful__hue {
+  height: 6px;
+}
+
+.react-colorful-component .react-colorful__pointer {
+  width: 12px;
+  height: 12px;
+}
+
+.react-colorful-component .react-colorful__saturation {
+  border-radius: 2px 2px 0 0;
+}
+
+.react-colorful-component .react-colorful__hue,
+.react-colorful__last-control {
+  border-radius: 0 0 2px 2px;
+}
