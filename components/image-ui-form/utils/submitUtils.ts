@@ -89,7 +89,7 @@ export function buildImageGenerationRequest(params: {
   };
 
   // 过滤掉空值字段（'', undefined, null）
-  return removeEmptyProperties(rawRequest);
+  return removeEmptyProperties<CreateImageTaskRequest>(rawRequest);
 }
 
 /**

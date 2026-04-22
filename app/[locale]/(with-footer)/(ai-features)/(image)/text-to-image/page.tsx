@@ -16,7 +16,7 @@ const DEFAULT_PRIORITY = {
 const DEFAULT_VALUES = {
   prompt: '',
   images: [],
-  modelVersion: 'gemini-3-pro-image-preview',
+  modelVersion: 'nano-banana-pro',
   aspectRatio: '-',
   resolution: '2k',
 };

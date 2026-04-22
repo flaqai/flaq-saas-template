@@ -14,7 +14,7 @@ export default function Form() {
       formTitle={t('title')}
       showAllVideoHistory={true}
       defaultValues={{
-        modelVersion: 'veo-3-1-fast',
+        modelVersion: 'veo3.1-text-to-video',
         ratio: '16:9',
         enableEndFrame: true,
       }}

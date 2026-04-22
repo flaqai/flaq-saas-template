@@ -36,6 +36,7 @@ export interface ImageFormProps {
   showPromptInput?: boolean;
   showRatio?: boolean;
   showModelVersion?: boolean;
+  modelVersionDisplayMode?: 'model' | 'label' | 'both';
 
   // Template Selector
   showTemplateSelector?: boolean;

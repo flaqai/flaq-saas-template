@@ -19,7 +19,7 @@ export const getModelIcon = (modelValue: string): string => {
   }
 
   if (lowerValue.startsWith('gemini') || lowerValue.startsWith('nano-banana')) {
-    return '';
+    return '/images/model-icon/veo.svg';
   }
 
   return '';

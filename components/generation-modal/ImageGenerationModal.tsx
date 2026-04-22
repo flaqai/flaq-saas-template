@@ -76,7 +76,7 @@ export default function ImageGenerationModal({
   const updateImageObj = useImageFormStore((state) => state.updateImageObj);
 
   // 默认使用 Nano Banana Pro (Gemini 3 Pro Image Preview)
-  const defaultVersion = NANO_BANANA_PROVIDER.versions.find((v) => v.modelVersion === 'gemini-3-pro-image-preview') || NANO_BANANA_PROVIDER.versions[0];
+  const defaultVersion = NANO_BANANA_PROVIDER.versions.find((v) => v.modelVersion === 'nano-banana-pro') || NANO_BANANA_PROVIDER.versions[0];
 
   // 当 modal 关闭时重置 tab，但保留 imageObj 以便轮询完成后能保存结果
   useEffect(() => {
@@ -146,7 +146,7 @@ export default function ImageGenerationModal({
               resolution: ['2k'],
             }}
             defaultValues={{
-              modelVersion: defaultVersion?.modelVersion || 'gemini-3-pro-image-preview',
+              modelVersion: defaultVersion?.modelVersion || 'nano-banana-pro',
               aspectRatio: defaultAspectRatio || defaultVersion?.options?.ratio?.[0]?.value || '9:16',
               resolution: '2k',
             }}

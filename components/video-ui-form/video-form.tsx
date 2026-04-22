@@ -307,7 +307,12 @@ export default function VideoFormBase({
             {showVideoModelVersion && (
               <>
                 <SubHeading>{t('modelVersion')}</SubHeading>
-                <ModelSelect name='modelVersion' hasImages={hasImages} allowedProviders={allowedProviders} />
+                <ModelSelect
+                  name='modelVersion'
+                  hasImages={hasImages}
+                  allowedProviders={allowedProviders}
+                  videoType={videoType}
+                />
               </>
             )}
 

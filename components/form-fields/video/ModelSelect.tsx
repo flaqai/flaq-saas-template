@@ -2,7 +2,6 @@
 
 import { useMemo, useEffect, useRef } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 import { getModelIcon } from '@/lib/utils/modelIcons';
 
@@ -11,6 +10,7 @@ import {
   getFilteredVisibleProviders,
   getVideoProviderByModelVersion,
   versionSupportsImageToVideo,
+  versionSupportsTextToVideo,
 } from '@/lib/constants/video/';
 import type { ModelVersionConfig } from '@/lib/constants/video/types';
 import {
@@ -26,12 +26,17 @@ interface ModelSelectProps {
   name: string;
   hasImages?: boolean;
   allowedProviders?: string[];
+  videoType?: 'Text-to-video' | 'Image-to-video';
 }
 
-export default function ModelSelect({ name, hasImages = false, allowedProviders }: ModelSelectProps) {
+export default function ModelSelect({
+  name,
+  hasImages = false,
+  allowedProviders,
+  videoType,
+}: ModelSelectProps) {
   const { control, watch, setValue } = useFormContext();
   const selectedModelVersion = watch(name);
-  const t = useTranslations('VideoModels');
 
   // 记录上一次的 hasImages 状态，用于检测变化
   const prevHasImages = useRef<boolean>(hasImages);
@@ -46,12 +51,20 @@ export default function ModelSelect({ name, hasImages = false, allowedProviders 
       : visibleProviders;
     const allVisibleVersions = providers.flatMap((p) => p.versions);
 
+    if (videoType === 'Text-to-video') {
+      return allVisibleVersions.filter((v) => versionSupportsTextToVideo(v));
+    }
+
+    if (videoType === 'Image-to-video') {
+      return allVisibleVersions.filter((v) => versionSupportsImageToVideo(v));
+    }
+
     if (hasImages) {
       return allVisibleVersions.filter((v) => versionSupportsImageToVideo(v));
     }
 
     return allVisibleVersions;
-  }, [hasImages, allowedProviders]);
+  }, [hasImages, allowedProviders, videoType]);
 
   // 对模型版本列表进行排序：
   // 1. 将当前选中模型的品牌的所有版本放在前面
@@ -110,9 +123,24 @@ export default function ModelSelect({ name, hasImages = false, allowedProviders 
       features.push({ icon: 'resolution' as const, label: resolutionLabel });
     }
 
-    // 添加音频信息
-    if (version.options?.audio) {
-      features.push({ icon: 'audio' as const, label: 'Audio' });
+    // 添加音频输入能力
+    if (version.options?.audioUrl || version.options?.audio) {
+      features.push({ icon: 'audio' as const, label: 'Audio Upload' });
+    }
+
+    // 添加声音生成能力
+    if (version.options?.sound) {
+      features.push({ icon: 'sound' as const, label: 'Sound' });
+    }
+
+    // 添加背景音乐能力
+    if (version.options?.bgm) {
+      features.push({ icon: 'bgm' as const, label: 'BGM' });
+    }
+
+    // 添加风格控制能力
+    if (version.options?.style?.length) {
+      features.push({ icon: 'style' as const, label: 'Style' });
     }
 
     // 添加结束帧信息
@@ -123,10 +151,9 @@ export default function ModelSelect({ name, hasImages = false, allowedProviders 
     return features;
   };
 
-  // 获取模型版本的显示名称
+  // 获取模型版本的显示名称：默认直接显示 flaq model_name
   const getVersionDisplayName = (version: ModelVersionConfig) => {
-    // 直接使用 ModelVersionConfig 中的 name 字段
-    return version.name;
+    return version.modelVersion;
   };
 
   // 当 hasImages 改变时，检查当前模型是否仍然可用
@@ -216,7 +243,6 @@ export default function ModelSelect({ name, hasImages = false, allowedProviders 
                     <ModelSelectItem
                       value={version.modelVersion}
                       label={getVersionDisplayName(version)}
-                      description={t(version.modelVersion as any) || ''}
                       features={getVersionFeatures(version)}
                       isSelected={selectedModelVersion === version.modelVersion}
                       isDisabled={isDisabled}

@@ -61,6 +61,7 @@ export default function ImageForm({
   showPromptInput = true,
   showRatio = true,
   showModelVersion = true,
+  modelVersionDisplayMode = 'model',
 
   // Template Selector
   showTemplateSelector = false,
@@ -215,6 +216,7 @@ export default function ImageForm({
     selectModel(hasImages),
     [selectModel, hasImages]
   );
+  void modelForDisplay;
 
   // 使用模型切换检测 Hook（返回 needsReset 标记）
   const { needsReset, clearResetFlag } = useModelSwitch({
@@ -328,15 +330,32 @@ export default function ImageForm({
                 <ModelVersionField
                   title={t('selectModel')}
                   name='modelVersion'
+                  displayMode={modelVersionDisplayMode}
                   versions={
                     customVersionList ||
                     (customModelList && convertModelsToVersionConfigs(customModelList)) ||
-                    ALL_IMAGE_PROVIDERS.flatMap(p => p.versions).filter(v =>
-                      !hasImages || v.models.some(m =>
-                        supportsGenerationType(m, 'image-edit') ||
-                        supportsGenerationType(m, 'multi-image-to-image')
-                      )
-                    )
+                    ALL_IMAGE_PROVIDERS
+                      .flatMap(p => p.versions)
+                      .filter(v => {
+                        if (imageFormType === 'text-to-image') {
+                          return v.models.every(m => !(
+                            supportsGenerationType(m, 'image-edit') ||
+                            supportsGenerationType(m, 'multi-image-to-image')
+                          ));
+                        }
+
+                        if (imageFormType === 'image-to-image' || imageFormType === 'virtual-try-on') {
+                          return v.models.some(m =>
+                            supportsGenerationType(m, 'image-edit') ||
+                            supportsGenerationType(m, 'multi-image-to-image')
+                          );
+                        }
+
+                        return !hasImages || v.models.some(m =>
+                          supportsGenerationType(m, 'image-edit') ||
+                          supportsGenerationType(m, 'multi-image-to-image')
+                        );
+                      })
                   }
                 />
               </>

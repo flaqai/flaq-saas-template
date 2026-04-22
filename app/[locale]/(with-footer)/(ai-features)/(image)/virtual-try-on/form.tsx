@@ -18,10 +18,10 @@ const TRY_ON_PROMPT =
   "Dress the person from the first image in the clothing from the second image. Exactly maintain the clothing's original proportions, length, and design. Preserve the character's identical pose and body shape. The outfit must flatter the figure — subtly slimming and contouring the body for a more elegant silhouette — while staying slim, lightweight, and non-bulky. No excessive volume, no puffiness, realistic fabric behavior and natural folds, photorealistic integration.";
 
 const ALLOWED_VERSIONS = new Set([
-  'gemini-3-pro-image-preview',   // Nano Banana Pro
-  'gemini-3-1-flash-image-preview', // Nano Banana 2
-  'seedream-v5-0',                 // Seedream 5.0
-  'seedream-v4-5',                 // Seedream 4.5
+  'nano-banana-pro-edit',
+  'nano-banana-2-edit',
+  'seedream-v5.0-edit',
+  'seedream-v4.5-edit',
 ]);
 
 const TRYON_VERSION_LIST: ImageModelVersionConfig[] = [
@@ -93,7 +93,7 @@ export default function Form({ hintsPresets }: FormProps) {
       defaultValues={{
         prompt: '',
         images: [],
-        modelVersion: 'gemini-3-pro-image-preview',
+        modelVersion: 'nano-banana-pro-edit',
         aspectRatio: '-',
         resolution: '2k',
       }}

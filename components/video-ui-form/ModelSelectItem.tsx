@@ -1,18 +1,17 @@
 'use client';
 
-import { Clock3, Scaling, Mic, ImageIcon } from 'lucide-react';
+import { Clock3, Scaling, Mic, ImageIcon, Music4, Palette } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getModelIcon } from '@/lib/utils/modelIcons';
 
 interface ModelFeature {
-  icon: 'duration' | 'resolution' | 'audio' | 'endFrame';
+  icon: 'duration' | 'resolution' | 'audio' | 'sound' | 'bgm' | 'style' | 'endFrame';
   label: string;
 }
 
 interface ModelSelectItemProps {
   value: string;
   label: string;
-  description: string;
   features: ModelFeature[];
   isSelected?: boolean;
   isDisabled?: boolean;
@@ -23,7 +22,6 @@ interface ModelSelectItemProps {
 export default function ModelSelectItem({
   value,
   label,
-  description,
   features,
   isSelected,
   isDisabled = false,
@@ -39,6 +37,12 @@ export default function ModelSelectItem({
         return <Scaling className='w-3.5 h-3.5' />;
       case 'audio':
         return <Mic className='w-3.5 h-3.5' />;
+      case 'sound':
+        return <Mic className='w-3.5 h-3.5' />;
+      case 'bgm':
+        return <Music4 className='w-3.5 h-3.5' />;
+      case 'style':
+        return <Palette className='w-3.5 h-3.5' />;
       case 'endFrame':
         return <ImageIcon className='w-3.5 h-3.5' />;
       default:
@@ -111,8 +115,6 @@ export default function ModelSelectItem({
               )}
             </div>
           </div>
-          <p className='text-sm text-white/60 mb-3'>{description}</p>
-
           {/* 渲染模型特性图标 */}
           <div className='flex flex-wrap gap-2'>
             {features.map((feature, index) => (
