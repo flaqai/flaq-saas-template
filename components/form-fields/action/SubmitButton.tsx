@@ -2,11 +2,9 @@
 
 import { useTranslations } from 'next-intl';
 import Spinning from '@/components/Spinning';
-import Credits from '@/components/svg/Credits';
 
 interface SubmitButtonProps {
   isSubmitting?: boolean;
-  creditCost?: number;
   submitButtonText?: string;
   translationNamespace?: 'components.video-form' | 'components.image-form';
   disabled?: boolean;
@@ -14,7 +12,6 @@ interface SubmitButtonProps {
 
 export default function SubmitButton({
   isSubmitting = false,
-  creditCost = 0,
   submitButtonText,
   translationNamespace = 'components.video-form',
   disabled = false,
@@ -30,15 +27,7 @@ export default function SubmitButton({
       {isSubmitting ? (
         <Spinning className='size-4' />
       ) : (
-        <>
-          {submitButtonText || t('generate')}
-          {creditCost > 0 && (
-            <>
-              <Credits />
-              {creditCost}
-            </>
-          )}
-        </>
+        <>{submitButtonText || t('generate')}</>
       )}
     </button>
   );

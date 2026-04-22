@@ -6,7 +6,6 @@ import { FormControl, FormField, FormItem } from '@/components/ui/form';
 import FormSelect from '@/components/form/FormSelect';
 import { cn } from '@/lib/utils';
 import Spinning from '@/components/Spinning';
-import Credits from '@/components/svg/Credits';
 import { Clock, Square, MonitorPlay } from 'lucide-react';
 
 interface BottomActionAreaProps {
@@ -17,7 +16,6 @@ interface BottomActionAreaProps {
   showRatio?: boolean;
   showResolution?: boolean;
   isSubmitting?: boolean;
-  creditCost?: number;
   submitButtonText?: string;
   ratioFieldName?: string;
   resolutionFieldName?: string;
@@ -31,7 +29,6 @@ export default function BottomActionArea({
   showRatio = false,
   showResolution = false,
   isSubmitting = false,
-  creditCost = 0,
   submitButtonText,
   ratioFieldName = 'ratio',
   resolutionFieldName = 'resolution',
@@ -134,11 +131,7 @@ export default function BottomActionArea({
           {isSubmitting ? (
             <Spinning className='size-4' />
           ) : (
-            <>
-              {submitButtonText || t('generate')}
-              <Credits />
-              {creditCost}
-            </>
+            <>{submitButtonText || t('generate')}</>
           )}
         </button>
       </div>

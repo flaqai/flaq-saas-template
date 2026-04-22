@@ -17,7 +17,7 @@
 
 import { useCallback } from 'react';
 import { UseFormReturn } from 'react-hook-form';
-import { VideoModelService } from '../utils/modelService';
+import * as VideoModelService from '@/lib/utils/videoModelService';
 import type { VideoModel } from '@/lib/constants/video/';
 import type { VideoFormData } from '../types';
 

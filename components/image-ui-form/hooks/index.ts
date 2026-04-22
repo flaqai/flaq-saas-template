@@ -8,7 +8,6 @@
  * - useFieldDefaults: 字段默认值计算（可选，用于其他场景）
  */
 
-export { useImageCredit } from './useImageCredit';
 export { useModelConfig } from './useModelConfig';
 export { useFieldDefaults } from './useFieldDefaults';
 export { useModelSwitch, useFieldReset } from './useModelSwitch';

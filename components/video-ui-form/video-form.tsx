@@ -33,7 +33,7 @@ import useVideoFormSubmit from './hooks/useVideoFormSubmit';
 import useModelToggle from './hooks/useModelToggle';
 import useFormSync from './hooks/useFormSync';
 import { useVideoModelConfig } from './hooks/useVideoModelConfig';
-import { VideoModelService } from './utils/modelService';
+import * as VideoModelService from '@/lib/utils/videoModelService';
 
 import { videoAudioContext } from './VideoContenxtProvider';
 import VideoContenxtProvider from './VideoContenxtProvider';
@@ -48,8 +48,7 @@ import type { VideoFormData } from './types';
 // 配置常量
 // ============================================
 
-// 注意：模型选择逻辑已移至 ./utils/modelService.ts
-// 这里不再重复定义，直接使用 VideoModelService
+// 注意：模型选择逻辑已统一移至 lib/utils/videoModelService.ts
 
 /**
  * VideoFormBase Props
@@ -359,7 +358,6 @@ export default function VideoFormBase({
             showRatio={showRatio}
             showResolution={showResolution}
             isSubmitting={isSubmitting}
-            creditCost={currentModel?.credit || 0}
             submitButtonText={t('generate')}
           />
         </form>

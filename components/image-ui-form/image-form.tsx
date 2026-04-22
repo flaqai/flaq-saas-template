@@ -9,7 +9,7 @@ import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 
 import { ALL_IMAGE_PROVIDERS } from '@/lib/constants/image';
-import { calculateImageCredit, supportsGenerationType } from '@/lib/utils/imageModelService';
+import { supportsGenerationType } from '@/lib/utils/imageModelService';
 
 import { Form } from '@/components/ui/form';
 
@@ -403,11 +403,6 @@ export default function ImageForm({
               showResolution={resolutionOptions.length > 0}
               showDuration={false}
               isSubmitting={isPolling || isSubmitting}
-              creditCost={modelForDisplay ? calculateImageCredit(modelForDisplay, {
-                generationType: hasImages ? 'image-edit' : 'text-to-image',
-                resolution: form.watch('resolution'),
-                ratio: form.watch('aspectRatio'),
-              }) : 0}
               submitButtonText={t('generate')}
               ratioFieldName='aspectRatio'
               resolutionFieldName='resolution'
