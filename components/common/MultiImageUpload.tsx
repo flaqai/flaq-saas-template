@@ -127,7 +127,7 @@ const MultiImageUpload = forwardRef<MultiImageUploadRef, MultiImageUploadProps>(
           className={cn(
             'relative flex w-full cursor-pointer flex-col rounded-xl border-2 border-dashed p-3 transition-all',
             'border-color-b1 bg-white/40 h-[150px]',
-            isDragActive && 'border-color-b2 bg-white/60',
+            isDragActive && 'border-color-b1 bg-white/60',
             !canAddMore && 'cursor-not-allowed opacity-60',
           )}
         >

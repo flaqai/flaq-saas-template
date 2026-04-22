@@ -23,7 +23,7 @@ function SiderItem({ title, icon, href, isActive }: SiderGroupType['items'][numb
         isActive && 'bg-white/10 font-medium',
       )}
     >
-      <div className={cn(isActive && 'bg-gradient-to-r from-[#2563eb] to-[#60a5fa] bg-clip-text text-transparent')}>
+      <div className={cn(isActive && 'text-color-main')}>
         {icon && <span>{icon}</span>}
         <div>{title}</div>
       </div>

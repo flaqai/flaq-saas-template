@@ -25,7 +25,7 @@ export default function SubmitButton({
     <button
       type='submit'
       disabled={isSubmitting || disabled}
-      className='flex h-9 flex-1 items-center justify-center gap-1.5 rounded-lg bg-gradient-main text-base font-semibold uppercase text-white disabled:cursor-not-allowed disabled:opacity-70'
+      className='flex h-9 flex-1 items-center justify-center gap-1.5 rounded-lg bg-color-main text-base font-semibold uppercase text-white disabled:cursor-not-allowed disabled:opacity-70'
     >
       {isSubmitting ? (
         <Spinning className='size-4' />

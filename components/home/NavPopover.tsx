@@ -96,15 +96,15 @@ export default function NavPopover({
                   <div className='relative shrink-0'>
                     {/* <span>{renderHeaderIcon(child.code)}</span> */}
                     {child.isNew && (
-                      <div className='bg-gradient-main text-xxs absolute -top-1/2 left-1/2 -translate-x-1/2 rounded-full px-1.5 py-px font-bold text-black uppercase'>
+                      <div className='bg-color-main text-xxs absolute -top-1/2 left-1/2 -translate-x-1/2 rounded-full px-1.5 py-px font-bold text-white uppercase'>
                         {t('new')}
-                        <div className='absolute -bottom-1 left-1/2 h-0 w-0 -translate-x-1/2 border-t-4 border-r-4 border-l-4 border-t-[#EFF2B2] border-r-transparent border-l-transparent' />
+                        <div className='absolute -bottom-1 left-1/2 h-0 w-0 -translate-x-1/2 border-t-4 border-r-4 border-l-4 border-t-color-main border-r-transparent border-l-transparent' />
                       </div>
                     )}
                     {child.isHot && (
-                      <div className='bg-gradient-main text-xxs absolute -top-1/2 left-1/2 -translate-x-1/2 rounded-full px-1.5 py-px font-bold text-black uppercase'>
+                      <div className='bg-color-main text-xxs absolute -top-1/2 left-1/2 -translate-x-1/2 rounded-full px-1.5 py-px font-bold text-white uppercase'>
                         🔥
-                        <div className='absolute -bottom-1 left-1/2 h-0 w-0 -translate-x-1/2 border-t-4 border-r-4 border-l-4 border-t-[#EFF2B2] border-r-transparent border-l-transparent' />
+                        <div className='absolute -bottom-1 left-1/2 h-0 w-0 -translate-x-1/2 border-t-4 border-r-4 border-l-4 border-t-color-main border-r-transparent border-l-transparent' />
                       </div>
                     )}
                   </div>

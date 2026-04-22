@@ -113,10 +113,9 @@ export default function ImageGenerationModal({
               className={cn(
                 'cursor-pointer whitespace-nowrap transition-all',
                 activeTab === 'generate'
-                  ? 'bg-gradient-to-r from-[#2563eb] to-[#60a5fa] bg-clip-text'
+                  ? 'text-color-main'
                   : 'text-white/40 hover:text-white/60',
               )}
-              style={activeTab === 'generate' ? { WebkitTextFillColor: 'transparent' } : undefined}
             >
               {generateTabTitle}
             </button>
@@ -126,10 +125,9 @@ export default function ImageGenerationModal({
               className={cn(
                 'cursor-pointer whitespace-nowrap transition-all',
                 activeTab === 'history'
-                  ? 'bg-gradient-to-r from-[#2563eb] to-[#60a5fa] bg-clip-text'
+                  ? 'text-color-main'
                   : 'text-white/40 hover:text-white/60',
               )}
-              style={activeTab === 'history' ? { WebkitTextFillColor: 'transparent' } : undefined}
             >
               {historyTabTitle}
             </button>

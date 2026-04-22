@@ -81,7 +81,7 @@ const SingleImageUpload = forwardRef<SingleImageUploadRef, SingleImageUploadProp
           className={cn(
             'relative flex h-full w-full cursor-pointer items-center justify-center gap-4 rounded-xl border-2 border-dashed p-3 transition-all',
             'border-color-b1 bg-white/40',
-            isDragActive && 'border-color-b2 bg-color-c2',
+            isDragActive && 'border-color-b1 bg-color-c2',
             image && 'cursor-default',
           )}
         >

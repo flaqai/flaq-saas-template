@@ -84,11 +84,7 @@ export default function HintsPresets({
                 <div
                   className='absolute inset-0 rounded-lg pointer-events-none'
                   style={{
-                    background: 'linear-gradient(to right, #2563eb, #60a5fa)',
-                    padding: '2px',
-                    WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
-                    WebkitMaskComposite: 'xor',
-                    maskComposite: 'exclude',
+                    boxShadow: 'inset 0 0 0 2px #4c52fe',
                   }}
                 />
               )}
@@ -135,10 +131,7 @@ export default function HintsPresets({
               <img src={hoveredPreset.aiGeneration} alt='AI Generation' className='h-full w-full object-cover' />
               <div className='absolute bottom-1 left-1 right-1'>
                 <span className='inline-flex max-w-full items-center justify-center h-5 rounded bg-[#000000B2] px-2 py-0.5 text-xs font-medium backdrop-blur-[5.33px]'>
-                  <span
-                    className='truncate bg-gradient-to-r from-[#2563eb] to-[#60a5fa] bg-clip-text'
-                    style={{ WebkitTextFillColor: 'transparent' }}
-                  >
+                  <span className='truncate text-color-main'>
                     {aiGenerationLabel}
                   </span>
                 </span>

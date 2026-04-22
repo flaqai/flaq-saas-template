@@ -141,10 +141,7 @@ const FrameImageUpload = forwardRef<FrameImageUploadRef, FrameImageUploadProps>(
                 className='flex flex-1 items-center justify-center gap-1 rounded-lg bg-[#1c1d20] px-3 py-2 hover:opacity-80'
               >
                 <AiGenerationIcon />
-                <div
-                  className='bg-gradient-to-r from-[#2563eb] to-[#60a5fa] bg-clip-text text-[14px] font-normal leading-[21px]'
-                  style={{ WebkitTextFillColor: 'transparent' }}
-                >
+                <div className='text-[14px] font-normal leading-[21px] text-color-main'>
                   {t('ai-generation')}
                 </div>
               </button>

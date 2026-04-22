@@ -70,10 +70,10 @@ const StartEndFrameField = forwardRef<ImageUploadFieldRef, StartEndFrameFieldPro
                 <FormControl>
                   <Switch
                     className={cn(
-                      'h-[16px] w-[28px] rounded border border-[#2a2b2f] !bg-transparent focus:ring-0 data-[state=checked]:border-color-main',
+                      'h-[16px] w-[28px] rounded border border-white !bg-transparent focus:ring-0 data-[state=checked]:border-color-main',
                     )}
                     thumbClassName={cn(
-                      'h-3 w-3 rounded-[2px] bg-white/20 data-[state=unchecked]:translate-x-[1px] data-[state=checked]:translate-x-[12px] data-[state=checked]:bg-gradient-main',
+                      'h-3 w-3 rounded-[2px] bg-white data-[state=unchecked]:translate-x-[1px] data-[state=checked]:translate-x-[12px] data-[state=checked]:bg-color-main',
                     )}
                     checked={!!field.value}
                     onCheckedChange={(checked) => {

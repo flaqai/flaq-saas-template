@@ -137,7 +137,7 @@ export default function ModalImageDisplay({ onImageSelect, imageObjContext = 'de
         {shouldShowButtons && (
           <div className='relative flex flex-none flex-wrap justify-end gap-2 rounded-b-xl bg-[#1c1d20] p-2 lg:items-center lg:gap-3'>
             {/* Use this image */}
-            <Box className='order-3 w-full gap-1 rounded-lg bg-gradient-main p-1 lg:order-none lg:w-auto'>
+            <Box className='order-3 w-full gap-1 rounded-lg bg-color-main p-1 lg:order-none lg:w-auto'>
               <button
                 type='button'
                 onClick={handleImageSelect}

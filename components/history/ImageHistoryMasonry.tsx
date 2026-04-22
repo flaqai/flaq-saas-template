@@ -81,7 +81,7 @@ export default function ImageHistoryMasonry({
                 <div className='mb-6 text-base text-white/70 md:text-lg'>{emptyConfig.message}</div>
                 <Link
                   href={emptyConfig.linkHref}
-                  className='rounded-lg bg-gradient-to-r from-[#2563eb] to-[#60a5fa] px-10 py-3 text-base font-medium text-white transition-all hover:scale-[1.02] hover:shadow-lg md:px-12 md:py-4'
+                  className='rounded-lg bg-color-main px-10 py-3 text-base font-medium text-white transition-all hover:scale-[1.02] hover:shadow-lg md:px-12 md:py-4'
                 >
                   {emptyConfig.linkText}
                 </Link>
@@ -106,8 +106,8 @@ export default function ImageHistoryMasonry({
                     className={cn(
                       'group relative w-full overflow-hidden rounded-lg border-2 transition-all hover:shadow-lg active:scale-95',
                       selectedImageUrl === image.url
-                        ? 'border-[#8B5CF6]'
-                        : 'border-transparent hover:border-[#8B5CF6]/50',
+                        ? 'border-color-main'
+                        : 'border-transparent hover:border-color-main/50',
                     )}
                   >
                     <div className='relative overflow-hidden rounded-lg'>
@@ -125,22 +125,16 @@ export default function ImageHistoryMasonry({
                       />
                       {selectedImageUrl === image.url && (
                         <div className='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2'>
-                          <div className='flex size-12 items-center justify-center rounded-full bg-white shadow-lg'>
+                          <div className='flex size-12 items-center justify-center rounded-full bg-white text-color-main shadow-lg'>
                             <svg
                               viewBox='0 0 24 24'
                               fill='none'
                               xmlns='http://www.w3.org/2000/svg'
                               className='size-8'
                             >
-                              <defs>
-                                <linearGradient id='checkGradient' x1='0%' y1='0%' x2='100%' y2='100%'>
-                                  <stop offset='0%' stopColor='#2563eb' />
-                                  <stop offset='100%' stopColor='#60a5fa' />
-                                </linearGradient>
-                              </defs>
                               <path
                                 d='M20 6L9 17L4 12'
-                                stroke='url(#checkGradient)'
+                                stroke='currentColor'
                                 strokeWidth='3'
                                 strokeLinecap='round'
                                 strokeLinejoin='round'
@@ -174,7 +168,7 @@ export default function ImageHistoryMasonry({
                 type='button'
                 onClick={handleConfirm}
                 disabled={!selectedImageUrl}
-                className='w-full rounded-lg bg-gradient-to-r from-[#2563eb] to-[#60a5fa] px-6 py-2.5 text-sm font-medium text-white transition-all hover:scale-[1.02] hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:px-8 sm:py-3'
+                className='w-full rounded-lg bg-color-main px-6 py-2.5 text-sm font-medium text-white transition-all hover:scale-[1.02] hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:px-8 sm:py-3'
               >
                 {confirmButtonText}
               </button>

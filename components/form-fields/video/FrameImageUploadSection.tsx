@@ -97,10 +97,10 @@ const FrameImageUploadSection = forwardRef<FrameImageUploadSectionRef, FrameImag
                   <FormControl>
                     <Switch
                       className={cn(
-                        'h-[16px] w-[28px] rounded border border-input !bg-transparent focus:ring-0 data-[state=checked]:border-color-main',
+                        'h-[16px] w-[28px] rounded border border-white !bg-transparent focus:ring-0 data-[state=checked]:border-color-main',
                       )}
                       thumbClassName={cn(
-                        'h-3 w-3 rounded-[2px] bg-input data-[state=unchecked]:translate-x-[1px] data-[state=checked]:translate-x-[12px] data-[state=checked]:bg-gradient-main',
+                        'h-3 w-3 rounded-[2px] bg-white data-[state=unchecked]:translate-x-[1px] data-[state=checked]:translate-x-[12px] data-[state=checked]:bg-color-main',
                       )}
                       checked={!!field.value}
                       onCheckedChange={field.onChange}
@@ -149,7 +149,7 @@ const FrameImageUploadSection = forwardRef<FrameImageUploadSectionRef, FrameImag
                 videoUrl={usageTipsVideoUrl}
                 videoCover={usageTipsVideoCover}
                 buttonText={usageTipsButtonText}
-                className='w-full justify-center rounded-lg bg-[#2a2b2f] px-4 py-3 text-[#427cf1]'
+                className='w-full justify-center rounded-lg bg-[#2a2b2f] px-4 py-3 text-color-main'
               />
             </div>
           )}
