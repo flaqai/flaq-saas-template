@@ -99,23 +99,23 @@ export default async function CoreFeaturesCards({
             }
           >
             {cardStyle === 'square' ? (
-              <h3 className='text-[18px] leading-[28px] text-color-1 md:text-[20px] mb-2 relative z-10'>
+              <h3 className='relative z-10 mb-2 text-[18px] leading-[28px] text-color-t1 md:text-[20px]'>
                 {feature.title}
               </h3>
             ) : (
-              <div className='flex items-center gap-2 mb-2'>
+              <div className='mb-2 flex items-center gap-2'>
                 <div className='h-[20px] w-[4px] flex-shrink-0 rounded-full bg-color-main' />
-                <h3 className='text-[18px] leading-[28px] text-color-1 md:text-[20px]'>
+                <h3 className='text-[18px] leading-[28px] text-color-t1 md:text-[20px]'>
                   {feature.title}
                 </h3>
               </div>
             )}
 
             {cardStyle === 'normal' && (
-              <div className='h-px w-full bg-color-card-2 mb-3 flex-shrink-0' />
+              <div className='mb-3 h-px w-full flex-shrink-0 bg-color-card-2' />
             )}
 
-            <p className={cardStyle === 'square' ? 'flex-1 text-sm leading-[22px] text-color-2 relative z-10' : 'flex-1 text-sm leading-[22px] text-color-2'}>
+            <p className={cardStyle === 'square' ? 'relative z-10 flex-1 text-sm leading-[22px] text-color-t2' : 'flex-1 text-sm leading-[22px] text-color-t2'}>
               {feature.description}
             </p>
           </div>

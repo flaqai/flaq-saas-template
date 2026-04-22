@@ -12,9 +12,8 @@ import { Trash2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 
-import { IMAGE_RESOLUTION_LIST } from '@/lib/constants';
 import { numberList } from '@/lib/utils/arrayUtils';
-import { findClosestResolution } from '@/lib/utils/numUtils';
+import { formatDate } from '@/lib/utils/timeUtils';
 import FailurePlaceholder from '@/components/ui/failure-placeholder';
 
 import { useImageContext } from './image-context-provider';
@@ -30,14 +29,14 @@ function LoadingPlaceholder() {
 
 function ImageItem({
   imgSrc,
-  resolution,
+  createTime,
   onClick,
   isFailed,
   isLoading,
   onDelete,
 }: {
   imgSrc: string;
-  resolution: string;
+  createTime: number;
   onClick: () => void;
   isFailed?: boolean;
   isLoading?: boolean;
@@ -81,7 +80,7 @@ function ImageItem({
       />
 
       <div className='absolute bottom-0 left-0 flex items-center justify-center rounded-tr-lg rounded-bl-lg bg-[rgba(128,128,128,0.5)] p-2.5 py-1 text-xs text-white backdrop-blur'>
-        {resolution}
+        {formatDate(createTime)}
       </div>
     </div>
   );
@@ -171,7 +170,7 @@ const ImageHistory = forwardRef<ScrollRef, ImageHistoryProps>(
               <ImageItem
                 key={el.id}
                 imgSrc={el.thumbnailUrl || el.url}
-                resolution={findClosestResolution(el.resolution, IMAGE_RESOLUTION_LIST)}
+                createTime={el.createTime}
                 onClick={() => {
                   if (!isProcessing) {
                     handleClickImg(el as NonNullable<typeof data>[number]);

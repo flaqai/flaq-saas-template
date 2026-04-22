@@ -14,7 +14,7 @@ import { toast } from 'sonner';
 
 import { cn } from '@/lib/utils';
 import { numberList } from '@/lib/utils/arrayUtils';
-import useFormatPastTime from '@/hooks/utils/useFormatPastTime';
+import { formatDate } from '@/lib/utils/timeUtils';
 import FailurePlaceholder from '@/components/ui/failure-placeholder';
 
 import Spinning from '../Spinning';
@@ -34,7 +34,6 @@ function VideoItem({
   status: VideoHistoryItem['status'];
   onDelete?: () => void;
 }) {
-  const formatPastTime = useFormatPastTime();
   if (status === 'pending' || status === 'processing') {
     return (
       <div
@@ -82,7 +81,7 @@ function VideoItem({
         fetchPriority='high'
       />
       <div className='absolute bottom-0 left-0 flex items-center justify-center rounded-tr-lg rounded-bl-lg bg-[rgba(128,128,128,0.5)] p-2.5 py-1 text-xs text-white backdrop-blur'>
-        {formatPastTime(createTime)}
+        {formatDate(createTime)}
       </div>
     </div>
   );
