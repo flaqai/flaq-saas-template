@@ -2,7 +2,8 @@ import { NextResponse, type NextRequest } from 'next/server';
 import createMiddleware from 'next-intl/middleware';
 
 import { routing } from './i18n/routing';
-import { HEADER_IP_KEY } from './lib/constants';
+
+const HEADER_IP_KEY = 'x-client-ip';
 
 function getIp(request: NextRequest): string {
   return (
