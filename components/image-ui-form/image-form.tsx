@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { ArrowLeftRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import useImageFormStore from '@/store/form/useImageFormStore';
 import useImageFormDefaultStore from '@/store/form/useImageFormDefaultStore';
@@ -12,6 +13,7 @@ import { ALL_IMAGE_PROVIDERS } from '@/lib/constants/image';
 import { supportsGenerationType } from '@/lib/utils/imageModelService';
 
 import { Form } from '@/components/ui/form';
+import SubHeading from '@/components/form/SubHeading';
 
 // 通用表单组件
 import {
@@ -98,6 +100,9 @@ export default function ImageForm({
   className,
 }: ImageFormProps) {
   const t = useTranslations('components.image-form');
+  const [currentModelVersionDisplayMode, setCurrentModelVersionDisplayMode] = useState<
+    'model' | 'label'
+  >(modelVersionDisplayMode === 'label' ? 'label' : 'model');
 
   const multiImageUploadFormRef = useRef<UnifiedImageUploadFieldRef>(null);
 
@@ -327,10 +332,29 @@ export default function ImageForm({
             {/* Model Selection */}
             {showModelVersion && (
               <>
+                <div className='flex items-center justify-between gap-3'>
+                  <SubHeading>{t('selectModel')}</SubHeading>
+                  <button
+                    type='button'
+                    aria-label='Toggle model name display'
+                    title={currentModelVersionDisplayMode === 'model' ? 'Show labels' : 'Show model names'}
+                    onClick={() =>
+                      setCurrentModelVersionDisplayMode((current) =>
+                        current === 'model' ? 'label' : 'model',
+                      )
+                    }
+                    className='flex h-7 w-7 items-center justify-center rounded-lg bg-transparent text-white/70 transition-colors hover:bg-white/10 hover:text-white'
+                  >
+                    <ArrowLeftRight className='h-3.5 w-3.5' />
+                    <span className='sr-only'>
+                      {currentModelVersionDisplayMode === 'model' ? 'Show labels' : 'Show model names'}
+                    </span>
+                  </button>
+                </div>
                 <ModelVersionField
-                  title={t('selectModel')}
+                  hideTitle
                   name='modelVersion'
-                  displayMode={modelVersionDisplayMode}
+                  displayMode={currentModelVersionDisplayMode}
                   versions={
                     customVersionList ||
                     (customModelList && convertModelsToVersionConfigs(customModelList)) ||

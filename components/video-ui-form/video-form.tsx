@@ -3,7 +3,8 @@
 /* eslint-disable @typescript-eslint/indent */
 /* eslint-disable no-confusing-arrow */
 /* eslint-disable react/jsx-wrap-multilines */
-import { useCallback, useContext, useMemo, useRef } from 'react';
+import { useCallback, useContext, useMemo, useRef, useState } from 'react';
+import { ArrowLeftRight } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useNavigationGuard } from 'next-navigation-guard';
@@ -68,6 +69,7 @@ interface VideoFormBaseProps {
   // UI 显示控制
   showInput?: boolean;
   showVideoModelVersion?: boolean;
+  modelVersionDisplayMode?: 'model' | 'label' | 'both';
   showRatio?: boolean;
   showDuration?: boolean;
   showResolution?: boolean;
@@ -98,6 +100,7 @@ export default function VideoFormBase({
   // UI 显示控制 props
   showInput = true,
   showVideoModelVersion = true,
+  modelVersionDisplayMode = 'model',
   showRatio = true,
   showDuration = true,
   showResolution = true,
@@ -111,6 +114,9 @@ export default function VideoFormBase({
   allowedProviders,
 }: VideoFormBaseProps) {
   const t = useTranslations('components.video-form');
+  const [currentModelVersionDisplayMode, setCurrentModelVersionDisplayMode] = useState<
+    'model' | 'label'
+  >(modelVersionDisplayMode === 'label' ? 'label' : 'model');
   const pathname = usePathname();
   const { audioDuration: _audioDuration } = useContext(videoAudioContext);
   void _audioDuration; // Reserved for future use
@@ -306,12 +312,31 @@ export default function VideoFormBase({
             {/* 模型版本选择 */}
             {showVideoModelVersion && (
               <>
-                <SubHeading>{t('modelVersion')}</SubHeading>
+                <div className='flex items-center justify-between gap-3'>
+                  <SubHeading>{t('modelVersion')}</SubHeading>
+                  <button
+                    type='button'
+                    aria-label='Toggle model name display'
+                    title={currentModelVersionDisplayMode === 'model' ? 'Show labels' : 'Show model names'}
+                    onClick={() =>
+                      setCurrentModelVersionDisplayMode((current) =>
+                        current === 'model' ? 'label' : 'model',
+                      )
+                    }
+                    className='flex h-7 w-7 items-center justify-center rounded-lg bg-transparent text-white/70 transition-colors hover:bg-white/10 hover:text-white'
+                  >
+                    <ArrowLeftRight className='h-3.5 w-3.5' />
+                    <span className='sr-only'>
+                      {currentModelVersionDisplayMode === 'model' ? 'Show labels' : 'Show model names'}
+                    </span>
+                  </button>
+                </div>
                 <ModelSelect
                   name='modelVersion'
                   hasImages={hasImages}
                   allowedProviders={allowedProviders}
                   videoType={videoType}
+                  displayMode={currentModelVersionDisplayMode}
                 />
               </>
             )}

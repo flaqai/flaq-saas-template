@@ -26,6 +26,7 @@ export interface ModelVersionFieldProps {
   versions: ImageModelVersionConfig[];
   onChange?: (value: string) => void;
   displayMode?: 'model' | 'label' | 'both';
+  hideTitle?: boolean;
 }
 
 export default function ModelVersionField({
@@ -34,6 +35,7 @@ export default function ModelVersionField({
   versions,
   onChange,
   displayMode = 'model',
+  hideTitle = false,
 }: ModelVersionFieldProps) {
   const form = useFormContext();
   const tCommon = useTranslations('Common');
@@ -112,7 +114,7 @@ export default function ModelVersionField({
       name={name}
       render={({ field }) => (
         <FormItem>
-          <SubHeading>{title || tCommon('selectModel')}</SubHeading>
+          {!hideTitle && <SubHeading>{title || tCommon('selectModel')}</SubHeading>}
           <FormControl>
             <Select
               value={field.value}

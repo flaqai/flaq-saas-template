@@ -27,6 +27,7 @@ interface ModelSelectProps {
   hasImages?: boolean;
   allowedProviders?: string[];
   videoType?: 'Text-to-video' | 'Image-to-video';
+  displayMode?: 'model' | 'label' | 'both';
 }
 
 export default function ModelSelect({
@@ -34,6 +35,7 @@ export default function ModelSelect({
   hasImages = false,
   allowedProviders,
   videoType,
+  displayMode = 'model',
 }: ModelSelectProps) {
   const { control, watch, setValue } = useFormContext();
   const selectedModelVersion = watch(name);
@@ -153,6 +155,8 @@ export default function ModelSelect({
 
   // 获取模型版本的显示名称：默认直接显示 flaq model_name
   const getVersionDisplayName = (version: ModelVersionConfig) => {
+    if (displayMode === 'label') return version.name;
+    if (displayMode === 'both') return `${version.modelVersion} / ${version.name}`;
     return version.modelVersion;
   };
 
