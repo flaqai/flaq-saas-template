@@ -20,10 +20,11 @@
 
 import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
-import { createKlingVideoTraceId } from '@/network/video/client';
-import { refreshVideoHistory } from '@/network/video/useVideoHistory';
+import { createVideoTask } from '@/network/video/client';
+import { getClientOpenApiConfig } from '@/network/clientFetch';
+import { addPendingVideoHistory } from '@/network/video/history';
+import useGenerationPollingStore from '@/store/useGenerationPollingStore';
 import { shouldCompressImageFileList, type FileType } from '@/lib/utils/fileUtils';
-import { removeEmptyProperties } from '@/lib/utils/objectUtils';
 import { showConfettiFireworks } from '@/lib/utils/uiUtils';
 import { sendGAEventBtnClicked } from '@/lib/utils/analyticsUtils';
 import trimAudioFile from '@/lib/utils/audioUtils';
@@ -49,13 +50,12 @@ export default function useVideoFormSubmit(options: UseVideoFormSubmitOptions) {
   const { videoType, stores, pathname, t, submitBtnId } = options;
   const {
     setOpenPricingDialogStore,
-    setShowBtn,
     uploadFilesToStorageThroughBackEnd,
-    updateUserInfoWithDelay,
   } = stores;
   void pathname;
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const addProcessingTask = useGenerationPollingStore((state) => state.add);
 
   /**
    * 处理文件上传
@@ -201,7 +201,7 @@ export default function useVideoFormSubmit(options: UseVideoFormSubmitOptions) {
 
       try {
         // 上传文件
-        const { startFrameUrl, endFrameUrl, imageUrlList, clothesChangerImageUrl, audioUrl } = await uploadFiles(formData);
+        const { startFrameUrl, endFrameUrl, imageUrlList, audioUrl } = await uploadFiles(formData);
 
         // 统一使用 imageUrlList 管理所有图片（首帧、尾帧、多图等）
         const finalImageUrlList: string[] = [];
@@ -211,37 +211,57 @@ export default function useVideoFormSubmit(options: UseVideoFormSubmitOptions) {
           finalImageUrlList.push(...imageUrlList);
         }
 
-        const reqData = removeEmptyProperties<Parameters<typeof createKlingVideoTraceId>[number]>({
-          prompt: currentModel.prompt || formData.prompt, // 优先使用模型配置中的 prompt
-          videoType,
-          model: currentModel.model,
-          platformType: currentModel.platformType,
+        const prompt = currentModel.prompt || formData.prompt;
+        const imageUrls = finalImageUrlList.length > 0 ? finalImageUrlList : undefined;
+        const res = await createVideoTask(getClientOpenApiConfig(), {
+          model_name: currentModel.model,
+          prompt,
+          aspect_ratio: formData.ratio || undefined,
+          duration: formData.duration ? Number(String(formData.duration).replace('s', '')) : undefined,
+          resolution: formData.resolution || undefined,
+          image_url: imageUrls?.[0],
+          image_end_url: imageUrls?.[1],
+          images: imageUrls && imageUrls.length > 2 ? imageUrls : undefined,
+          audio_url: audioUrl || undefined,
+        });
+
+        if (res.code !== 200 || !res.data?.task_id) {
+          toast.error(res.message || 'Video task submit failed');
+          return;
+        }
+
+        addPendingVideoHistory({
+          id: res.data.task_id,
+          traceId: res.data.task_id,
+          platformName: currentModel.model,
+          coverImage: imageUrls?.[0] || '',
+          categoryName: '',
+          createTime: Date.now(),
+          duration: formData.duration ? Number(String(formData.duration).replace('s', '')) : 0,
+          errorInfo: '',
+          imageEndUrl: imageUrls?.[1] || '',
+          imageUrl: imageUrls?.[0] || '',
+          prompt,
+          videoId: res.data.task_id,
+          videoThumbnailUrl: imageUrls?.[0] || '',
+          videoUrl: '',
+          videoType: videoType as any,
           ratio: formData.ratio,
-          imageUrlList: finalImageUrlList.length > 0 ? finalImageUrlList : undefined,
-          audioUrl: audioUrl || undefined,
-        } satisfies Parameters<typeof createKlingVideoTraceId>[number]);
+        });
 
-        const res = await createKlingVideoTraceId(reqData);
-
-        if (res?.code === 204) {
-          setOpenPricingDialogStore(true, 'credits');
-          return;
-        }
-
-        if (res.code !== 200) {
-          toast.error(res.msg);
-          return;
-        }
+        addProcessingTask(res.data.task_id, 'video', videoType);
 
         // 成功处理
         showConfettiFireworks(3000);
-        setShowBtn(true);
-        refreshVideoHistory();
+        toast.success(res.message || 'Video task submitted.');
       } catch (error: any) {
-        toast.error(error as string);
+        if (String(error?.message || error).toLowerCase().includes('credit')) {
+          setOpenPricingDialogStore(true, 'credits');
+          return;
+        }
+        toast.error(error?.message || String(error));
       } finally {
         setIsSubmitting(false);
-        updateUserInfoWithDelay();
       }
     },
     [
@@ -250,8 +270,7 @@ export default function useVideoFormSubmit(options: UseVideoFormSubmitOptions) {
       t,
       uploadFiles,
       setOpenPricingDialogStore,
-      setShowBtn,
-      updateUserInfoWithDelay,
+      addProcessingTask,
     ],
   );
 

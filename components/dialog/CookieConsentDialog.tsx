@@ -1,36 +1,13 @@
 'use client';
 
-// import { useEffect } from 'react';
-// import { getCountry } from '@/network/auth/client';
 import useCookieDialogStore from '@/store/dialog/useCookieDialogStore';
 import { useTranslations } from 'next-intl';
-
-// import { euCountries } from '@/lib/constants';
 
 export default function CookieConsentDialog() {
   const t = useTranslations('cookie');
 
   const open = useCookieDialogStore((state) => state.open);
   const setOpen = useCookieDialogStore((state) => state.setOpen);
-  // const locale = useCookieDialogStore((state) => state.locale);
-  // const setLocale = useCookieDialogStore((state) => state.setLocale);
-
-  // const getLocale = async () => {
-  //   const res = await getCountry();
-  //   setLocale(res.data.country);
-  //   if (euCountries.some((el) => el.code === res.data.country?.toUpperCase())) {
-  //     setOpen(true);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (typeof locale !== 'string') {
-  //     getLocale();
-  //   }
-  //   return () => {};
-  // }, []);
-
-  // if (!open || typeof locale === 'string') return null;
 
   if (!open) return null;
 

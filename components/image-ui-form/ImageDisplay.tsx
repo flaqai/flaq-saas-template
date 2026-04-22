@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { deleteImageById } from '@/network/image/client';
-import { refreshImageHistory } from '@/network/profile/useUserImageHistory';
+import { refreshImageHistory } from '@/network/image/history';
 import useImageFormStore from '@/store/form/useImageFormStore';
 import { ChevronDown, Download, ImageIcon, Trash2, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
@@ -25,7 +25,6 @@ import Loading from './shared/loading';
 
 const ImageDetailModal = dynamic(() => import('@/components/dialog/ImageDetailModal'), { ssr: false });
 
-// import ImageInpainting from './image-inpainting';
 
 export default function ImageDisplay() {
   const t = useTranslations('components.image-form.display');

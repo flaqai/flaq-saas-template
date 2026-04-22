@@ -5,19 +5,15 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import { forwardRef, useEffect, useMemo, useState } from 'react';
-// import { Link } from '@/i18n/navigation';
-import useUserImageHistory, { refreshImageHistory } from '@/network/profile/useUserImageHistory';
+import useUserImageHistory, { refreshImageHistory } from '@/network/image/history';
 import { deleteImageById } from '@/network/image/client';
 import useImageFormStore from '@/store/form/useImageFormStore';
-import useGenerationPollingStore from '@/store/useGenerationPollingStore';
 import { Trash2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 
 import { IMAGE_RESOLUTION_LIST } from '@/lib/constants';
 import { numberList } from '@/lib/utils/arrayUtils';
-// import { cn } from '@/lib/utils';
-// import { numberList } from '@/lib/utils/arrayUtils';
 import { findClosestResolution } from '@/lib/utils/numUtils';
 import FailurePlaceholder from '@/components/ui/failure-placeholder';
 
@@ -108,31 +104,12 @@ const ImageHistory = forwardRef<ScrollRef, ImageHistoryProps>(
       return state.updateImageObj;
     });
 
-    const setLayerImageObj = useImageFormStore((state) => state.setLayerImageObj);
     const resetDefault = useImageFormStore((state) => state.resetDefault);
-    const processingTasksMap = useGenerationPollingStore((state) => state.processingTasks);
 
-    // const [pageNum, setPageNum] = useState(1);
-    // const { total, data, isLoading } = useUserImageHistory(pageNum, imageNum, imageType);
     const [pageNum] = useState(1);
     const { data, isLoading } = useUserImageHistory(pageNum, 30, imageType || undefined);
 
-    // 合并占位符和真实数据
-    const displayData = useMemo(() => {
-      // 只显示当前 imageType 的占位符
-      const allTasks = Array.from(processingTasksMap.values());
-      const imageTasks = allTasks.filter((task) => task.type === 'image' && task.imageType === imageType);
-      const placeholders = imageTasks.map((task) => ({
-        id: `temp-${task.traceId}`,
-        isProcessing: true as const,
-        traceId: task.traceId,
-        // 占位符的必需字段
-        thumbnailUrl: '',
-        resolution: '1024x1024',
-        url: '',
-      }));
-      return [...placeholders, ...(data || []).map((item) => ({ ...item, isProcessing: false as const }))];
-    }, [processingTasksMap, data, imageType]);
+    const displayData = useMemo(() => data || [], [data]);
 
     const hasData = displayData.length > 0;
 
@@ -188,12 +165,12 @@ const ImageHistory = forwardRef<ScrollRef, ImageHistoryProps>(
         )}
         {hasData &&
           displayData.map((el) => {
-            const isProcessing = el.isProcessing === true;
-            const isFailed = !isProcessing && (!el.url || !el.thumbnailUrl);
+            const isProcessing = el.status === 'processing';
+            const isFailed = el.status === 'fail';
             return (
               <ImageItem
                 key={el.id}
-                imgSrc={el.thumbnailUrl}
+                imgSrc={el.thumbnailUrl || el.url}
                 resolution={findClosestResolution(el.resolution, IMAGE_RESOLUTION_LIST)}
                 onClick={() => {
                   if (!isProcessing) {

@@ -3,7 +3,6 @@ import { getTranslations } from 'next-intl/server';
 
 import { numberList } from '@/lib/utils/arrayUtils';
 import Faq from '@/components/Faq';
-import FYIItem from '@/components/fyi-item';
 import ImageShowcaseSection from '@/components/home/newSections/image-showcase-section';
 import CoreFeaturesCards from '@/components/home/newSections2/CoreFeaturesCards';
 import ImageForm from '@/components/image-ui-form/image-form';
@@ -60,7 +59,6 @@ export default async function Page() {
             defaultValuePriority={DEFAULT_PRIORITY}
             defaultValues={DEFAULT_VALUES}
           />
-          <FYIItem mediaType='image' />
         </div>
         <Heading title={t('heading.title')} description={t('heading.description')} />
       </div>

@@ -8,8 +8,6 @@ interface BrandItem {
 }
 
 const brands: BrandItem[] = [
-  { name: 'Tripo 3D', icon: '/images/model-brand/tripo.svg' },
-  { name: 'Sora', icon: '/images/model-brand/sora.png' },
   // { name: 'Wan', icon: '/images/model-brand/wan.png' },
   { name: 'Kling', icon: '/images/model-brand/kling.png' },
   { name: 'Veo', icon: '/images/model-brand/veo.png' },

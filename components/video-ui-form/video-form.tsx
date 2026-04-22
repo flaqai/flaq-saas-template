@@ -39,7 +39,7 @@ import { videoAudioContext } from './VideoContenxtProvider';
 import VideoContenxtProvider from './VideoContenxtProvider';
 import VideoDisplay from './VideoDisplay';
 import VideoHistorySection from './VideoHistorySection';
-import type { VideoRequestType } from '@/network/video/useVideoHistory';
+import type { VideoHistoryRequest } from '@/network/video/history';
 
 // 本地类型
 import type { VideoFormData } from './types';
@@ -58,7 +58,7 @@ import type { VideoFormData } from './types';
  */
 interface VideoFormBaseProps {
   submitBtnId: string;
-  videoType: VideoRequestType['videoType'];
+  videoType: VideoHistoryRequest['videoType'];
   defaultValues?: Partial<VideoFormData>;
   formTitle?: string;
   uploadImageTitle?: string;
@@ -124,8 +124,6 @@ export default function VideoFormBase({
     setOpenPricingDialogStore,
     resetDefault,
     defaultPrompt,
-    shareImageObj,
-    setShareImageObj,
   } = stores;
 
   // ============================================
@@ -138,9 +136,6 @@ export default function VideoFormBase({
   useNavigationGuard({
     enabled: true,
     confirm: () => {
-      if (shareImageObj && shareImageObj.touchCount) {
-        setShareImageObj(null);
-      }
       resetDefault();
       return true;
     },

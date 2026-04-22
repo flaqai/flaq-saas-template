@@ -1,9 +1,9 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { deleteVideoById } from '@/network/video/client';
-import type { VideoResponseType } from '@/network/video/useVideoHistory';
-import { refreshVideoHistory } from '@/network/video/useVideoHistory';
+import type { VideoHistoryItem } from '@/network/video/history';
+import { refreshVideoHistory } from '@/network/video/history';
 import { X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
@@ -19,18 +19,16 @@ import {
   type MetadataItem,
   ModelTag,
   PromptSection,
-  RemixButton,
 } from './DetailModalComponents';
 
 interface VideoDetailModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onDelete?: () => void;
-  video: VideoResponseType & { imageUrl?: string | null; imageEndUrl?: string | null };
+  video: VideoHistoryItem & { imageUrl?: string | null; imageEndUrl?: string | null };
 }
 
 export default function VideoDetailModal({ open, onOpenChange, onDelete, video }: VideoDetailModalProps) {
-  const videoRef = useRef<HTMLVideoElement>(null);
   const t = useTranslations('Profile.video-history.detail');
   const tHistory = useTranslations('Profile.video-history');
   const [isDeleting, setIsDeleting] = useState(false);

@@ -7,10 +7,9 @@ import useImageFormStore from '@/store/form/useImageFormStore';
 import { CircleX, Upload } from 'lucide-react';
 import { useFormContext } from 'react-hook-form';
 
+import Box from '@/components/Box';
 import { getFileByUrl } from '@/lib/utils/fileUtils';
 import { FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
-
-import Box from './Box';
 
 const acceptedImageTypes = ['image/jpg', 'image/jpeg', 'image/png', 'image/webp'];
 
@@ -106,7 +105,7 @@ const ImageUploadForm: ForwardRefRenderFunction<
   );
 
   return (
-    <Box className='flex h-[72px] flex-row justify-between p-1'>
+    <Box variant='input' className='flex h-[72px] flex-row justify-between p-1'>
       <FormField
         control={methods.control}
         name={name}

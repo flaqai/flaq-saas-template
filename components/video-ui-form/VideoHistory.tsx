@@ -4,8 +4,8 @@
 /* eslint-disable react/jsx-indent */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import { forwardRef, useContext, useEffect, useState } from 'react';
-import useVideoHistory, { VideoRequestType, VideoResponseType, refreshVideoHistory } from '@/network/video/useVideoHistory';
+import { forwardRef, useContext, useState } from 'react';
+import useVideoHistory, { VideoHistoryItem, VideoHistoryRequest, refreshVideoHistory } from '@/network/video/history';
 import { deleteVideoById } from '@/network/video/client';
 import useVideoFormStore from '@/store/form/useVideoFormStore';
 import { Trash2 } from 'lucide-react';
@@ -31,7 +31,7 @@ function VideoItem({
   imgSrc: string;
   onClick: () => void;
   createTime: number;
-  status: VideoResponseType['status'];
+  status: VideoHistoryItem['status'];
   onDelete?: () => void;
 }) {
   const formatPastTime = useFormatPastTime();
@@ -101,18 +101,11 @@ const VideoHistory = forwardRef<ScrollRef, VideoHistoryProps>(({ onClickImage, o
 
   const updateVideoObj = useVideoFormStore((state) => state.updateVideoObj);
   const [pageNum] = useState(1);
-  const { data, isLoading } = useVideoHistory({ pageNum, pageSize: 30, videoType: videoType as VideoRequestType['videoType'] });
+  const { data, isLoading } = useVideoHistory({ pageNum, pageSize: 30, videoType: videoType as VideoHistoryRequest['videoType'] });
 
   const hasData = !!data && data.length > 0;
 
   const t = useTranslations('components.video-form.history');
-  const resetDefault = useVideoFormStore((state) => state.resetDefault);
-
-  // 当 videoType 变化时，重置为默认预设视频
-  useEffect(() => {
-    resetDefault();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [videoType]);
 
   const handleClickImg = (videoData: NonNullable<typeof data>[number]) => {
     // 如果视频失败或没有videoUrl，不处理点击

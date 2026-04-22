@@ -7,14 +7,12 @@
  * @example
  * ```tsx
  * const stores = useVideoFormStores();
- * // 使用 stores.setShowBtn, stores.uploadFilesToStorageThroughBackEnd 等
+ * // 使用 stores.uploadFilesToStorageThroughBackEnd 等
  * ```
  */
 
 import usePricingDialogStore from '@/store/usePricingDialogStore';
-import useMobileVideoHistoryButttonStore from '@/store/video/useMobileVideoHistoryButttonStore';
-import useShareFormStore from '@/store/form/use-share-form-store';
-import useVideoFormDefaultStore from '@/store/form/use-video-form-default-store';
+import useVideoFormDefaultStore from '@/store/form/useVideoFormDefaultStore';
 import useVideoFormStore from '@/store/form/useVideoFormStore';
 import useUploadFiles from '@/hooks/use-upload-files';
 import useUpdateUserInfo from '@/hooks/useUpdateUserInfo';
@@ -32,21 +30,10 @@ export function useVideoFormStores() {
   const setOpenPricingDialogStore = usePricingDialogStore((state) => state.setOpen);
 
   // ============================================
-  // 导航和UI状态
-  // ============================================
-  const setShowBtn = useMobileVideoHistoryButttonStore((state) => state.setShowBtn);
-
-  // ============================================
   // 表单状态
   // ============================================
   const resetDefault = useVideoFormStore((state) => state.resetDefault);
   const defaultPrompt = useVideoFormDefaultStore((state) => state.prompt);
-
-  // ============================================
-  // 共享状态
-  // ============================================
-  const shareImageObj = useShareFormStore((state) => state.shareImageObj);
-  const setShareImageObj = useShareFormStore((state) => state.setShareImageObj);
 
   // ============================================
   // 工具函数
@@ -62,17 +49,9 @@ export function useVideoFormStores() {
     // 对话框
     setOpenPricingDialogStore,
 
-    // 导航和UI
-    setShowBtn,
-
     // 表单状态
     resetDefault,
     defaultPrompt,
-
-    // 共享状态
-    shareImageObj,
-    setShareImageObj,
-
     // 工具函数
     uploadFilesToStorageThroughBackEnd,
     updateUserInfoWithDelay,

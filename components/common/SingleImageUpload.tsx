@@ -28,7 +28,7 @@ interface SingleImageUploadProps {
 
 const SingleImageUpload = forwardRef<SingleImageUploadRef, SingleImageUploadProps>(
   ({ className, label, onImageChange }, ref) => {
-    const t = useTranslations('components.hero-form.3d-ai');
+    const t = useTranslations('components.hero-form.image');
     const [image, setImageState] = useState<{ file: File | string; previewUrl: string; sourceUrl?: string } | null>(
       null,
     );

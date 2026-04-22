@@ -3,7 +3,6 @@ import { getTranslations } from 'next-intl/server';
 
 import { numberList } from '@/lib/utils/arrayUtils';
 import Faq from '@/components/Faq';
-import FYIItem from '@/components/fyi-item';
 import CoreFeaturesCards from '@/components/home/newSections2/CoreFeaturesCards';
 import VideoCarousel from '@/components/home/video-carousel';
 import Heading from '@/components/internal-page/heading';
@@ -35,7 +34,6 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
       <div className='container-centered container-gap'>
         <div className='flex w-full flex-col gap-5'>
           <Form />
-          <FYIItem mediaType='video' />
         </div>
         <Heading title={t('heading.title')} description={t('heading.description')} />
       </div>

@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 import { ChevronLeft, ChevronRight, Copy, Check } from 'lucide-react';
 import SubHeading from '../internal-page/sub-heading';
 import YouTubeVideo, { YouTubeProps, YouTubePlayer } from 'react-youtube';
-import useDefaultModalStore from '@/store/useDefaultModalStore';
+import useImageFormDefaultStore from '@/store/form/useImageFormDefaultStore';
 
 export interface ExampleSectionProps {
   title: string;
@@ -34,7 +34,7 @@ export default function ExampleSection({
   autoPlay = true,
 }: ExampleSectionProps) {
   const router = useRouter();
-  const updateDefaultStore = useDefaultModalStore((state) => state.updateDefaultStore);
+  const setImagePrompt = useImageFormDefaultStore((state) => state.setPrompt);
 
   // Extract video ID from YouTube URL
   const getVideoId = (url: string): string => {
@@ -55,8 +55,8 @@ export default function ExampleSection({
 
   // 点击图片跳转到 AI 图片生成页面并填充 prompt
   const handleImageClick = (prompt: string) => {
-    updateDefaultStore({ prompt });
-    router.push('/text-to-image');
+    setImagePrompt(prompt);
+    router.push('/image-to-image');
   };
 
   // 初始化滚动位置到中间组

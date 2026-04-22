@@ -9,7 +9,6 @@ import {
   ModelTag,
   PromptSection,
 } from './DetailModalComponents';
-import useDefaultModalStore from '@/store/useDefaultModalStore';
 
 interface SimpleImagePreviewModalProps {
   open: boolean;
@@ -26,17 +25,10 @@ export default function SimpleImagePreviewModal({ open, onOpenChange, image }: S
   const t = useTranslations('nano-banana-prompt.modal');
   const tDetail = useTranslations('Profile.image-history.detail');
   const router = useRouter();
-  const updateDefaultStore = useDefaultModalStore((state) => state.updateDefaultStore);
 
   const handleRecreate = () => {
-    // 一次性更新 store，避免触发多次渲染
-    updateDefaultStore({
-      prompt: image.prompt || '',
-      remixImages: image.originalUrls && image.originalUrls.length > 0 ? image.originalUrls : [],
-    });
-
     onOpenChange(false);
-    router.push('/text-to-image');
+    router.push(`/text-to-image${image.prompt ? `?prompt=${encodeURIComponent(image.prompt)}` : ''}`);
   };
 
   const userImageUrlList = image.originalUrls || [];

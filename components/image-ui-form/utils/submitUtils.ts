@@ -1,5 +1,6 @@
 import type { ImageFormData, FormValidationResult, AspectRatioParseResult } from '../types';
 import type { ImageModel } from '@/lib/constants/image/types';
+import type { CreateImageTaskRequest } from '@/network/image/client';
 import { removeEmptyProperties } from '@/lib/utils/objectUtils';
 
 /**
@@ -76,16 +77,15 @@ export function buildImageGenerationRequest(params: {
   const { formData, modelToUse, uploadedUrls, finalPrompt, defaultImageFormType } = params;
   const { width, height, isAutoRatio } = parseAspectRatio(formData.aspectRatio);
 
-  const rawRequest = {
+  void defaultImageFormType;
+
+  const rawRequest: CreateImageTaskRequest = {
+    model_name: modelToUse.model,
     prompt: finalPrompt,
-    imageUrlList: uploadedUrls,
-    platformType: modelToUse.platformType,
-    modelName: modelToUse.model,
-    width,
-    height,
-    supportRatio: !isAutoRatio,
-    resolution: formData.resolution, // 可能为空字符串，会被过滤
-    imageType: defaultImageFormType || 'text-to-image',
+    width: isAutoRatio ? 1 : width || 1,
+    height: isAutoRatio ? 1 : height || 1,
+    image_url_list: uploadedUrls.length > 0 ? uploadedUrls : undefined,
+    resolution: formData.resolution || undefined,
   };
 
   // 过滤掉空值字段（'', undefined, null）

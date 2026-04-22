@@ -6,7 +6,7 @@ import { useContext, useState } from 'react';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { deleteVideoById } from '@/network/video/client';
-import { refreshVideoHistory } from '@/network/video/useVideoHistory';
+import { refreshVideoHistory } from '@/network/video/history';
 import useVideoFormStore from '@/store/form/useVideoFormStore';
 import { ChevronDown, Download, Trash2, VideoIcon, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';

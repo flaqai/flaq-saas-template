@@ -24,14 +24,14 @@
 import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
 
-import { generateImageAsyncApi, ImageGeneratorRequest } from '@/network/generation/client';
-import { refreshImageHistory } from '@/network/profile/useUserImageHistory';
+import { createImageTask } from '@/network/image/client';
+import { getClientOpenApiConfig } from '@/network/clientFetch';
+import { addPendingImageHistory } from '@/network/image/history';
 import useGenerationPollingStore from '@/store/useGenerationPollingStore';
 import { sendGAEventBtnClicked } from '@/lib/utils/analyticsUtils';
 import { FileType } from '@/lib/utils/fileUtils';
 import { showConfettiFireworks } from '@/lib/utils/uiUtils';
 import useUploadFiles from '@/hooks/use-upload-files';
-import useUpdateUserInfo from '@/hooks/useUpdateUserInfo';
 
 import { buildImageGenerationRequest } from '../utils/submitUtils';
 import type { ImageFormData } from '../types';
@@ -69,7 +69,6 @@ export function useImageFormSubmit(options: UseImageFormSubmitOptions) {
   const addProcessingTask = useGenerationPollingStore((state) => state.add);
   const removeProcessingTask = useGenerationPollingStore((state) => state.remove);
   const uploadFilesToStorageThroughBackEnd = useUploadFiles();
-  const { updateUserInfoWithDelay } = useUpdateUserInfo();
 
   /**
    * 处理表单提交
@@ -183,32 +182,41 @@ export function useImageFormSubmit(options: UseImageFormSubmitOptions) {
           defaultImageFormType: imageFormType,
         });
 
-        res = await generateImageAsyncApi(reqData as ImageGeneratorRequest);
+        res = await createImageTask(getClientOpenApiConfig(), reqData);
 
-        const { code, msg, data } = res;
+        const { code, message, data } = res;
 
-        if (code !== 200 || data?.status === 'failed' || !data?.key) {
-          throw new Error(msg);
+        if (code !== 200 || !data?.task_id) {
+          throw new Error(message);
         }
 
+        addPendingImageHistory({
+          id: data.task_id,
+          taskId: data.task_id,
+          prompt: finalPrompt,
+          createTime: Date.now(),
+          url: '',
+          thumbnailUrl: '',
+          resolution: formData.resolution || formData.aspectRatio || '1:1',
+          modelName: modelToUse.model,
+          modelInfo: modelToUse.name,
+          userImageUrlList: allImageUrls,
+        });
+
         // 添加到全局轮询状态，后台处理生成任务
-        addProcessingTask(res.data.key, 'image', imageFormType);
+        addProcessingTask(data.task_id, 'image', imageFormType);
 
         // 显示成功提示和特效
         showConfettiFireworks(3000);
-        toast.success(res.msg);
-
-        // 刷新历史记录，让用户在历史记录中看到新任务
-        refreshImageHistory();
+        toast.success(message || 'Image task submitted.');
       } catch (error: any) {
         // 提交失败时移除全局轮询任务
-        if (res?.data?.key) {
-          removeProcessingTask(res.data.key);
+        if (res?.data?.task_id) {
+          removeProcessingTask(res.data.task_id);
         }
         toast.error(error?.message || String(error));
       } finally {
         setIsSubmitting(false);
-        updateUserInfoWithDelay();
       }
     },
     [
@@ -223,7 +231,6 @@ export function useImageFormSubmit(options: UseImageFormSubmitOptions) {
       addProcessingTask,
       removeProcessingTask,
       uploadFilesToStorageThroughBackEnd,
-      updateUserInfoWithDelay,
     ],
   );
 

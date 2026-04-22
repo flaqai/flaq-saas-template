@@ -106,7 +106,6 @@ export default function Navigation() {
               </div>
             ))}
           </div>
-          {/* login */}
           <div className='absolute right-0 flex items-center'>
             <div className='bg-color-5 flex items-center gap-x-1 rounded lg:gap-x-3'>
               {mounted ? (

@@ -1,15 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { deleteImageById } from '@/network/image/client';
-import { refreshImageHistory } from '@/network/profile/useUserImageHistory';
-import useDefaultModalStore from '@/store/useDefaultModalStore';
+import { refreshImageHistory } from '@/network/image/history';
 import { ChevronDown, Download, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
-import { useRouter, usePathname } from '@/i18n/navigation';
-import useImageFormStore from '@/store/form/useImageFormStore';
 
 import { getImageModelVersionName } from '@/lib/constants/image';
 import { detectImageFormat } from '@/lib/utils/fileUtils';
@@ -17,13 +14,11 @@ import { Dialog, DialogContent, DialogPortal } from '@/components/ui/dialog';
 import {
   CopyrightText,
   DeleteButton,
-  ImageToVideoButton,
   MediaGrid,
   MetadataRow,
   type MetadataItem,
   ModelTag,
   PromptSection,
-  RemixButton,
 } from './DetailModalComponents';
 
 const ConfirmDialog = dynamic(() => import('@/components/dialog/ConfirmDialog'), { ssr: false });
@@ -51,12 +46,6 @@ export default function ImageDetailModal({ open, onOpenChange, onDelete, image }
   const t = useTranslations('Profile.image-history.detail');
   const tHistory = useTranslations('Profile.image-history');
 
-  const router = useRouter();
-  const pathname = usePathname();
-  const setImageFormSrc = useImageFormStore((state) => state.setImageFormSrc);
-  const setVideoFormImageSrc = useImageFormStore((state) => state.setVideoFormImageSrc);
-  const updateDefaultStore = useDefaultModalStore((state) => state.updateDefaultStore);
-
   const [isDeleting, setIsDeleting] = useState(false);
   const [selectedFormat, setSelectedFormat] = useState('WEBP');
   const [showFormatMenu, setShowFormatMenu] = useState(false);
@@ -70,33 +59,6 @@ export default function ImageDetailModal({ open, onOpenChange, onDelete, image }
       if (format) setSelectedFormat(format);
     });
   }, [open, image.url]);
-
-// 处理 Remix 按钮点击
-const handleRemixClick = () => {
-  // Remix 只传生成的结果图，不填充提示词（让用户自己写新的）
-  updateDefaultStore({
-    remixImages: [image.url]
-  });
-
-  onOpenChange(false);
-
-  // 只在不在目标页面时才跳转
-  if (!pathname.includes('/text-to-image')) {
-    router.push('/text-to-image');
-  }
-};
-
-// 处理 Image to Video 按钮点击
-const handleImageToVideoClick = () => {
-  // 使用生成的图片（video 不需要原始素材）
-  setVideoFormImageSrc(image.url);
-  onOpenChange(false);
-
-  // 只在不在目标页面时才跳转
-  if (!pathname.includes('/image-to-video')) {
-    router.push('/image-to-video');
-  }
-};
 
   const handleDownload = async () => {
     if (!image.url) return;
@@ -360,11 +322,6 @@ const handleImageToVideoClick = () => {
                   <DeleteButton onClick={handleDeleteClick} disabled={isDeleting} />
                 </div>
 
-                {/* Row 2: Image to Video + Remix */}
-                <div className='flex items-center gap-2'>
-                  <ImageToVideoButton onClick={handleImageToVideoClick} />
-                  <RemixButton onClick={handleRemixClick} />
-                </div>
               </div>
             </div>
           </div>

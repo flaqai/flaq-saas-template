@@ -14,8 +14,6 @@ import {
   selectVideoModelByGenerationType,
   type VideoModel,
 } from '@/lib/constants/video/';
-import useUserInfoStore from '@/store/useUserInfoStore';
-import { getUserAllowedStatus } from '@/lib/access-control';
 
 /**
  * 视频模型服务类
@@ -31,10 +29,7 @@ export class VideoModelService {
    */
   static getVersionConfig(modelVersionStr?: string) {
     if (!modelVersionStr) return undefined;
-
-    const userInfo = useUserInfoStore.getState().userInfo;
-    const isAllowed = getUserAllowedStatus(userInfo);
-    const providers = getFilteredProviders(isAllowed);
+    const providers = getFilteredProviders(true);
 
     return providers.flatMap((provider) => provider.versions).find(
       (v) => v.modelVersion === modelVersionStr,
@@ -58,9 +53,7 @@ export class VideoModelService {
     hasImages?: boolean,
     enableAudio?: boolean,
   ): VideoModel | undefined {
-    const userInfo = useUserInfoStore.getState().userInfo;
-    const isAllowed = getUserAllowedStatus(userInfo);
-    const filteredProviders = getFilteredProviders(isAllowed);
+    const filteredProviders = getFilteredProviders(true);
 
     if (!filteredProviders || filteredProviders.length === 0) {
       return undefined;
@@ -87,9 +80,7 @@ export class VideoModelService {
    * @returns 默认模型的 modelVersion
    */
   static getDefaultModel(): string {
-    const userInfo = useUserInfoStore.getState().userInfo;
-    const isAllowed = getUserAllowedStatus(userInfo);
-    const providers = getFilteredProviders(isAllowed);
+    const providers = getFilteredProviders(true);
 
     if (providers && providers.length > 0 && providers[0].versions.length > 0) {
       return providers[0].versions[0].modelVersion;
@@ -137,11 +128,8 @@ export class VideoModelService {
   }): string | undefined {
     const { audio, endFrame, currentModelVersion, hasImages } = options;
 
-    const userInfo = useUserInfoStore.getState().userInfo;
-    const isAllowed = getUserAllowedStatus(userInfo);
-
     // 使用可见的 provider 列表，根据 hasImages 过滤版本
-    const versions = getFilteredVisibleProviders(isAllowed).flatMap((provider) => provider.versions).filter(
+    const versions = getFilteredVisibleProviders(true).flatMap((provider) => provider.versions).filter(
       (version) => {
         if (hasImages) {
           return versionSupportsImageToVideo(version);

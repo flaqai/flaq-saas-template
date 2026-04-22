@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { cn } from '@/lib/utils';
 import useImageFormStore from '@/store/form/useImageFormStore';
-import useDefaultModalStore from '@/store/useDefaultModalStore';
+import useImageFormDefaultStore from '@/store/form/useImageFormDefaultStore';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 
@@ -128,8 +128,8 @@ export default function ImageForm({
     return state.setIsPolling;
   });
 
-  const defaultPrompt = useDefaultModalStore((state) => state.prompt);
-  const updateDefaultStore = useDefaultModalStore((state) => state.updateDefaultStore);
+  const defaultPrompt = useImageFormDefaultStore((state) => state.prompt);
+  const resetImageFormDefault = useImageFormDefaultStore((state) => state.resetDefault);
 
   // ============================================
   // 表单初始化
@@ -149,9 +149,9 @@ export default function ImageForm({
   useEffect(() => {
     if (defaultPrompt) {
       form.setValue('prompt', defaultPrompt);
-      updateDefaultStore({ prompt: '' });
+      resetImageFormDefault();
     }
-  }, [defaultPrompt, form, updateDefaultStore]);
+  }, [defaultPrompt, form, resetImageFormDefault]);
 
   // ============================================
   // 业务逻辑：模型选择

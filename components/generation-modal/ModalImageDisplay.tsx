@@ -8,10 +8,10 @@ import { useTranslations } from 'next-intl';
 import { cn } from '@/lib/utils';
 import { detectImageFormat } from '@/lib/utils/fileUtils';
 import useImageConverter, { ImageType, imageTypesList } from '@/hooks/useImageConverter';
+import Box from '@/components/Box';
 import { useImageContext } from '@/components/image-ui-form/image-context-provider';
 import Loading from '@/components/image-ui-form/shared/loading';
 import Spinning from '@/components/Spinning';
-import Box from '@/components/form/Box';
 
 interface ModalImageDisplayProps {
   onImageSelect?: (imageUrl: string, imageName: string) => void;

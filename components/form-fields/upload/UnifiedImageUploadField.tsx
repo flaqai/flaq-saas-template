@@ -8,7 +8,6 @@ import { useDropzone } from 'react-dropzone';
 import { useFormContext } from 'react-hook-form';
 import { toast } from 'sonner';
 import useImageFormStore from '@/store/form/useImageFormStore';
-import useDefaultModalStore from '@/store/useDefaultModalStore';
 
 import { cn } from '@/lib/utils';
 import { getFileByUrl } from '@/lib/utils/fileUtils';
@@ -81,8 +80,6 @@ const UnifiedImageUploadField = forwardRef<UnifiedImageUploadFieldRef, UnifiedIm
     const setUploadImageObj = useImageFormStore((state) => state.setUploadImageObj);
     const imageFormSrc = useImageFormStore((state) => state.imageFormSrc);
     const setImageFormSrc = useImageFormStore((state) => state.setImageFormSrc);
-    const remixImages = useDefaultModalStore((state) => state.remixImages);
-    const updateDefaultStore = useDefaultModalStore((state) => state.updateDefaultStore);
 
     const [images, setImages] = useState<ImageItem[]>([]);
     const imgRef = useRef<HTMLImageElement>(null);
@@ -92,7 +89,6 @@ const UnifiedImageUploadField = forwardRef<UnifiedImageUploadFieldRef, UnifiedIm
     });
     const fileInputRef = useRef<HTMLInputElement>(null);
     const hasReadInitialValue = useRef(false);
-    const lastRemixImagesRef = useRef<string>('');
 
     const isSingleMode = maxImages === 1;
 
@@ -260,37 +256,6 @@ const UnifiedImageUploadField = forwardRef<UnifiedImageUploadFieldRef, UnifiedIm
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [imageFormSrc]);
-
-    // 监听 remixImages（用于追加图片，不替换）
-    useEffect(() => {
-      if (remixImages && remixImages.length > 0 && name === 'images') {
-        // 生成唯一标识，防止相同数据被处理两次
-        const remixKey = JSON.stringify(remixImages);
-        if (lastRemixImagesRef.current === remixKey) {
-          return;
-        }
-        lastRemixImagesRef.current = remixKey;
-
-        const newImages: ImageItem[] = remixImages.map((url) => ({
-          id: nanoid(),
-          file: new File([], 'remote-image', { type: 'image/png' }),
-          previewUrl: url,
-          sourceUrl: url,
-        }));
-
-        if (isSingleMode) {
-          setImages(newImages.slice(0, 1));
-        } else {
-          setImages((prev) => [...prev, ...newImages].slice(0, maxImages));
-        }
-
-        updateDefaultStore({ remixImages: [] });
-      } else if (!remixImages || remixImages.length === 0) {
-        // store 被清空时，重置标识
-        lastRemixImagesRef.current = '';
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [remixImages, name, isSingleMode, maxImages]);
 
     useEffect(() => {
       if (isSingleMode && images.length > 0) {

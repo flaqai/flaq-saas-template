@@ -1,6 +1,5 @@
 'use client';
 
-// import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { ArrowBigRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import Pagination from 'rc-pagination';

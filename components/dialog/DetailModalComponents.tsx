@@ -5,7 +5,6 @@ import { Check, Copy, Download, Trash2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 import useCopyToClipboard from '@/hooks/useCopyToClipboard';
-import { ImageToVideoIcon } from '@/components/svg/button/common';
 import ImageExpiredIcon from '@/components/svg/image/ImageExpiredIcon';
 
 // 图片过期占位符组件
@@ -140,35 +139,6 @@ export function DeleteButton({
       className='group flex aspect-square h-[42px] cursor-pointer items-center justify-center rounded-lg bg-[#1c1d23] transition-colors hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-50'
     >
       <Trash2 className='h-[18px] w-4 text-white transition-colors group-hover:text-red-500' />
-    </button>
-  );
-}
-
-// Remix 按钮
-export function RemixButton({ onClick, translationKey = 'Profile.image-history.detail' }: { onClick?: () => void; translationKey?: string }) {
-  const t = useTranslations(translationKey);
-  return (
-    <button
-      type='button'
-      onClick={onClick}
-      className='flex h-[42px] flex-1 cursor-pointer items-center justify-center rounded-lg bg-[#1677ff] py-1.5 text-base leading-6 text-white transition-opacity hover:opacity-90'
-    >
-      {t('remix')}
-    </button>
-  );
-}
-
-// Image to Video 按钮
-export function ImageToVideoButton({ onClick, translationKey = 'Profile.image-history.detail' }: { onClick?: () => void; translationKey?: string }) {
-  const t = useTranslations(translationKey);
-  return (
-    <button
-      type='button'
-      onClick={onClick}
-      className='flex h-[42px] flex-1 cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#1c1d23] py-1.5 text-base leading-6 text-white transition-colors hover:bg-[#252629]'
-    >
-      <ImageToVideoIcon className='h-6 w-6' />
-      {t('imageToVideo')}
     </button>
   );
 }

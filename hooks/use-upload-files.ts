@@ -1,4 +1,4 @@
-import { createSignedUrl } from '@/network/image/client';
+import { createSignedUrl } from '@/network/upload/client';
 
 import { FileType } from '@/lib/utils/fileUtils';
 import { fetchWithRetry } from '@/lib/utils/promiseUtils';

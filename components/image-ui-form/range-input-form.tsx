@@ -4,11 +4,10 @@ import { useEffect, useRef } from 'react';
 import { Minus, Plus } from 'lucide-react';
 import { useFormContext } from 'react-hook-form';
 
+import Box from '@/components/Box';
 import { cn } from '@/lib/utils';
 import { FormControl, FormField, FormItem } from '@/components/ui/form';
 import { Slider } from '@/components/ui/slider';
-
-import Box from './Box';
 
 export default function RangeInputForm({
   name,
@@ -48,7 +47,7 @@ export default function RangeInputForm({
   };
 
   return (
-    <Box className='flex w-full'>
+    <Box variant='input' className='flex w-full'>
       <FormField
         control={methods.control}
         name={name}

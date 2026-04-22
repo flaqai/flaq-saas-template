@@ -9,9 +9,9 @@ import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import SingleImageUpload, { SingleImageUploadRef } from '@/components/common/SingleImageUpload';
 import MultiImageUpload, { MultiImageUploadRef } from '@/components/common/MultiImageUpload';
-import useDefaultModalStore from '@/store/useDefaultModalStore';
+import useImageFormDefaultStore from '@/store/form/useImageFormDefaultStore';
 import useImageFormStore from '@/store/form/useImageFormStore';
-import useVideoFormDefaultStore from '@/store/form/use-video-form-default-store';
+import useVideoFormDefaultStore from '@/store/form/useVideoFormDefaultStore';
 import ModelBrandsBar from '@/components/home/ModelBrandsBar';
 import useUploadFiles from '@/hooks/use-upload-files';
 
@@ -185,7 +185,7 @@ export default function HeroFormSection() {
   const tHome = useTranslations('Home');
   const tCommon = useTranslations('Common');
   const router = useRouter();
-  const updateDefaultStore = useDefaultModalStore((state) => state.updateDefaultStore);
+  const setImagePrompt = useImageFormDefaultStore((state) => state.setPrompt);
   const setVideoFormImageSrc = useImageFormStore((state) => state.setVideoFormImageSrc);
   const setVideoPrompt = useVideoFormDefaultStore((state) => state.setPrompt);
   const uploadFilesToStorageThroughBackEnd = useUploadFiles();
@@ -284,60 +284,7 @@ export default function HeroFormSection() {
     if (isUploading) return;
 
     if (generationType === 'image') {
-      // AI Image: 传递提示词和图片
-      const remixImages: string[] = [];
-
-      // 获取所有图片（包括URL和上传的图片）
-      const allImages = multiImageUploadRef.current?.getImages() || [];
-
-      if (allImages.length > 0) {
-        // 收集需要上传的File对象及其索引
-        const fileObjectsWithIndex: { file: File; index: number }[] = [];
-
-        allImages.forEach((image, index) => {
-          if (image instanceof File) {
-            fileObjectsWithIndex.push({ file: image, index });
-          }
-        });
-
-        // 上传File对象到服务器获取URL
-        let uploadedUrls: string[] = [];
-        if (fileObjectsWithIndex.length > 0) {
-          setIsUploading(true);
-          try {
-            uploadedUrls = await uploadFilesToStorageThroughBackEnd(
-              fileObjectsWithIndex.map(({ file }) => ({ data: file, type: file.type })),
-            );
-          } catch (error) {
-            console.error('Upload failed:', error);
-            toast.error(tCommon('upload-failed'));
-            setIsUploading(false);
-            return;
-          } finally {
-            setIsUploading(false);
-          }
-        }
-
-        // 按原始顺序组合URL
-        let uploadedUrlIndex = 0;
-        allImages.forEach((image) => {
-          if (image instanceof File) {
-            // 使用上传后的URL
-            if (uploadedUrlIndex < uploadedUrls.length) {
-              remixImages.push(uploadedUrls[uploadedUrlIndex]);
-              uploadedUrlIndex++;
-            }
-          } else if (typeof image === 'string') {
-            // 直接使用URL字符串
-            remixImages.push(image);
-          }
-        });
-      }
-
-      updateDefaultStore({
-        prompt: prompt || '',
-        remixImages,
-      });
+      setImagePrompt(prompt || '');
       router.push('/text-to-image/');
     } else {
       // AI Video: 传递提示词和图片

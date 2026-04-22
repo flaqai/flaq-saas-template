@@ -16,7 +16,6 @@ import { FormControl, FormField, FormItem, FormLabel } from '@/components/ui/for
 import AgSwitch from '../AgSwitch';
 import BorderLightB from '../svg/image/BorderLightB';
 
-// import Crop from '../svg/file/Crop';
 
 // const ImageCropDialog = dynamic(() => import('@/components/image/ImageCropDialog'), { ssr: false });
 const CompressImageDialog = dynamic(() => import('@/components/file-upload/CompressImageDialog'), { ssr: false });

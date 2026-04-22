@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic';
 
 const TopLoadingBar = dynamic(() => import('@/components/top-loading-bar'), { ssr: false });
 const CookieConsentDialog = dynamic(() => import('@/components/dialog/CookieConsentDialog'), { ssr: false });
-const GlobalImagePolling = dynamic(() => import('@/components/GlobalImagePolling'), { ssr: false });
+const GlobalTaskPolling = dynamic(() => import('@/components/GlobalTaskPolling'), { ssr: false });
 
 export default function LazyGlobalUI() {
   const [mounted, setMounted] = useState(false);
@@ -18,7 +18,7 @@ export default function LazyGlobalUI() {
     <>
       <CookieConsentDialog />
       <TopLoadingBar />
-      <GlobalImagePolling />
+      <GlobalTaskPolling />
     </>
   );
 }

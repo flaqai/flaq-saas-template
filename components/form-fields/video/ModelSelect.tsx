@@ -13,8 +13,6 @@ import {
   versionSupportsImageToVideo,
 } from '@/lib/constants/video/';
 import type { ModelVersionConfig } from '@/lib/constants/video/types';
-import useUserInfoStore from '@/store/useUserInfoStore';
-import { getUserAllowedStatus } from '@/lib/access-control';
 import {
   Select,
   SelectContent,
@@ -34,7 +32,6 @@ export default function ModelSelect({ name, hasImages = false, allowedProviders 
   const { control, watch, setValue } = useFormContext();
   const selectedModelVersion = watch(name);
   const t = useTranslations('VideoModels');
-  const userInfo = useUserInfoStore((state) => state.userInfo);
 
   // 记录上一次的 hasImages 状态，用于检测变化
   const prevHasImages = useRef<boolean>(hasImages);
@@ -43,8 +40,7 @@ export default function ModelSelect({ name, hasImages = false, allowedProviders 
   // 使用 getFilteredVisibleProviders（排除特殊用途模型，按渠道控制 WAN）
   // 有图片时，只显示支持 image-to-video 的版本
   const modelVersions = useMemo(() => {
-    const isAllowed = getUserAllowedStatus(userInfo);
-    const visibleProviders = getFilteredVisibleProviders(isAllowed);
+    const visibleProviders = getFilteredVisibleProviders(true);
     const providers = allowedProviders
       ? visibleProviders.filter((p) => allowedProviders.includes(p.provider))
       : visibleProviders;
@@ -55,7 +51,7 @@ export default function ModelSelect({ name, hasImages = false, allowedProviders 
     }
 
     return allVisibleVersions;
-  }, [hasImages, allowedProviders, userInfo]);
+  }, [hasImages, allowedProviders]);
 
   // 对模型版本列表进行排序：
   // 1. 将当前选中模型的品牌的所有版本放在前面

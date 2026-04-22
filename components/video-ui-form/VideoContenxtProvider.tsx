@@ -1,9 +1,9 @@
 'use client';
 
 import { createContext, useState, useMemo } from 'react';
-import type { VideoRequestType } from '@/network/video/useVideoHistory';
+import type { VideoHistoryRequest } from '@/network/video/history';
 
-export const videoTypeContenxt = createContext<VideoRequestType['videoType']>('Image-to-video');
+export const videoTypeContenxt = createContext<VideoHistoryRequest['videoType']>('Image-to-video');
 
 export const showAllVideoHistoryContext = createContext<boolean>(false);
 
@@ -22,7 +22,7 @@ export default function VideoContenxtProvider({
   showAllVideoHistory = false,
   children,
 }: {
-  videoType: VideoRequestType['videoType'];
+  videoType: VideoHistoryRequest['videoType'];
   showAllVideoHistory?: boolean;
   children: React.ReactNode;
 }) {

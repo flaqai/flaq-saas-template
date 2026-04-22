@@ -6,17 +6,14 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getTranslations, getMessages } from 'next-intl/server';
 
 import { Toaster } from '@/components/ui/sonner';
-import { TrafficTracker } from '@/lib/traffic/tracker';
 
 import './globals.css';
 
-// import SeoScript from '@/components/seo/SeoScript';
 import { NavigationGuardProvider } from 'next-navigation-guard';
 import JsonLdScript from '@/components/scripts/JsonLdScript';
 
 import LazyGlobalUI from './LazyGlobalUI';
 
-// const LoginDialog = dynamic(() => import('@/components/dialog/LoginDialog'), { ssr: false });
 const din = localFont({
   src: [
     {
@@ -37,8 +34,6 @@ export async function generateMetadata(props: { params: Promise<{ locale: string
     locale,
     namespace: 'Metadata.home',
   });
-
-  // const SITE_URL = `${process.env.NEXT_PUBLIC_SITE_URL}/`;
 
   return {
     metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL as string),
@@ -113,7 +108,6 @@ export default async function RootLayout(props: { children: React.ReactNode; par
                 },
               }}
             />
-            <TrafficTracker />
             <LazyGlobalUI />
             {children}
           </NextIntlClientProvider>

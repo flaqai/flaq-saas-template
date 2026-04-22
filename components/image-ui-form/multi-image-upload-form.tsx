@@ -19,9 +19,8 @@ import { Upload, X } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useFormContext } from 'react-hook-form';
 
+import Box from '@/components/Box';
 import { FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
-
-import Box from './Box';
 
 const acceptedImageTypes = ['image/jpg', 'image/jpeg', 'image/png', 'image/webp'];
 
@@ -176,7 +175,7 @@ const MultiImageUploadForm: ForwardRefRenderFunction<
   const canAddMore = images.length < maxImages;
 
   return (
-    <Box className='flex h-auto min-h-[72px] shrink-0 flex-col bg-[#080808] border border-dashed border-[#303030] p-1'>
+    <Box variant='input' className='flex h-auto min-h-[72px] shrink-0 flex-col bg-[#080808] border border-dashed border-[#303030] p-1'>
       <FormField
         control={methods.control}
         name={name}

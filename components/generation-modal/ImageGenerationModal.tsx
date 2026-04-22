@@ -18,7 +18,7 @@ import {
   type ImageModelVersionConfig,
 } from '@/lib/constants/image';
 import useImageFormStore from '@/store/form/useImageFormStore';
-import useUserImageHistory from '@/network/profile/useUserImageHistory';
+import useUserImageHistory from '@/network/image/history';
 
 const ALL_AVAILABLE_VERSIONS: ImageModelVersionConfig[] = [
   ...SEEDREAM_PROVIDER.versions,
