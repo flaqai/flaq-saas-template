@@ -1,6 +1,7 @@
 'use client';
 
 import { defaultLocale, languages } from '@/i18n/languages';
+import { STORE_PREFIX } from '@/lib/constants/config';
 import { clientSideGetCookie } from '@/lib/utils/stringUtils';
 
 export type OpenApiTaskStatus = 'submitted' | 'processing' | 'succeed' | 'failed';
@@ -47,8 +48,29 @@ export interface TaskCreditResult {
 }
 
 export const DEFAULT_OPEN_API_BASE_URL = 'https://api.flaq.ai';
-export const OPEN_API_BASE_URL_STORAGE_KEY = 'flaq_open_api_base_url';
-export const OPEN_API_CLIENT_KEY_STORAGE_KEY = 'flaq_open_api_client_key';
+
+const OLD_OPEN_API_BASE_URL_STORAGE_KEY = 'flaq_open_api_base_url';
+const OLD_OPEN_API_CLIENT_KEY_STORAGE_KEY = 'flaq_open_api_client_key';
+
+export const OPEN_API_BASE_URL_STORAGE_KEY = `${STORE_PREFIX}-open-api-base-url`;
+export const OPEN_API_CLIENT_KEY_STORAGE_KEY = `${STORE_PREFIX}-open-api-client-key`;
+
+function migrateOldApiKeys() {
+  if (typeof window === 'undefined') return;
+
+  const oldBaseUrl = localStorage.getItem(OLD_OPEN_API_BASE_URL_STORAGE_KEY);
+  const oldClientKey = localStorage.getItem(OLD_OPEN_API_CLIENT_KEY_STORAGE_KEY);
+
+  if (oldBaseUrl && !localStorage.getItem(OPEN_API_BASE_URL_STORAGE_KEY)) {
+    localStorage.setItem(OPEN_API_BASE_URL_STORAGE_KEY, oldBaseUrl);
+    localStorage.removeItem(OLD_OPEN_API_BASE_URL_STORAGE_KEY);
+  }
+
+  if (oldClientKey && !localStorage.getItem(OPEN_API_CLIENT_KEY_STORAGE_KEY)) {
+    localStorage.setItem(OPEN_API_CLIENT_KEY_STORAGE_KEY, oldClientKey);
+    localStorage.removeItem(OLD_OPEN_API_CLIENT_KEY_STORAGE_KEY);
+  }
+}
 
 function getContentLanguage(code?: string): string {
   return languages.find((item) => item.lang === code)?.backendValue || defaultLocale;
@@ -105,6 +127,8 @@ export function getClientOpenApiConfig(): OpenApiConfig {
       clientKey: '',
     };
   }
+
+  migrateOldApiKeys();
 
   const baseUrl = localStorage.getItem(OPEN_API_BASE_URL_STORAGE_KEY) || envBaseUrl;
   const clientKey = localStorage.getItem(OPEN_API_CLIENT_KEY_STORAGE_KEY) || '';

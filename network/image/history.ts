@@ -1,9 +1,23 @@
 import { useEffect, useMemo, useState } from 'react';
 
 import { ImageFormType } from '@/components/image-ui-form/image-context-provider';
+import { STORE_PREFIX } from '@/lib/constants/config';
 import { notifyLocalHistory, readLocalHistory, subscribeLocalHistory, writeLocalHistory } from '../local-history';
 
-export const imageHistoryKey = 'flaq_image_history';
+const OLD_IMAGE_HISTORY_KEY = 'flaq_image_history';
+export const imageHistoryKey = `${STORE_PREFIX}-image-history`;
+
+function migrateOldData() {
+  if (typeof window === 'undefined') return;
+
+  const oldData = localStorage.getItem(OLD_IMAGE_HISTORY_KEY);
+  const newData = localStorage.getItem(imageHistoryKey);
+
+  if (oldData && !newData) {
+    localStorage.setItem(imageHistoryKey, oldData);
+    localStorage.removeItem(OLD_IMAGE_HISTORY_KEY);
+  }
+}
 
 export type ImageHistoryItem = {
   id: string;
@@ -29,6 +43,7 @@ export default function useImageHistory(pageNum: number, pageSize: number, filte
   const [data, setData] = useState<ImageHistoryItem[]>([]);
 
   useEffect(() => {
+    migrateOldData();
     setData(readLocalHistory<ImageHistoryItem>(imageHistoryKey));
 
     return subscribeLocalHistory(imageHistoryKey, () => {
