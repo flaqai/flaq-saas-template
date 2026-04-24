@@ -9,15 +9,17 @@ import { maxSizeMB } from '../constants';
  * @param {String} filename - 下载文件的名字（考虑到兼容性问题，最好加上后缀名）
  */
 export function downloadFile(path: string, filename: string) {
+  // 使用代理 API 避免 CORS 问题
+  const proxyUrl = `/api/proxy-image?url=${encodeURIComponent(path)}`;
+
   const xhr = new XMLHttpRequest();
-  xhr.open('GET', path, true);
+  xhr.open('GET', proxyUrl, true);
   xhr.responseType = 'blob'; // 直接获取Blob数据
 
   xhr.onload = function () {
     if (xhr.status === 200 || xhr.status === 304) {
       const blob = xhr.response;
       const downloadUrl = URL.createObjectURL(blob); // 从Blob创建一个URL
-      console.log(`fileurl:${downloadUrl}`);
 
       const a = document.createElement('a');
       a.href = downloadUrl;
@@ -35,7 +37,9 @@ export function downloadFile(path: string, filename: string) {
 }
 
 export async function getFileByUrl(url: string): Promise<File> {
-  const response = await fetch(url);
+  // 使用代理 API 避免 CORS 问题
+  const proxyUrl = `/api/proxy-image?url=${encodeURIComponent(url)}`;
+  const response = await fetch(proxyUrl);
 
   if (!response.ok) {
     throw new Error('Failed to fetch file');
@@ -129,7 +133,9 @@ export type ImageFormatType = 'WEBP' | 'PNG' | 'JPG';
  */
 export async function detectImageFormat(imageUrl: string): Promise<ImageFormatType | null> {
   try {
-    const response = await fetch(imageUrl);
+    // 使用代理 API 避免 CORS 问题
+    const proxyUrl = `/api/proxy-image?url=${encodeURIComponent(imageUrl)}`;
+    const response = await fetch(proxyUrl);
     const blob = await response.blob();
     const mimeType = blob.type;
     const format = mimeType.split('/')[1]?.toLowerCase();

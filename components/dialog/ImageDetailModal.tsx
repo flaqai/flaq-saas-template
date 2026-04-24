@@ -64,7 +64,9 @@ export default function ImageDetailModal({ open, onOpenChange, onDelete, image }
     if (!image.url) return;
 
     try {
-      const response = await fetch(image.url);
+      // 使用代理 API 避免 CORS 问题
+      const proxyUrl = `/api/proxy-image?url=${encodeURIComponent(image.url)}`;
+      const response = await fetch(proxyUrl);
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -77,6 +79,7 @@ export default function ImageDetailModal({ open, onOpenChange, onDelete, image }
       window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error('Download failed:', error);
+      toast.error('Download failed');
     }
   };
 

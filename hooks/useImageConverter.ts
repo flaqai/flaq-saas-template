@@ -28,8 +28,9 @@ const useImageConverter = (): UseImageConverterResult => {
       // 移除文件名中的扩展名
       const nameWithoutExt = imageName.replace(/\.[^/.]+$/, '');
 
-      // Fetch the image
-      const response = await fetch(imageUrl);
+      // 使用代理 API 避免 CORS 问题
+      const proxyUrl = `/api/proxy-image?url=${encodeURIComponent(imageUrl)}`;
+      const response = await fetch(proxyUrl);
       const blob = await response.blob();
 
       // 检测原始图片格式
