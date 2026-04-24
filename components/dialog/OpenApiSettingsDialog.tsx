@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { ChevronDown, ChevronRight } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 
@@ -23,6 +24,7 @@ import {
 import { Input } from '@/components/ui/input';
 
 const FLAQ_REGISTER_URL = 'https://flaq.ai/';
+const R2_PUBLIC_DOMAIN_STORAGE_KEY = 'FLAQ-SAAS-TEMPLATE-r2-public-domain';
 
 function isAuthError(status: number, message: string) {
   const normalizedMessage = message.toLowerCase();
@@ -54,10 +56,14 @@ export default function OpenApiSettingsDialog({
   onOpenChange,
 }: OpenApiSettingsDialogProps) {
   const t = useTranslations('components.open-api-settings');
+  const tHosting = useTranslations('components.image-hosting');
   const tCommon = useTranslations('Common');
   const [baseUrl, setBaseUrl] = useState(DEFAULT_OPEN_API_BASE_URL);
   const [clientKey, setClientKey] = useState('');
   const [isTesting, setIsTesting] = useState(false);
+  const [hostingExpanded, setHostingExpanded] = useState(false);
+  const [r2PublicDomain, setR2PublicDomain] = useState('');
+  const [isTestingR2, setIsTestingR2] = useState(false);
 
   useEffect(() => {
     if (!open || typeof window === 'undefined') return;
@@ -66,11 +72,13 @@ export default function OpenApiSettingsDialog({
       localStorage.getItem(OPEN_API_BASE_URL_STORAGE_KEY) || DEFAULT_OPEN_API_BASE_URL,
     );
     setClientKey(localStorage.getItem(OPEN_API_CLIENT_KEY_STORAGE_KEY) || '');
+    setR2PublicDomain(localStorage.getItem(R2_PUBLIC_DOMAIN_STORAGE_KEY) || '');
   }, [open]);
 
   const handleReset = () => {
     setBaseUrl(DEFAULT_OPEN_API_BASE_URL);
     setClientKey('');
+    setR2PublicDomain('');
   };
 
   const handleSave = () => {
@@ -84,6 +92,13 @@ export default function OpenApiSettingsDialog({
 
     localStorage.setItem(OPEN_API_BASE_URL_STORAGE_KEY, normalizedBaseUrl);
     localStorage.setItem(OPEN_API_CLIENT_KEY_STORAGE_KEY, normalizedClientKey);
+
+    const normalizedDomain = r2PublicDomain.trim();
+    if (normalizedDomain) {
+      localStorage.setItem(R2_PUBLIC_DOMAIN_STORAGE_KEY, normalizedDomain);
+    } else {
+      localStorage.removeItem(R2_PUBLIC_DOMAIN_STORAGE_KEY);
+    }
 
     toast.success(t('saved'));
     onOpenChange(false);
@@ -130,6 +145,26 @@ export default function OpenApiSettingsDialog({
       toast.error(`${t('test-failed')} ${message}`);
     } finally {
       setIsTesting(false);
+    }
+  };
+
+  const handleTestR2 = async () => {
+    setIsTestingR2(true);
+
+    try {
+      const response = await fetch('/api/upload/test-r2', { method: 'GET' });
+      const result = await response.json() as { ok?: boolean; error?: string };
+
+      if (response.ok && result.ok) {
+        toast.success(tHosting('test-success'));
+      } else {
+        toast.error(`${tHosting('test-failed')} ${result.error || ''}`);
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : tHosting('test-failed');
+      toast.error(`${tHosting('test-failed')} ${message}`);
+    } finally {
+      setIsTestingR2(false);
     }
   };
 
@@ -187,6 +222,49 @@ export default function OpenApiSettingsDialog({
                 {t('register')}
               </a>
             </Button>
+          </div>
+
+          <div className='rounded-md border border-white/10'>
+            <button
+              type='button'
+              onClick={() => setHostingExpanded((prev) => !prev)}
+              className='flex w-full items-center justify-between px-3 py-2.5 text-sm font-medium text-white/70 hover:text-white/90'
+            >
+              <span>{tHosting('title')}</span>
+              {hostingExpanded
+                ? <ChevronDown className='h-4 w-4' />
+                : <ChevronRight className='h-4 w-4' />}
+            </button>
+
+            {hostingExpanded && (
+              <div className='space-y-2 border-t border-white/10 px-3 pb-3 pt-3'>
+                <label htmlFor='r2-public-domain' className='text-sm font-medium text-white/80'>
+                  {tHosting('public-domain')}
+                </label>
+                <Input
+                  id='r2-public-domain'
+                  value={r2PublicDomain}
+                  onChange={(event) => setR2PublicDomain(event.target.value)}
+                  placeholder={tHosting('public-domain-placeholder')}
+                  className='h-11 border-white/10 bg-white/5 text-white placeholder:text-white/30'
+                />
+                <p className='text-xs text-white/45'>
+                  {tHosting('public-domain-hint')}
+                </p>
+                <p className='text-xs text-white/30'>
+                  {tHosting('not-configured')}
+                </p>
+                <Button
+                  type='button'
+                  variant='outline'
+                  onClick={handleTestR2}
+                  disabled={isTestingR2}
+                  className='mt-1 h-9 w-full border-white/10 bg-transparent text-sm text-white hover:bg-white/8 hover:text-white'
+                >
+                  {isTestingR2 ? tHosting('testing') : tHosting('test')}
+                </Button>
+              </div>
+            )}
           </div>
         </div>
 

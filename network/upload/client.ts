@@ -28,8 +28,27 @@ export async function createSignedUrl(
   mineType: string[],
   isForever?: boolean,
 ): Promise<CreateSignedUrlResponse> {
-  void mineType;
   void isForever;
 
-  throw new Error('Upload adapter is not configured yet.');
+  if (typeof window === 'undefined') {
+    throw new Error('createSignedUrl can only be called from the browser.');
+  }
+
+  const publicDomain = localStorage.getItem('FLAQ-SAAS-TEMPLATE-r2-public-domain');
+  if (!publicDomain) {
+    throw new Error('R2 public domain is not configured. Please set it in Open API Settings.');
+  }
+
+  const response = await fetch('/api/upload/presigned-url', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ mimeTypes: mineType, publicDomain }),
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({ error: 'Upload failed' }));
+    throw new Error(error.error || 'Failed to create signed URL');
+  }
+
+  return response.json();
 }
