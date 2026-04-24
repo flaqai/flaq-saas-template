@@ -91,8 +91,8 @@ export function PromptSection({ prompt, translationKey = 'Profile.image-history.
 
 // Copyright text component
 export function CopyrightText({ translationKey = 'Profile.image-history.detail' }: { translationKey?: string }) {
-  const t = useTranslations(translationKey);
-  return <p className='text-sm leading-[22px] text-[#777]'>{t('copyright')}</p>;
+  const t = useTranslations('Common.copy-right');
+  return <p className='text-sm leading-[22px] text-[#777]'><span className='font-medium'>{t('title')}</span> {t('content')}</p>;
 }
 
 // Bottom action button container

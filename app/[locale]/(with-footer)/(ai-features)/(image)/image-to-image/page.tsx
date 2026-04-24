@@ -112,7 +112,7 @@ export default async function Page() {
       />
       <Faq
         title={t('faq.title')}
-        faqList={numberList(6).map((num) => ({
+        faqList={numberList(5).map((num) => ({
           id: num,
           question: t(`faq.${num}.question`),
           answer: t(`faq.${num}.answer`),

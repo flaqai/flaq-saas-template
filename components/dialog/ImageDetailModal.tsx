@@ -14,7 +14,6 @@ import { Dialog, DialogContent, DialogPortal } from '@/components/ui/dialog';
 import {
   CopyrightText,
   DeleteButton,
-  MediaGrid,
   MetadataRow,
   type MetadataItem,
   ModelTag,
@@ -251,14 +250,6 @@ export default function ImageDetailModal({ open, onOpenChange, onDelete, image }
 
               {/* Scrollable Content Section */}
               <div className='flex flex-1 flex-col gap-3 overflow-y-auto p-3 custom-scrollbar'>
-
-                {/* Images Section */}
-                <MediaGrid
-                  title={t('images')}
-                  mediaUrls={image.userImageUrlList || []}
-                  columns={5}
-                  itemHeight='h-20 aspect-square'
-                />
 
                 {/* Prompt Section */}
                 <PromptSection prompt={image.prompt} />

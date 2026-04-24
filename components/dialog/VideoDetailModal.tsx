@@ -14,7 +14,6 @@ import {
   CopyrightText,
   DeleteButton,
   DownloadButton,
-  MediaGrid,
   MetadataRow,
   type MetadataItem,
   ModelTag,
@@ -32,13 +31,6 @@ export default function VideoDetailModal({ open, onOpenChange, onDelete, video }
   const t = useTranslations('Profile.video-history.detail');
   const tHistory = useTranslations('Profile.video-history');
   const [isDeleting, setIsDeleting] = useState(false);
-  // Get frames list
-  const getFrames = () => {
-    const frames: string[] = [];
-    if (video.imageUrl) frames.push(video.imageUrl);
-    if (video.imageEndUrl) frames.push(video.imageEndUrl);
-    return frames;
-  };
 
   const handleDownload = async () => {
     if (!video.videoUrl) return;
@@ -120,7 +112,6 @@ export default function VideoDetailModal({ open, onOpenChange, onDelete, video }
             <div className='flex h-full w-full flex-1 items-center justify-center bg-[#111214] p-3 lg:h-[700px] lg:p-6'>
               {video.videoUrl ? (
                 <video
-                  ref={videoRef}
                   src={video.videoUrl}
                   poster={video.coverImage || video.imageUrl}
                   className='max-h-[576px] max-w-full rounded object-contain outline-none'
@@ -154,14 +145,6 @@ export default function VideoDetailModal({ open, onOpenChange, onDelete, video }
 
               {/* Scrollable Content Section */}
               <div className='flex flex-1 flex-col gap-3 overflow-y-auto p-3 custom-scrollbar'>
-
-                {/* Frames Section */}
-                <MediaGrid
-                  title={t('frames')}
-                  mediaUrls={getFrames()}
-                  columns={2}
-                  itemHeight='h-32'
-                />
 
                 {/* Prompt Section */}
                 <PromptSection prompt={video.prompt} translationKey='Profile.video-history.detail' />
