@@ -3,6 +3,7 @@ import { Link } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 
 import { IMAGE_CHILDREN_LIST, VIDEO_CHILDREN_LIST } from '@/lib/constants';
+import BusinessButton from './BusinessButton';
 
 function InfoList({
   title,
@@ -10,25 +11,37 @@ function InfoList({
   prefetch = true,
 }: {
   title: string;
-  dataList: { title: string; href: string; target?: React.HTMLAttributeAnchorTarget; type?: string }[];
+  dataList: Array<{
+    title: string;
+    href?: string;
+    target?: React.HTMLAttributeAnchorTarget;
+    type?: string;
+    isBusinessButton?: boolean;
+  }>;
   prefetch?: boolean;
 }) {
   return (
     <div className='flex flex-col items-center gap-3 lg:items-start'>
       <p className='text-white/40'>{title}</p>
       <ul className='flex flex-col items-center gap-3 lg:items-start'>
-        {dataList.map((el) => (
-          <li key={el.href}>
-            <Link
-              href={el.href}
-              title={el.title}
-              className='flex items-center gap-1 text-xs text-nowrap hover:underline lg:text-sm'
-              target={el.target}
-              type={el.type}
-              prefetch={prefetch}
-            >
-              {el.title}
-            </Link>
+        {dataList.map((el, index) => (
+          <li key={el.href || index}>
+            {el.isBusinessButton ? (
+              <BusinessButton className='flex items-center gap-1 text-xs text-nowrap hover:underline lg:text-sm'>
+                {el.title}
+              </BusinessButton>
+            ) : (
+              <Link
+                href={el.href!}
+                title={el.title}
+                className='flex items-center gap-1 text-xs text-nowrap hover:underline lg:text-sm'
+                target={el.target}
+                type={el.type}
+                prefetch={prefetch}
+              >
+                {el.title}
+              </Link>
+            )}
           </li>
         ))}
       </ul>
@@ -45,6 +58,15 @@ export default function Footer() {
 
   const INFO_LIST = [
     {
+      title: t('docs'),
+      href: 'https://flaq.ai/docs',
+      target: '_blank' as const,
+    },
+    {
+      title: t('business'),
+      isBusinessButton: true,
+    },
+    {
       title: t('privacy'),
       href: '/privacy-policy',
     },
@@ -59,7 +81,6 @@ export default function Footer() {
   ];
 
   return (
-    // <footer className='w-full bg-[#15141A]'>
     <footer className='w-full bg-black'>
       <div className='max-w-pc mx-auto flex min-h-[252px] flex-col items-center justify-between p-10 pb-5 lg:flex-row lg:px-0 lg:pb-10'>
         <div className='flex flex-col items-center space-y-3 lg:items-stretch'>

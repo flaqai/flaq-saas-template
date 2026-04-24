@@ -11,6 +11,8 @@ import { NAV_LINKS } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 
 import OpenApiSettingsDialog from '../dialog/OpenApiSettingsDialog';
+import BusinessDialog from '../dialog/BusinessDialog';
+import useBusinessDialogStore from '@/store/useBusinessDialogStore';
 import LocaleSwitcher from '../LocaleSwitcher';
 import MenuBtn from './MenuBtn';
 import NavigationDrawer from './NavigationDrawer';
@@ -25,6 +27,7 @@ export default function Navigation() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const { setOpen: setBusinessDialogOpen } = useBusinessDialogStore();
 
   useEffect(() => {
     setMounted(true);
@@ -65,6 +68,7 @@ export default function Navigation() {
   return (
     <>
       <OpenApiSettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
+      <BusinessDialog />
       <header
         className={cn(
           'sticky top-0 left-0 z-50 flex h-[64px] w-full bg-transparent px-3 lg:px-10',
@@ -109,6 +113,21 @@ export default function Navigation() {
                 )}
               </div>
             ))}
+            <a
+              href='https://flaq.ai/docs'
+              target='_blank'
+              rel='noopener noreferrer'
+              className='flex h-10 items-center justify-center rounded-lg px-1.5 font-semibold text-white/70 hover:bg-white/15'
+            >
+              {t('docs')}
+            </a>
+            <button
+              type='button'
+              onClick={() => setBusinessDialogOpen(true)}
+              className='flex h-10 items-center justify-center rounded-lg px-1.5 font-semibold text-white/70 hover:bg-white/15'
+            >
+              {t('business')}
+            </button>
           </div>
           <div className='absolute right-0 flex items-center gap-2'>
             <div className='bg-color-5 rounded'>
