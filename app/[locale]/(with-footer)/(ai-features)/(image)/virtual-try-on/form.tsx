@@ -13,6 +13,7 @@ import TryOnUploadSection, {
 } from '@/components/generation-modal/TryOnUploadSection';
 import HintsPresets from '@/components/generation-modal/HintsPresets';
 import type { HintPreset } from '@/components/generation-modal/HintsPresets';
+import { urlToFile, urlsToFiles } from '@/lib/utils/imageUtils';
 
 const TRY_ON_PROMPT =
   "Dress the person from the first image in the clothing from the second image. Exactly maintain the clothing's original proportions, length, and design. Preserve the character's identical pose and body shape. The outfit must flatter the figure — subtly slimming and contouring the body for a more elegant silhouette — while staying slim, lightweight, and non-bulky. No excessive volume, no puffiness, realistic fabric behavior and natural folds, photorealistic integration.";
@@ -32,6 +33,7 @@ const TRYON_VERSION_LIST: ImageModelVersionConfig[] = [
 const TRYON_DEFAULT_PRIORITY = {
   aspectRatio: ['9:16', '1:1'],
   resolution: ['2k', '4k', '1k'],
+  quality: ['medium', 'high', 'low'],
 };
 
 interface FormProps {
@@ -54,11 +56,21 @@ function TryOnModalContent({
   });
   const maxObjectImages = uiConfig.maxImages || 4;
 
-  const handlePresetClick = (preset: HintPreset) => {
-    tryOnRef.current?.setSubjectImage(preset.subject);
-    const objectUrls = Array.isArray(preset.object) ? preset.object : [preset.object];
-    tryOnRef.current?.setObjectImages(objectUrls);
-    methods.setValue('prompt', TRY_ON_PROMPT);
+  const handlePresetClick = async (preset: HintPreset) => {
+    try {
+      const subjectFile = await urlToFile(preset.subject);
+      tryOnRef.current?.setSubjectImage(subjectFile);
+
+      const objectUrls = Array.isArray(preset.object) ? preset.object : [preset.object];
+      const objectFiles = await urlsToFiles(objectUrls);
+
+      const previewUrls = objectFiles.map((file) => URL.createObjectURL(file));
+      tryOnRef.current?.setObjectImages(previewUrls);
+      methods.setValue('objectImages', objectFiles);
+      methods.setValue('prompt', TRY_ON_PROMPT);
+    } catch (error) {
+      console.error('Failed to load preset images:', error);
+    }
   };
 
   return (

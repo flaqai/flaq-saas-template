@@ -25,7 +25,7 @@ import { useCallback, useState } from 'react';
 import { toast } from 'sonner';
 
 import { createImageTask } from '@/network/image/client';
-import { getClientOpenApiConfig } from '@/network/clientFetch';
+import { getClientOpenApiConfigAsync } from '@/network/clientFetch';
 import { addPendingImageHistory } from '@/network/image/history';
 import useGenerationPollingStore from '@/store/useGenerationPollingStore';
 import { sendGAEventBtnClicked } from '@/lib/utils/analyticsUtils';
@@ -183,7 +183,7 @@ export function useImageFormSubmit(options: UseImageFormSubmitOptions) {
           defaultImageFormType: imageFormType,
         });
 
-        res = await createImageTask(getClientOpenApiConfig(), reqData);
+        res = await createImageTask(await getClientOpenApiConfigAsync(), reqData);
 
         const { code, message, data } = res;
 

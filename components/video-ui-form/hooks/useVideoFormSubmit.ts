@@ -19,7 +19,7 @@
  */
 
 import { useCallback, useState } from 'react';
-import { getClientOpenApiConfig } from '@/network/clientFetch';
+import { getClientOpenApiConfigAsync } from '@/network/clientFetch';
 import { startTaskPolling } from '@/network/task-polling';
 import { createVideoTask } from '@/network/video/client';
 import { addPendingVideoHistory } from '@/network/video/history';
@@ -214,7 +214,7 @@ export default function useVideoFormSubmit(options: UseVideoFormSubmitOptions) {
 
         const prompt = currentModel.prompt || formData.prompt;
         const imageUrls = finalImageUrlList.length > 0 ? finalImageUrlList : undefined;
-        const res = await createVideoTask(getClientOpenApiConfig(), {
+        const res = await createVideoTask(await getClientOpenApiConfigAsync(), {
           model_name: currentModel.model,
           prompt,
           aspect_ratio: formData.ratio || undefined,

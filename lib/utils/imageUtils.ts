@@ -175,3 +175,21 @@ export const generateImageData = async ({
     }, 'image/png');
   });
 };
+
+/**
+ * Convert a local image path to a File object
+ * Fetches the image from the path and converts it to a File
+ */
+export async function urlToFile(url: string, filename?: string): Promise<File> {
+  const response = await fetch(url);
+  const blob = await response.blob();
+  const name = filename || url.split('/').pop() || 'image.webp';
+  return new File([blob], name, { type: blob.type || 'image/webp' });
+}
+
+/**
+ * Convert multiple local image paths to File objects
+ */
+export async function urlsToFiles(urls: string[]): Promise<File[]> {
+  return Promise.all(urls.map((url) => urlToFile(url)));
+}

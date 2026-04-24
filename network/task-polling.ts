@@ -1,7 +1,7 @@
 'use client';
 
 import { toast } from 'sonner';
-import { getClientOpenApiConfig } from '@/network/clientFetch';
+import { getClientOpenApiConfigAsync } from '@/network/clientFetch';
 import { getImageTask } from '@/network/image/client';
 import {
   completeImageHistory,
@@ -54,7 +54,7 @@ async function pollTask(task: PollingTask): Promise<void> {
       return;
     }
 
-    const config = getClientOpenApiConfig();
+    const config = await getClientOpenApiConfigAsync();
 
     if (task.type === 'image') {
       const res = await getImageTask(config, task.traceId);
@@ -116,13 +116,13 @@ async function pollTask(task: PollingTask): Promise<void> {
   }
 }
 
-export function startTaskPolling(traceId: string, type: 'image' | 'video', submitTime = Date.now()) {
+export async function startTaskPolling(traceId: string, type: 'image' | 'video', submitTime = Date.now()) {
   if (typeof window === 'undefined') return;
   if (!traceId || activePolls.has(traceId)) return;
 
   // Check if clientKey is configured
   try {
-    getClientOpenApiConfig();
+    await getClientOpenApiConfigAsync();
   } catch (error) {
     const errorMsg = 'Please configure your Flaq client key in settings first.';
     if (type === 'image') failImageHistory(traceId, errorMsg);

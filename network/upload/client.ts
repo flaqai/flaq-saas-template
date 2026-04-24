@@ -1,3 +1,5 @@
+import { getSecureItem } from '@/lib/utils/secureStorage';
+
 export interface CreateSignedUrlRequest {
   mineType: string[];
   isForever?: boolean;
@@ -34,7 +36,7 @@ export async function createSignedUrl(
     throw new Error('createSignedUrl can only be called from the browser.');
   }
 
-  const publicDomain = localStorage.getItem('FLAQ-SAAS-TEMPLATE-r2-public-domain');
+  const publicDomain = await getSecureItem('FLAQ-SAAS-TEMPLATE-r2-public-domain');
   if (!publicDomain) {
     throw new Error('R2 public domain is not configured. Please set it in Open API Settings.');
   }

@@ -60,6 +60,7 @@ export async function POST(req: NextRequest) {
   }
 
   const domain = publicDomain.replace(/\/$/, '');
+  const domainWithProtocol = domain.startsWith('http') ? domain : `https://${domain}`;
 
   const rows = await Promise.all(
     mimeTypes.map(async (mimeType) => {
@@ -70,7 +71,7 @@ export async function POST(req: NextRequest) {
         ContentType: mimeType,
       });
       const signedUrl = await getSignedUrl(client, command, { expiresIn: 3600 });
-      const url = `${domain}/${path}`;
+      const url = `${domainWithProtocol}/${path}`;
       return { signedUrl, url };
     }),
   );
