@@ -4,12 +4,12 @@ import { create } from 'zustand';
 
 const defaultVideoSrcs = {
   'image-to-video': {
-    poster: 'https://cdn.heydream.im/heydream/v2/image_to_video/example/example1.webp',
-    videoSrc: 'https://cdn.heydream.im/heydream/v2/image_to_video/example/example1.1.mp4',
+    poster: '/flaqai_saas_asserts/image_to_video/example/1.webp',
+    videoSrc: '/flaqai_saas_asserts/image_to_video/example/1.mp4',
   },
   'text-to-video': {
-    poster: 'https://cdn.heydream.im/heydream/v2/text_to_video/example/example2.webp',
-    videoSrc: 'https://cdn.heydream.im/heydream/v2/text_to_video/example/example2.1.mp4',
+    poster: '/flaqai_saas_asserts/image_to_video/example/2.webp',
+    videoSrc: '/flaqai_saas_asserts/image_to_video/example/2.mp4',
   },
 } as const;
 

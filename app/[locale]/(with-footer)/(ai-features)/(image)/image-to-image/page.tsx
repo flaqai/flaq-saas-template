@@ -23,16 +23,16 @@ const DEFAULT_VALUES = {
 
 const EXAMPLE_IMAGE_LIST = [
   [
-    'https://cdn.heydream.im/heydream/v3/image_to_image/feature/feature1.1.webp',
-    'https://cdn.heydream.im/heydream/v3/image_to_image/feature/feature1.2.webp',
+    '/flaqai_saas_asserts/image_to_image/feature/1_1.webp',
+    '/flaqai_saas_asserts/image_to_image/feature/1_2.webp',
   ],
   [
-    'https://cdn.heydream.im/heydream/v3/image_to_image/feature/feature2.1.webp',
-    'https://cdn.heydream.im/heydream/v3/image_to_image/feature/feature2.2.webp',
+    '/flaqai_saas_asserts/image_to_image/feature/2_1.webp',
+    '/flaqai_saas_asserts/image_to_image/feature/2_2.webp',
   ],
   [
-    'https://cdn.heydream.im/heydream/v3/image_to_image/feature/feature3.1.webp',
-    'https://cdn.heydream.im/heydream/v3/image_to_image/feature/feature3.2.webp',
+    '/flaqai_saas_asserts/image_to_image/feature/3_1.webp',
+    '/flaqai_saas_asserts/image_to_image/feature/3_2.webp',
   ],
 ];
 

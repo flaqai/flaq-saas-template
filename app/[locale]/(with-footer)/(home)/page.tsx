@@ -8,30 +8,49 @@ import CoreFeaturesCards from '@/components/home/CoreFeaturesCards';
 import HomeCarousel from '@/components/home/HomeCarousel';
 import type { CarouselCard } from '@/components/home/HomeCarousel';
 
+const exampleVideos = [
+  {
+    src: '/flaqai_saas_asserts/image_to_video/example/1.mp4',
+    prompt: "Full live-action cinematic realism, high-contrast chiaroscuro lighting, deep oppressive shadows, photographic texture, real motion blur, subtle film grain. No anime, no cartoon.\n\nCold dominant real human male actor.\n\nDark cyberpunk interior, central table full of scattered standard poker cards with red and black suits. Strong side key light creates dramatic facial shadow split, dark background with faint volumetric beams.\n\n0-2s: Extreme low-angle upward shot, slow push-in. Man slowly sits sideways at table, light slices across face, mouth corner lifts. Deep icy voice with reverb: \"Wanna play?\"\n\n2-5s: Rapid push to close-up. He flicks one card spinning fast toward camera. Extreme slow motion: card nearly suspends, bright edge halo, hyper-sharp red-black pattern. Snaps back to full speed, card boomerangs into his hand.\n\n5-9s: Fast multi-angle montage with 360° orbiting ascending camera. Man explosively stands, arms wide. All cards spiral upward into massive swirling card storm around him. He stands at center, head tilted down with dominant gaze.\n\n9-15s: Violent slow-mo alternating with full speed. He swings both hands, dozens of cards shoot outward with luminous streaks. Three insert close-ups: card spins, suspends, edge electric arc flash, then accelerates away. Final rapid wide pull to epic freeze frame of man in flying card storm, deep bass impact.\n\nStrict: Pure photographic live-action, consistent poker cards only, no text, no symbols, no logos, no watermarks anywhere. Realistic card motion, no distortions, no style shifts.",
+  },
+  {
+    src: '/flaqai_saas_asserts/image_to_video/example/2.mp4',
+    prompt: "ultra-cinematic action sequence in bright clear daylight. Start instantly with a fast-moving ultra-wide aerial shot of a shattered skybridge between two supertall towers high above a massive city. One person is falling through open air while a rescue runner sprints across the collapsing bridge. Camera sweeps low and fast past breaking glass, bending steel, sparks, cables, and spinning debris, with sharp detail, strong sunlight, deep contrast, realistic physics, and epic scale. At 7 seconds enter dramatic slow motion as the runner launches from the final intact beam, dives through flying glass, and reaches toward the falling person with the city far below. At 10 seconds snap back to full speed as their hands connect, both swing into a hanging maintenance cable, crash through an open service hatch, slide safely inside the tower, and come to rest as the bridge collapses outside behind them. Clear ending, complete rescue, premium blockbuster visuals, strong composition, dynamic camera, polished action film aesthetic.",
+  },
+];
+
 const exampleImages = [
   {
-    src: 'https://cdn.heydream.im/heydream/v3/home_page/example/example1.webp',
-    prompt: 'A towering, larger-than-life rectangular perfume bottle with a dark blue body and a prominent "LOEWE" label, positioned diagonally across the frame, adorned with two small white doves perched on its edge a small white bird flying in the upper right corner, with a cylindrical light brown cap intricately embossed with a pattern, in a surreal, distorted aerial city and coastal landscape featuring a winding highway along a coastline, urban buildings extending into the distance, and the sea curving uniquely in the background, under a bright blue sky with faint clouds. Style: Photorealistic, Surrealism, Advertisement Photography Lighting: Bright natural light, enhancing reflections on the bottle. Composition: Low-angle, wide-lens perspective looking up at the colossal bottle, with a dramatic fisheye-like distortion of the background cityscape and coastline. Details: Glossy finish on the bottle, detailed texture on the wooden cap, minute details of the city, clear reflections, tranquil doves, ethereal atmosphere. Quality: High Detail, 8K, Masterpiece, Award-winning photography'
+    src: '/flaqai_saas_asserts/home/example/image/1.webp',
+    prompt: 'Create a clean 16:9 automotive design specification board on a light gray studio background. Feature a highly detailed 1980s Volvo 240 widebody show car, JUMDOO EDITION, in warm beige satin paint with satin black accents. The car should have a boxy Volvo 240 silhouette, very low air-suspension stance, extra-wide track width, riveted wide fender flares, deep black front splitter with near-ground clearance, black side skirts, black lower cladding, black deep-dish multi-spoke wheels, stretched low-profile tires, black grille with Volvo diagonal slash, one inner front headlight covered by an X-pattern insert for an asymmetric look, shaved clean body trim, dual center exhaust, and visible racing bucket seats. Add small JUMDOO branding on the front plate area, side skirt, and rear panel. Arrange six studio render views in a 3x2 grid: front 3/4, front, side profile, rear, rear close view, and rear 3/4. Use crisp realistic 3D product-render lighting, soft shadows, black sans-serif typography, thin gray divider lines, and minimal Swiss-style layout. Include a top-left title: VOLVO 240 WIDEBODY, subheadline: JUMDOO EDITION. Add small side panels for material swatches, colorway, branding locations, wheels and fitment, and notable details.'
   },
   {
-    src: 'https://cdn.heydream.im/heydream/v3/home_page/example/example2.webp',
-    prompt: 'Snowboarder soaring mid-air during a stylish jump off a snow ramp, body dynamically twisted, snow particles scattering around. Blue jacket, white pants, white hood, orange-tinted goggles. Snowy mountain peaks under a clear blue sky. Cinematic action frame with dramatic lighting, strong contrast, bright sunlight and defined shadows. Close-up composition with crisp focus on the rider, motion blur on the edges, depth of field enhancing background separation. Detailed textures on clothing, goggles glint, red-accented snowboard base, sharp mountain contours. High detail, 4K, photorealistic, masterpiece quality.'
+    src: '/flaqai_saas_asserts/home/example/image/2.webp',
+    prompt: 'Design a poster of "Guyu" in Feng Zikai\'s painting style, with a 1:1 size.'
   },
   {
-    src: 'https://cdn.heydream.im/heydream/v3/home_page/example/example3.webp',
-    prompt: 'An imaginative double-exposure portrait of a woman in profile, her face serene and elegant as it blends seamlessly with ancient stone ruins and misty cliffs. Her flowing hair transforms into crumbling architecture framed by autumn-colored trees, all wrapped in atmospheric fog. The composition feels both romantic and mysterious, evoking themes of memory, decay, and beauty within ruins. A muted palette of gray-greens and soft earth tones enhances the ethereal mood, while her red lips create a striking contrast, symbolizing life amid history. The portrait is cinematic, poetic, and hauntingly beautiful, as if frozen in time.'
+    src: '/flaqai_saas_asserts/home/example/image/3.webp',
+    prompt: 'A candid documentary-style photo of a high school computer lab classroom with exactly 10 students. Viewed from the back-left corner at a slight wide angle. Early-2000s snapshot look: consumer digital camera, direct flash, soft grain, warm fluorescent lighting, timestamp "02 18 04" in bottom-right corner.\n\nForeground details:\n\n* Left: student in navy track jacket with white stripes pointing at CRT monitor\n\n* Center: student with short spiky hair in oversized gray sweatshirt, back to camera\n\n* Right: blonde girl with ponytail in light blue long-sleeve top with dark stripes, typing on keyboard\n\n* Far right: student with curly dark hair at workstation\n\nOther students sit in middle and back rows, all facing their screens.  Bulky off-white CRT computers show ChatGPT interface with "ChatGPT" heading and simple prompt text visible.  Room details: beige walls, drop ceiling, rolling office chairs, white keyboards and mice, backpack on floor. Back wall has 4 readable posters: "YOU CAN DO HARD THINGS", "BE KIND ONLINE", "THINK BEFORE YOU CLICK", and a large "KEYBOARD SHORTCUTS" poster. Also bulletin boards and a classroom door at the back.  Faces softly anonymized or partially obscured. Realistic classroom photo style, focus on students using ChatGPT in an old computer lab.'
   },
   {
-    src: 'https://cdn.heydream.im/heydream/v3/home_page/example/example4.webp',
-    prompt: 'A futuristic glass bridge curving through a lush tropical jungle, with people walking along it, a sleek silver futuristic vehicle flying near the bridge, and a traditional wooden house nestled among the trees. Below the bridge, a vibrant turquoise river flows with a powerful waterfall cascading into it, and small orange birds fly around. In the distance, misty mountains are covered in dense vegetation. Style: Photorealistic, Concept Art Lighting: Bright natural light with sun rays filtering through the foliage, brilliant reflections on the glass bridge and water Composition: High angle shot looking down along the length of the bridge and into the canyon Details: Intricate details of the glass bridge structure, lush tropical foliage, sparkling water, a grand waterfall, flying futuristic vehicle, birds in flight, misty atmosphere in the distance, vibrant colors Quality: High Detail, 4K, Masterpiece, Rendered in Octane'
+    src: '/flaqai_saas_asserts/home/example/image/4.webp',
+    prompt: 'Create a 16:9 editorial fashion moodboard for a fictional brand called VINCO. \n\nThis should be a clean standalone moodboard artwork, not a screenshot of an app or interface, with no UI, no buttons, no text panel, and no device framing.\n\nThe overall aesthetic blends Italian archival graphic design with late-1990s Southern California streetwear, mixing natural wine culture, skate utility, and sun-faded documentary fashion photography. Use gritty but precise art direction, midday outdoor light, slightly chaotic but disciplined typography, and real-person casting rather than polished fashion-model energy.\n\nArrange exactly 6 images in a collage or editorial grid composition. Keep the layout organic, slightly imperfect, and art-directed like a campaign deck or printed reference board.\n\nImage 1: a young man in an oversized faded olive T-shirt and dark pants standing in front of an off-white poster-like backdrop with bold VINCO branding, barcode graphics, and small editorial text.\n\nImage 2: a close-up still life of a dark wine bottle with a minimalist white label reading VINCO, photographed in warm sunlight with tactile paper texture and shadow.\n\nImage 3: a person from the back in a washed olive long-sleeve shirt with subtle branding, white shorts, and a yellow hanging tag or sticker element near the top right, posed against a pale wall with blue stripe detail and editorial layout text.\n\nImage 4: a skateboarder crouching or riding away, photographed from behind, wearing a white T-shirt with a large black graphic block on the back and dark shorts, in golden sun on pavement.\n\nImage 5: a printed wine ephemera flat lay with cream paper and a pale chartreuse-green wine label or booklet reading Vino Naturale, featuring grape illustration, small black text, and layered paper pieces.\n\nImage 6: a person facing camera in a white T-shirt with a race-bib style chest print reading 97, wearing a fluorescent yellow-green cap with small brand text, standing outdoors with palm trees and bright sky behind them.\n\nUse earthy tones throughout: olive, cream, charcoal, sun-bleached white, asphalt gray, muted brown, and one fluorescent yellow-green accent repeated in small details.\n\nThe final image should feel like a refined editorial collage board, not a software screenshot.'
   },
   {
-    src: 'https://cdn.heydream.im/heydream/v3/home_page/example/example5.webp',
-    prompt: 'A lone astronaut, wearing a beige and blue striped spacesuit, lying peacefully on their back, resting in a vibrant yellow wildflower field, a large white futuristic spaceship is partially obscured behind them in the midground, surrounded by massive jagged dark grey rocky mountains and peaks, with tiny sparse green foliage clinging to them under a bright blue sky with fluffy white clouds, with a large, misty pale blue planet and a smaller moon visible in the distance, and several smaller flying vehicles in the upper distance. Style: Sci-fi Concept Art, Digital Painting Lighting: Bright natural sunlight, casting gentle shadows Composition: Medium shot, slight low angle showcasing the flowers and stretching towards the sky and mountains Details: Intricate detail on the spacesuit and spaceship, individual petals visible on the wildflowers, textured rock faces, subtle atmospheric haze around the distant planet, serene and tranquil atmosphere. Quality: High Detail, 8K, Masterpiece, Award-winning, Breathtaking Composition'
+    src: '/flaqai_saas_asserts/home/example/image/5.webp',
+    prompt: 'Create a complete visual world-building model for a civilization with the style of reference image, including multiple images of buildings, characters, clothing, vehicles and maps, using a unified design language and featuring a cinematic-like realism with extremely rich details.'
   },
   {
-    src: 'https://cdn.heydream.im/heydream/v3/home_page/example/example6.webp',
-    prompt: 'A colossal white and blue mechanized Gundam, with intricate details and yellow V-fin, standing tall and partially assembled, surrounded by numerous tiny engineers and maintenance crew working on it, holding various tools and equipment, in a massive, cluttered, and multi-level industrial hangar or maintenance bay. Style: Mecha Anime, Sci-Fi Illustration, Digital Art Lighting: Dynamic, volumetric lighting with strong blue and orange glows emanating from various parts of the hangar and the robot, creating sharp contrasts and highlights. Composition: High-angle wide shot, looking down on the Gundam, emphasizing its immense scale relative to the human workers and the surrounding environment. Details: High level of mechanical and environmental details, cables, pipes, scaffolding, platforms, small vehicles, bustling activity, a sense of awe and industry, grungy textures, futuristic aesthetic. Quality: Ultra-detailed, 8K, Masterpiece, Concept Art, Photorealistic elements.'
+    src: '/flaqai_saas_asserts/home/example/image/6.webp',
+    prompt: 'Create a premium cinematic 3D illustration of a stylized X / Twitter-like profile screen set against a clean dark background.\n\nUse the provided reference character as the subject. Preserve her recognizable facial identity, facial proportions, and key features so she remains clearly the same person. Her expression should feel naturally warm and engaging, with a subtle genuine smile and bright, lively eyes.\n\nThe profile interface should feel authentic and polished, closely resembling a modern verified social media profile, with a believable layout, profile details, follower metrics, and post feed. The original avatar should remain unchanged within the interface.\n\nThe main visual moment is that the character is breaking out from the screen in a dynamic, immersive 3D effect, as if stepping into the real world from her profile page. The screen surface should feel disrupted by this motion, with visible ripple, tension, and distortion effects that enhance the sense of impact and movement.\n\nUse soft studio lighting, cinematic shadows, realistic depth of field, and ultra-clean rendering. The final image should feel highly detailed, sharp, and visually striking, blending realistic materials with refined stylized 3D character appeal.'
+  },
+  {
+    src: '/flaqai_saas_asserts/home/example/image/7.webp',
+    prompt: 'Maintain the design concept of the picture (no need to keep the style consistent), and create a 16:9 poster based on the theme "LIFE".'
+  },
+  {
+    src: '/flaqai_saas_asserts/home/example/image/8.webp',
+    prompt: 'Based on the reference image, create a professional English storyboard with 10 annotated frames, suitable for rehearsals, director\'s guidance, and action or scene planning, in a 16:9 ratio.'
   },
 ]
 
@@ -45,8 +64,8 @@ export default async function Page() {
       type: tCarousel('video.type'),
       media: {
         type: 'video',
-        src: 'https://cdn.heydream.im/heydream/v3/home_page/tools/ai_video_generator_video.mp4',
-        poster: 'https://cdn.heydream.im/heydream/v3/home_page/tools/ai_video_generator.webp'
+        src: '/flaqai_saas_asserts/home/tools/ai_video_generator.mp4',
+        poster: '/flaqai_saas_asserts/home/tools/ai_video_generator.webp'
       },
       href: '/image-to-video'
     },
@@ -54,7 +73,7 @@ export default async function Page() {
       type: tCarousel('image.type'),
       media: {
         type: 'image',
-        src: 'https://cdn.heydream.im/heydream/v3/home_page/tools/ai_image_generator.webp'
+        src: '/flaqai_saas_asserts/home/tools/ai_image_generator.webp'
       },
       href: '/text-to-image'
     },
@@ -62,7 +81,7 @@ export default async function Page() {
       type: tCarousel('tryon.type'),
       media: {
         type: 'image',
-        src: 'https://cdn.heydream.im/heydream/v3/virtual_try_on/feature/1_1.webp'
+        src: '/flaqai_saas_asserts/virtual_try_on/feature/1_1.webp'
       },
       href: '/virtual-try-on'
     }
@@ -75,7 +94,7 @@ export default async function Page() {
           alt='bg'
           width={1920}
           height={1134}
-          src='https://cdn.flaq.ai/flaq/home_page/background/background_web.webp'
+          src='/images/home/background_web.webp'
           style={{
             objectFit: 'contain',
             width: '100%',
@@ -89,7 +108,7 @@ export default async function Page() {
         alt='bg-mobile'
         width={375}
         height={428}
-        src='https://cdn.flaq.ai/flaq/home_page/background/background_phone.webp'
+        src='/images/home/background_phone.webp'
         style={{
           objectFit: 'cover',
           objectPosition: 'top',
@@ -117,16 +136,7 @@ export default async function Page() {
         videoExamplesDescription={tExampleSection('videoExamples.description')}
         promptLabel={tExampleSection('videoExamples.promptLabel')}
         images={exampleImages}
-        videos={[
-          {
-            src: 'https://youtu.be/icZrOIAAgZ0?si=8mJ3KpKFcksTltdr',
-            prompt: tExampleSection('videos.0.prompt'),
-          },
-          {
-            src: 'https://youtu.be/SpcBjq_GpUA?si=391HXbKwMvtuXkOx',
-            prompt: tExampleSection('videos.1.prompt'),
-          },
-        ]}
+        videos={exampleVideos}
       />
       <CoreFeaturesCards
         title={t('use-cases.title')}

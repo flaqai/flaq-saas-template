@@ -43,7 +43,7 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
         list={numberList(2).map((num) => ({
           id: num.toString(),
           prompt: t(`example.${num}.prompt`),
-          videoSrc: `https://cdn.heydream.im/heydream/v2/text_to_video/example/example${num}.1.mp4`,
+          videoSrc: `/flaqai_saas_asserts/image_to_video/example/${num}.mp4`,
         }))}
       />
       <CoreFeaturesCards

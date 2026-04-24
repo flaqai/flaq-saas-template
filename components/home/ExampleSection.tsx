@@ -3,9 +3,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from '@/i18n/navigation';
 import { cn } from '@/lib/utils';
-import { ChevronLeft, ChevronRight, Copy, Check } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Copy, Check, Volume2, VolumeOff } from 'lucide-react';
 import SubHeading from '../internal-page/sub-heading';
-import YouTubeVideo, { YouTubeProps, YouTubePlayer } from 'react-youtube';
 import useImageFormDefaultStore from '@/store/form/useImageFormDefaultStore';
 
 export interface ExampleSectionProps {
@@ -36,13 +35,6 @@ export default function ExampleSection({
   const router = useRouter();
   const setImagePrompt = useImageFormDefaultStore((state) => state.setPrompt);
 
-  // Extract video ID from YouTube URL
-  const getVideoId = (url: string): string => {
-    const regex = /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/;
-    const match = url.match(regex);
-    return match ? match[1] : '';
-  };
-
   const imageScrollRef = useRef<HTMLDivElement>(null);
   const imageItemRefs = useRef<(HTMLDivElement | null)[]>([]);
   const isScrollingRef = useRef(false);
@@ -51,7 +43,8 @@ export default function ExampleSection({
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [videoCurrentIndex, setVideoCurrentIndex] = useState(0);
   const [copied, setCopied] = useState(false);
-  const playerRefs = useRef<(YouTubePlayer | null)[]>([]);
+  const [muted, setMuted] = useState(true);
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
 
   // Click image to navigate to AI image generation page and fill prompt
   const handleImageClick = (prompt: string) => {
@@ -194,6 +187,19 @@ export default function ExampleSection({
     return () => clearInterval(intervalId);
   }, [videos.length, autoPlay]);
 
+  // Auto play current video and pause others when switching
+  useEffect(() => {
+    videoRefs.current.forEach((video, index) => {
+      if (!video) return;
+      if (index === videoCurrentIndex) {
+        video.play().catch(() => {});
+      } else {
+        video.pause();
+        video.currentTime = 0;
+      }
+    });
+  }, [videoCurrentIndex]);
+
   // Image carousel control - minimal version
   const goToPreviousImage = () => {
     const container = imageScrollRef.current;
@@ -213,11 +219,12 @@ export default function ExampleSection({
     container.scrollBy({ left: itemWidth, behavior: 'smooth' });
   };
 
-  // Stop current playing video and reset playback state when switching videos
+  // Stop current playing video when switching videos
   const stopCurrentVideo = () => {
-    const currentPlayer = playerRefs.current[videoCurrentIndex];
-    if (currentPlayer && typeof currentPlayer.stopVideo === 'function') {
-      currentPlayer.stopVideo();
+    const currentVideo = videoRefs.current[videoCurrentIndex];
+    if (currentVideo) {
+      currentVideo.pause();
+      currentVideo.currentTime = 0;
     }
   };
 
@@ -344,7 +351,7 @@ export default function ExampleSection({
 
         {/* Video content area */}
         <div className='mt-3 grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-6'>
-          {/* YouTube player */}
+          {/* Video player */}
           <div className='relative overflow-hidden rounded-xl bg-[#383838] aspect-video'>
             {videos.map((video, index) => (
               <div
@@ -354,25 +361,25 @@ export default function ExampleSection({
                   index === videoCurrentIndex ? 'opacity-100 z-10' : 'opacity-0 z-0'
                 )}
               >
-                <YouTubeVideo
-                  videoId={getVideoId(video.src)}
-                  opts={{
-                    width: '100%',
-                    height: '100%',
-                    playerVars: {
-                      autoplay: 0,
-                      controls: 1,
-                      rel: 0,
-                      showinfo: 0,
-                    },
-                  } as YouTubeProps['opts']}
-                  className='w-full h-full'
-                  onReady={(event) => {
-                    playerRefs.current[index] = event.target;
-                  }}
+                <video
+                  ref={(el) => { videoRefs.current[index] = el; }}
+                  src={video.src}
+                  muted={muted}
+                  autoPlay={index === 0}
+                  playsInline
+                  onEnded={() => setVideoCurrentIndex((prev) => (prev + 1) % videos.length)}
+                  className='w-full h-full object-cover'
                 />
               </div>
             ))}
+            <button
+              type='button'
+              onClick={() => setMuted((prev) => !prev)}
+              className='absolute bottom-3 left-3 z-20 flex items-center justify-center w-9 h-9 rounded-full backdrop-blur-md bg-white/15 text-white transition hover:bg-white/25 cursor-pointer'
+              aria-label={muted ? 'Unmute' : 'Mute'}
+            >
+              {muted ? <VolumeOff className='w-4 h-4' /> : <Volume2 className='w-4 h-4' />}
+            </button>
           </div>
 
           {/* Video info and Prompt */}

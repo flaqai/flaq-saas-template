@@ -2,15 +2,6 @@ import createNextIntlPlugin from 'next-intl/plugin';
 
 const withNextIntl = createNextIntlPlugin();
 
-const defaultImageRemotePatterns = [
-  {
-    protocol: 'https',
-    hostname: 'cdn.heydream.im',
-    port: '',
-    pathname: '/**',
-  },
-];
-
 function parseImageRemotePatterns(value) {
   if (!value) return [];
 
@@ -58,7 +49,7 @@ const nextConfig = {
     unoptimized: false,
     // Next 16 blocks image optimization for private IPs by default; enable via environment variable only if explicitly needed.
     dangerouslyAllowLocalIP: allowLocalImageOptimization,
-    remotePatterns: imageRemotePatterns.length > 0 ? imageRemotePatterns : defaultImageRemotePatterns,
+    remotePatterns: imageRemotePatterns,
   },
   productionBrowserSourceMaps: false,
 };

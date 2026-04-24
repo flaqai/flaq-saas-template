@@ -7,15 +7,15 @@ import { ImageFormType } from '@/components/image-ui-form/image-context-provider
 const PURE_IMAGE_DEFAULT_PREVIEW: { formType: ImageFormType; imgSrc: string }[] = [
   {
     formType: 'image-to-image',
-    imgSrc: 'https://cdn.heydream.im/heydream/v3/image_to_image/first_picture/first_picture.webp',
+    imgSrc: '/flaqai_saas_asserts/image_to_image/first_image/1.webp',
   },
   {
     formType: 'text-to-image',
-    imgSrc: 'https://cdn.heydream.im/heydream/v3/text_to_image/feature/feature1.3.webp',
+    imgSrc: '/flaqai_saas_asserts/text_to_image/feature/1_3.webp',
   },
   {
     formType: 'virtual-try-on',
-    imgSrc: 'https://cdn.heydream.im/heydream/v3/virtual_try_on/feature/1_1.webp',
+    imgSrc: '/flaqai_saas_asserts/virtual_try_on/feature/1_1.webp',
   },
 ];
 
