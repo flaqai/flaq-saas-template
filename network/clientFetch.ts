@@ -3,6 +3,7 @@
 import { defaultLocale, languages } from '@/i18n/languages';
 import { STORE_PREFIX } from '@/lib/constants/config';
 import { clientSideGetCookie } from '@/lib/utils/stringUtils';
+import { getSecureItem } from '@/lib/utils/secureStorage';
 
 export type OpenApiTaskStatus = 'submitted' | 'processing' | 'succeed' | 'failed';
 
@@ -115,6 +116,36 @@ export async function openApiFetchJson<TResponse>(
   return data as TResponse;
 }
 
+export async function getClientOpenApiConfigAsync(): Promise<OpenApiConfig> {
+  const envBaseUrl =
+    process.env.NEXT_PUBLIC_BASE_OPEN_API ||
+    process.env.NEXT_PUBLIC_OPEN_API_BASE_URL ||
+    DEFAULT_OPEN_API_BASE_URL;
+
+  if (typeof window === 'undefined') {
+    return {
+      baseUrl: envBaseUrl,
+      clientKey: '',
+    };
+  }
+
+  migrateOldApiKeys();
+
+  // Try to get from secure storage (encrypted)
+  const baseUrl = (await getSecureItem(OPEN_API_BASE_URL_STORAGE_KEY)) || envBaseUrl;
+  const clientKey = (await getSecureItem(OPEN_API_CLIENT_KEY_STORAGE_KEY)) || '';
+
+  if (!clientKey) {
+    throw new Error('Please configure your Flaq client key first.');
+  }
+
+  return {
+    baseUrl,
+    clientKey,
+  };
+}
+
+// Synchronous version for backward compatibility (tries localStorage first, then sessionStorage)
 export function getClientOpenApiConfig(): OpenApiConfig {
   const envBaseUrl =
     process.env.NEXT_PUBLIC_BASE_OPEN_API ||
@@ -130,8 +161,15 @@ export function getClientOpenApiConfig(): OpenApiConfig {
 
   migrateOldApiKeys();
 
-  const baseUrl = localStorage.getItem(OPEN_API_BASE_URL_STORAGE_KEY) || envBaseUrl;
-  const clientKey = localStorage.getItem(OPEN_API_CLIENT_KEY_STORAGE_KEY) || '';
+  // Check both sessionStorage and localStorage (unencrypted fallback)
+  const baseUrl =
+    sessionStorage.getItem(OPEN_API_BASE_URL_STORAGE_KEY) ||
+    localStorage.getItem(OPEN_API_BASE_URL_STORAGE_KEY) ||
+    envBaseUrl;
+  const clientKey =
+    sessionStorage.getItem(OPEN_API_CLIENT_KEY_STORAGE_KEY) ||
+    localStorage.getItem(OPEN_API_CLIENT_KEY_STORAGE_KEY) ||
+    '';
 
   if (!clientKey) {
     throw new Error('Please configure your Flaq client key first.');

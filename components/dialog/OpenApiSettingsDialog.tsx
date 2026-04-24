@@ -13,6 +13,7 @@ import {
   createOpenApiHeaders,
 } from '@/network/clientFetch';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   Dialog,
   DialogContent,
@@ -22,6 +23,13 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import {
+  setSecureItem,
+  getSecureItem,
+  removeSecureItem,
+  isRememberMeEnabled,
+  clearAllSecureStorage,
+} from '@/lib/utils/secureStorage';
 
 const FLAQ_REGISTER_URL = 'https://flaq.ai/';
 const R2_PUBLIC_DOMAIN_STORAGE_KEY = 'FLAQ-SAAS-TEMPLATE-r2-public-domain';
@@ -60,6 +68,7 @@ export default function OpenApiSettingsDialog({
   const tCommon = useTranslations('Common');
   const [baseUrl, setBaseUrl] = useState(DEFAULT_OPEN_API_BASE_URL);
   const [clientKey, setClientKey] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
   const [isTesting, setIsTesting] = useState(false);
   const [hostingExpanded, setHostingExpanded] = useState(false);
   const [r2PublicDomain, setR2PublicDomain] = useState('');
@@ -68,20 +77,36 @@ export default function OpenApiSettingsDialog({
   useEffect(() => {
     if (!open || typeof window === 'undefined') return;
 
-    setBaseUrl(
-      localStorage.getItem(OPEN_API_BASE_URL_STORAGE_KEY) || DEFAULT_OPEN_API_BASE_URL,
-    );
-    setClientKey(localStorage.getItem(OPEN_API_CLIENT_KEY_STORAGE_KEY) || '');
-    setR2PublicDomain(localStorage.getItem(R2_PUBLIC_DOMAIN_STORAGE_KEY) || '');
+    const loadSettings = async () => {
+      const savedBaseUrl = await getSecureItem(OPEN_API_BASE_URL_STORAGE_KEY);
+      const savedClientKey = await getSecureItem(OPEN_API_CLIENT_KEY_STORAGE_KEY);
+      const savedDomain = await getSecureItem(R2_PUBLIC_DOMAIN_STORAGE_KEY);
+
+      setBaseUrl(savedBaseUrl || DEFAULT_OPEN_API_BASE_URL);
+      setClientKey(savedClientKey || '');
+      setR2PublicDomain(savedDomain || '');
+      setRememberMe(isRememberMeEnabled());
+    };
+
+    loadSettings();
   }, [open]);
 
   const handleReset = () => {
     setBaseUrl(DEFAULT_OPEN_API_BASE_URL);
     setClientKey('');
     setR2PublicDomain('');
+    setRememberMe(false);
   };
 
-  const handleSave = () => {
+  const handleClearAll = () => {
+    if (window.confirm(t('clear-data-confirm'))) {
+      clearAllSecureStorage();
+      handleReset();
+      toast.success(t('data-cleared'));
+    }
+  };
+
+  const handleSave = async () => {
     const normalizedBaseUrl = baseUrl.trim() || DEFAULT_OPEN_API_BASE_URL;
     const normalizedClientKey = clientKey.trim();
 
@@ -90,14 +115,14 @@ export default function OpenApiSettingsDialog({
       return;
     }
 
-    localStorage.setItem(OPEN_API_BASE_URL_STORAGE_KEY, normalizedBaseUrl);
-    localStorage.setItem(OPEN_API_CLIENT_KEY_STORAGE_KEY, normalizedClientKey);
+    await setSecureItem(OPEN_API_BASE_URL_STORAGE_KEY, normalizedBaseUrl, rememberMe);
+    await setSecureItem(OPEN_API_CLIENT_KEY_STORAGE_KEY, normalizedClientKey, rememberMe);
 
     const normalizedDomain = r2PublicDomain.trim();
     if (normalizedDomain) {
-      localStorage.setItem(R2_PUBLIC_DOMAIN_STORAGE_KEY, normalizedDomain);
+      await setSecureItem(R2_PUBLIC_DOMAIN_STORAGE_KEY, normalizedDomain, rememberMe);
     } else {
-      localStorage.removeItem(R2_PUBLIC_DOMAIN_STORAGE_KEY);
+      removeSecureItem(R2_PUBLIC_DOMAIN_STORAGE_KEY);
     }
 
     toast.success(t('saved'));
@@ -172,7 +197,7 @@ export default function OpenApiSettingsDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         hiddenTitle={t('title')}
-        className='border-white/10 bg-[#111214] text-white sm:max-w-[520px]'
+        className='max-h-[90vh] overflow-y-auto border-white/10 bg-[#111214] text-white sm:max-w-[520px]'
       >
         <DialogHeader className='space-y-2 text-left'>
           <DialogTitle className='text-xl font-semibold text-white'>
@@ -211,9 +236,37 @@ export default function OpenApiSettingsDialog({
               onChange={(event) => setClientKey(event.target.value)}
               className='h-11 border-white/10 bg-white/5 text-white placeholder:text-white/30'
             />
+
+            <div className='flex items-center space-x-2 pt-2'>
+              <Checkbox
+                id='remember-me'
+                checked={rememberMe}
+                onCheckedChange={(checked) => setRememberMe(checked === true)}
+              />
+              <label
+                htmlFor='remember-me'
+                className='text-sm text-white/70 cursor-pointer'
+              >
+                {t('remember-me')}
+              </label>
+            </div>
             <p className='text-xs text-white/45'>
-              {t('client-key-hint')}
+              {t('remember-me-hint')}
             </p>
+
+            <div className='rounded-md border border-yellow-500/20 bg-yellow-500/5 p-3 mt-3'>
+              <p className='text-xs text-yellow-200/80'>
+                ⚠️ {t('security-warning')}
+              </p>
+              <button
+                type='button'
+                onClick={handleClearAll}
+                className='mt-2 text-xs text-red-400 hover:text-red-300 underline'
+              >
+                {t('clear-data')}
+              </button>
+            </div>
+
             <Button
               asChild
               className='mt-3 h-11 w-full bg-color-main text-white hover:bg-color-main/90'
@@ -269,16 +322,14 @@ export default function OpenApiSettingsDialog({
         </div>
 
         <DialogFooter className='flex-col gap-2 sm:flex-row sm:justify-between'>
-          <div className='flex gap-2'>
-            <Button
-              type='button'
-              variant='outline'
-              onClick={handleReset}
-              className='border-white/10 bg-transparent text-white hover:bg-white/8 hover:text-white'
-            >
-              {tCommon('reset')}
-            </Button>
-          </div>
+          <Button
+            type='button'
+            variant='outline'
+            onClick={handleReset}
+            className='border-white/10 bg-transparent text-white hover:bg-white/8 hover:text-white'
+          >
+            {tCommon('reset')}
+          </Button>
           <div className='flex gap-2'>
             <Button
               type='button'
