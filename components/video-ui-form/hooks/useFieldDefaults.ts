@@ -1,18 +1,18 @@
 import { useCallback } from 'react';
 
 /**
- * 字段默认值计算 Hook（Video 版本）
+ * Field default value calculation Hook (Video version)
  *
- * 职责：
- * 1. 根据可用选项和优先级列表，选择最佳默认值
- * 2. 纯函数，无副作用
+ * Responsibilities:
+ * 1. Select best default value based on available options and priority list
+ * 2. Pure function, no side effects
  */
 export function useFieldDefaults() {
   /**
-   * 选择最佳选项
+   * Select best option
    *
-   * 逻辑：按优先级列表查找第一个可用的选项
-   * 如果优先级列表中没有可用选项，返回第一个可用选项
+   * Logic: Find the first available option according to priority list
+   * If no available option in priority list, return the first available option
    */
   const selectBestOption = useCallback(
     (availableOptions: Array<{ value: string; name: string }>, priorityList?: string[]): string | undefined => {
@@ -20,7 +20,7 @@ export function useFieldDefaults() {
         return undefined;
       }
 
-      // 按优先级列表查找第一个可用值
+      // Find the first available value according to priority list
       if (priorityList && priorityList.length > 0) {
         for (const priority of priorityList) {
           const found = availableOptions.find((opt) => opt.value === priority);
@@ -30,14 +30,14 @@ export function useFieldDefaults() {
         }
       }
 
-      // 都没找到，返回第一个选项
+      // None found, return the first option
       return availableOptions[0]?.value;
     },
     [],
   );
 
   /**
-   * 计算字段默认值
+   * Calculate field default values
    */
   const calculateDefaults = useCallback(
     (params: {

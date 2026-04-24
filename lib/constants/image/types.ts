@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 /**
- * 图片生成类型
- * 严格对应后端模型支持的输入输出类型
+ * Image generation type
+ * Strictly corresponds to input/output types supported by backend models
  */
 export type ImageGenerationType =
   | 'text-to-image'
@@ -12,7 +12,7 @@ export type ImageGenerationType =
   | 'image-variation';
 
 /**
- * 分辨率选项类型
+ * Resolution option type
  */
 export interface ResolutionOption {
   name: string;
@@ -21,7 +21,7 @@ export interface ResolutionOption {
 }
 
 /**
- * 比例选项类型
+ * Ratio option type
  */
 export interface RatioOption {
   name: string;
@@ -32,7 +32,7 @@ export interface RatioOption {
 }
 
 /**
- * 图片模型配置
+ * Image model configuration
  */
 export interface ImageModel {
   provider: string;
@@ -44,11 +44,11 @@ export interface ImageModel {
   isPaid: boolean;
   pricingType: 'image';
 
-  // 生成类型（模型本质属性）
+  // Generation type (model intrinsic property)
   generationType: ImageGenerationType;
   supportedTypes?: ImageGenerationType[];
 
-  // 参数配置
+  // Parameter configuration
   options: ImageModelOptions;
 
   previewUrl?: string;
@@ -57,10 +57,10 @@ export interface ImageModel {
 }
 
 /**
- * 图片模型参数选项
+ * Image model parameter options
  */
 export interface ImageModelOptions {
-  // 图片输入配置
+  // Image input configuration
   imageInput?: {
     required: boolean;
     isSupported: boolean;
@@ -68,16 +68,16 @@ export interface ImageModelOptions {
     max?: number;
   };
 
-  // 参数选项
+  // Parameter options
   resolution?: ResolutionOption[];
   ratio?: RatioOption[];
 
-  // 预设提示词
+  // Preset prompt
   prompt?: string;
 }
 
 /**
- * 模型版本配置
+ * Model version configuration
  */
 export interface ImageModelVersionConfig {
   provider: string;
@@ -96,7 +96,7 @@ export interface ImageModelVersionConfig {
 }
 
 /**
- * 提供商配置
+ * Provider configuration
  */
 export interface ImageProviderConfig {
   provider: string;

@@ -99,7 +99,7 @@ const UnifiedImageUploadField = forwardRef<UnifiedImageUploadFieldRef, UnifiedIm
     };
 
     const addImages = async (files: File[]) => {
-      // 单图模式下，允许替换现有图片
+      // Single image mode: allow replacing existing image
       const remainingSlots = isSingleMode ? maxImages : maxImages - images.length;
       const filesToAdd = files.slice(0, remainingSlots);
 
@@ -137,8 +137,8 @@ const UnifiedImageUploadField = forwardRef<UnifiedImageUploadFieldRef, UnifiedIm
 
     const updateFile = async (file: File | Blob | null | string) => {
       if (typeof file === 'string') {
-        // 对于 URL，不下载文件，直接使用 URL 作为预览
-        // 创建一个空的 File 对象作为占位符
+        // For URL, do not download file; use URL directly as preview
+        // Create an empty File object as placeholder
         const dummyFile = new File([], 'url-placeholder.jpg', { type: 'image/jpeg' });
         setImages([{ id: nanoid(), file: dummyFile, previewUrl: file, sourceUrl: file }]);
         afterSetImage?.();
@@ -172,7 +172,7 @@ const UnifiedImageUploadField = forwardRef<UnifiedImageUploadFieldRef, UnifiedIm
     };
 
     useEffect(() => {
-      // 提交时，URL 字符串直接用，File 对象也直接用
+      // On submit, use URL strings directly; File objects also used directly
       methods.setValue(name, images.map((img) => img.sourceUrl || img.file));
 
       if (onImagePreview) {
@@ -189,7 +189,7 @@ const UnifiedImageUploadField = forwardRef<UnifiedImageUploadFieldRef, UnifiedIm
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [images, isSingleMode]);
 
-    // 只在首次挂载时读取 form 初始值
+    // Only read form initial value on first mount
     useEffect(() => {
       if (hasReadInitialValue.current) return;
       hasReadInitialValue.current = true;
@@ -228,7 +228,7 @@ const UnifiedImageUploadField = forwardRef<UnifiedImageUploadFieldRef, UnifiedIm
     useEffect(() => {
       if (imageFormSrc) {
         if (isSingleMode) {
-          // 单图模式：直接用 URL
+          // Single image mode: use URL directly
           setImages([{
             id: nanoid(),
             file: new File([], 'remote-image', { type: 'image/png' }),
@@ -236,7 +236,7 @@ const UnifiedImageUploadField = forwardRef<UnifiedImageUploadFieldRef, UnifiedIm
             sourceUrl: imageFormSrc,
           }]);
         } else {
-          // 多图模式：添加到列表（如果没超过 maxImages）
+          // Multi-image mode: add to list (if not exceeding maxImages)
           setImages((prev) => {
             if (prev.length >= maxImages) {
               return prev;

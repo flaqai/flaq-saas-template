@@ -8,8 +8,8 @@ interface AudioSupportFieldProps {
 }
 
 /**
- * 音频支持提示组件（纯展示）
- * 显示模型支持音频的提示信息
+ * Audio support indicator component (display only)
+ * Shows a hint that the model supports audio
  */
 export default function AudioSupportField({
   show = false,

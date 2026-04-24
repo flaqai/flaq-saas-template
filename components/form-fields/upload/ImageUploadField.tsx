@@ -71,7 +71,7 @@ const ImageUploadField = forwardRef<ImageUploadFieldRef, ImageUploadFieldProps>(
 
     const updateFile = async (file: File | Blob | null | string) => {
       if (typeof file === 'string') {
-        // 直接用 URL，不转 File（避免 CORS 问题）
+        // Use URL directly, skip File conversion (avoids CORS issues)
         setFileUrl(file);
         methods.setValue(name, file);
         afterSetImage?.();
@@ -130,9 +130,9 @@ const ImageUploadField = forwardRef<ImageUploadFieldRef, ImageUploadFieldProps>(
     // Monitor videoFormImageSrc for video forms (avoids CORS issues by using URL strings directly)
     useEffect(() => {
       if (videoFormImageSrc) {
-        // 直接用 URL，不转 File（避免 CORS 问题）
+        // Use URL directly, skip File conversion (avoids CORS issues)
         setFileUrl(videoFormImageSrc);
-        // 设置为 URL 字符串，提交时后端会处理
+        // Set as URL string; backend will handle it on submit
         methods.setValue(name, videoFormImageSrc);
         if (afterSetImage) {
           afterSetImage();

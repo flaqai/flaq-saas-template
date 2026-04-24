@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 
 /**
- * 表单验证结果
+ * Form validation result
  */
 export interface ValidationResult {
   valid: boolean;
@@ -9,7 +9,7 @@ export interface ValidationResult {
 }
 
 /**
- * 表单验证选项
+ * Form validation options
  */
 export interface FormValidationOptions {
   creditCost: number;
@@ -17,13 +17,13 @@ export interface FormValidationOptions {
 }
 
 /**
- * 统一表单验证 Hook
+ * Unified form validation hook
  *
- * 提供统一的表单提交前验证逻辑。
+ * Provides unified validation logic before form submission.
  *
- * 优势：
- * - 只处理前端表单完整性校验
- * - 不耦合登录、过期和站内 credits 逻辑
+ * Advantages:
+ * - Only handles frontend form integrity validation
+ * - Not coupled with login, expiration, and in-site credits logic
  *
  * @example
  * ```tsx
@@ -43,16 +43,16 @@ export interface FormValidationOptions {
  *
  *   if (!validation.valid) return;
  *
- *   // 执行提交逻辑
+ *   // Execute submission logic
  * };
  * ```
  */
 export function useFormValidation() {
   /**
-   * 执行表单验证
+   * Execute form validation
    *
-   * @param options - 验证选项
-   * @returns 验证结果
+   * @param options - Validation options
+   * @returns Validation result
    */
   const validate = useCallback(
     (options: FormValidationOptions): ValidationResult => {

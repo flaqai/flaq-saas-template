@@ -1,32 +1,32 @@
 /**
- * 视频表单相关类型定义
+ * Video form related type definitions
  *
- * 统一管理所有视频表单组件、hooks、utils 的类型
+ * Unified management of types for all video form components, hooks, and utils
  */
 
 /**
- * 视频表单数据类型
+ * Video form data type
  *
- * 用于 React Hook Form 的表单数据结构
+ * Form data structure for React Hook Form
  */
 export interface VideoFormData {
   prompt: string;
   ratio: string;
-  disableEndFrame: boolean; // 保留此字段以兼容主组件
+  disableEndFrame: boolean; // Keep this field for main component compatibility
   modelVersion: string;
-  duration?: string; // 时长选项 (如 '5s', '10s')
-  resolution?: string; // 分辨率选项 (如 '480p', '720p', '1080p')
-  startFrame?: File | string; // 可以是 File 对象或 URL 字符串
-  endFrame?: File | string; // 可以是 File 对象或 URL 字符串
+  duration?: string; // Duration option (e.g. '5s', '10s')
+  resolution?: string; // Resolution option (e.g. '480p', '720p', '1080p')
+  startFrame?: File | string; // Can be File object or URL string
+  endFrame?: File | string; // Can be File object or URL string
   multiImages?: File[] | null;
   enableEndFrame?: boolean;
   enableAudio?: boolean;
-  audioFile?: File | null; // 音频文件（用于 lipsync 等需要音频的模型）
-  audioTrimRange?: { startTime: number; endTime: number } | null; // 音频裁剪范围
+  audioFile?: File | null; // Audio file (for models that need audio like lipsync)
+  audioTrimRange?: { startTime: number; endTime: number } | null; // Audio trim range
 }
 
 /**
- * 表单选项类型
+ * Form option type
  */
 export interface FormOption {
   name: string;

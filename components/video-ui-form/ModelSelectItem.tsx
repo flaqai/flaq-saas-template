@@ -28,7 +28,7 @@ export default function ModelSelectItem({
   showComingSoon = false,
   onClick,
 }: ModelSelectItemProps) {
-  // 根据feature类型渲染对应的图标
+  // Render corresponding icon based on feature type
   const renderFeatureIcon = (iconType: string) => {
     switch (iconType) {
       case 'duration':
@@ -70,10 +70,10 @@ export default function ModelSelectItem({
     >
       <div className='flex items-start justify-between'>
         <div className='flex-1'>
-          {/* 模型图标、模型名称、radio 图标同一行，两端对齐 */}
+          {/* Model icon, model name, and radio icon in same row, justified between */}
           <div className='flex items-center justify-between mb-1'>
             <div className='flex items-center gap-2'>
-              {/* 模型图标 */}
+              {/* Model icon */}
               {getModelIcon(value) ? (
                 <img
                   src={getModelIcon(value)}
@@ -84,14 +84,14 @@ export default function ModelSelectItem({
                 <div className='w-5 h-5 flex-shrink-0' />
               )}
               <h3 className='text-base font-medium text-white'>{label}</h3>
-              {/* Coming Soon 标识 */}
+              {/* Coming Soon badge */}
               {showComingSoon && (
                 <span className='text-xs text-[#7D52FF] bg-[#f3eeff] px-2 py-0.5 rounded'>
                   Coming Soon
                 </span>
               )}
             </div>
-            {/* radio 样式 */}
+            {/* Radio style */}
             <div className='flex-shrink-0'>
               {isSelected ? (
                 <div className='flex w-5 h-5 items-center justify-center rounded-full border-2 border-[#427cf1] bg-[#427cf1]'>
@@ -115,7 +115,7 @@ export default function ModelSelectItem({
               )}
             </div>
           </div>
-          {/* 渲染模型特性图标 */}
+          {/* Render model feature icons */}
           <div className='flex flex-wrap gap-2'>
             {features.map((feature, index) => (
               <div

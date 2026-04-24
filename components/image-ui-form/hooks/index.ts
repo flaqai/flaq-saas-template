@@ -1,11 +1,11 @@
 /**
- * 图片表单 Hooks 集合
+ * Image form Hooks collection
  *
- * 模块化设计：
- * - useModelConfig: 模型配置解析
- * - useModelSwitch: 模型切换检测（返回 needsReset 标记）
- * - useFieldReset: 字段重置处理（监听 needsReset 和配置变化）
- * - useFieldDefaults: 字段默认值计算（可选，用于其他场景）
+ * Modular design:
+ * - useModelConfig: Model configuration parsing
+ * - useModelSwitch: Model switch detection (returns needsReset flag)
+ * - useFieldReset: Field reset handling (listens to needsReset and config changes)
+ * - useFieldDefaults: Field default value calculation (optional, for other scenarios)
  */
 
 export { useModelConfig } from './useModelConfig';

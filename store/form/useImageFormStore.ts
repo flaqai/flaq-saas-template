@@ -3,7 +3,7 @@ import { create } from 'zustand';
 
 import { ImageFormType } from '@/components/image-ui-form/image-context-provider';
 
-// 纯 Image 生成页的预览默认值
+// Default preview values for pure Image generation page
 const PURE_IMAGE_DEFAULT_PREVIEW: { formType: ImageFormType; imgSrc: string }[] = [
   {
     formType: 'image-to-image',
@@ -19,7 +19,7 @@ const PURE_IMAGE_DEFAULT_PREVIEW: { formType: ImageFormType; imgSrc: string }[] 
   },
 ];
 
-// 图片生成页的预览默认值
+// Default preview values for image generation page
 const DefaultPreviewMedia: { formType: ImageFormType; imgSrc: string }[] = [
   ...PURE_IMAGE_DEFAULT_PREVIEW,
 ];

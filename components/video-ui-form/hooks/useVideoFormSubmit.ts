@@ -1,11 +1,11 @@
 /**
- * 视频表单提交逻辑 Hook
+ * Video form submission logic Hook
  *
- * 封装表单提交的完整流程：
- * 1. 表单验证（必填字段）
- * 2. 文件上传处理（图片、音频）
- * 3. API 调用
- * 4. 成功/失败处理
+ * Encapsulates the complete form submission process:
+ * 1. Form validation (required fields)
+ * 2. File upload handling (images, audio)
+ * 3. API call
+ * 4. Success/failure handling
  *
  * @example
  * ```tsx
@@ -34,7 +34,7 @@ import type { VideoFormStores } from './useVideoFormStores';
 import type { VideoFormData } from '../types';
 
 /**
- * useVideoFormSubmit 的参数
+ * Parameters for useVideoFormSubmit
  */
 interface UseVideoFormSubmitOptions {
   videoType?: string;
@@ -45,7 +45,7 @@ interface UseVideoFormSubmitOptions {
 }
 
 /**
- * 视频表单提交 Hook
+ * Video form submission Hook
  */
 export default function useVideoFormSubmit(options: UseVideoFormSubmitOptions) {
   const { videoType, stores, pathname, t, submitBtnId } = options;
@@ -59,7 +59,7 @@ export default function useVideoFormSubmit(options: UseVideoFormSubmitOptions) {
   const addProcessingTask = useGenerationPollingStore((state) => state.add);
 
   /**
-   * 处理文件上传
+   * Handle file upload
    */
   const uploadFiles = useCallback(
     async (formData: VideoFormData): Promise<{
@@ -71,7 +71,7 @@ export default function useVideoFormSubmit(options: UseVideoFormSubmitOptions) {
     }> => {
       const filesToUpload: FileType[] = [];
 
-      // 根据模型配置处理图片上传 - 只处理 File 对象，字符串 URL 稍后直接使用
+      // Handle image upload based on model configuration - only process File objects, string URLs will be used directly later
       if (formData.startFrame && formData.startFrame instanceof File) {
         filesToUpload.push({
           type: formData.startFrame.type,
@@ -86,7 +86,7 @@ export default function useVideoFormSubmit(options: UseVideoFormSubmitOptions) {
         });
       }
 
-      // 处理多图上传
+      // Handle multi-image upload
       if (formData.multiImages && formData.multiImages.length > 0) {
         formData.multiImages.forEach((file) => {
           filesToUpload.push({
@@ -96,7 +96,7 @@ export default function useVideoFormSubmit(options: UseVideoFormSubmitOptions) {
         });
       }
 
-      // 处理音频文件（需要裁剪的话先裁剪）
+      // Handle audio file (trim first if needed)
       let processedAudioFile = formData.audioFile;
       if (formData.audioFile && formData.audioFile instanceof File && formData.audioTrimRange) {
         const { startTime, endTime } = formData.audioTrimRange;
@@ -123,28 +123,28 @@ export default function useVideoFormSubmit(options: UseVideoFormSubmitOptions) {
         uploadedUrls = await uploadFilesToStorageThroughBackEnd(compressFilesToUpload);
       }
 
-      // 按照上传顺序的逆序pop URL
+      // Pop URLs in reverse order of upload
       let startFrameUrl = '';
       let endFrameUrl = '';
       let clothesChangerImageUrl = '';
       let audioUrl = '';
       const imageUrlList: string[] = [];
 
-      // 处理音频文件 URL
+      // Handle audio file URL
       if (formData.audioFile && formData.audioFile instanceof File) {
         audioUrl = uploadedUrls.pop()!;
       }
 
-      // 处理多图URL列表（按照上传顺序的逆序pop）
+      // Handle multi-image URL list (pop in reverse order of upload)
       if (formData.multiImages && formData.multiImages.length > 0) {
         // eslint-disable-next-line no-plusplus
         for (let i = 0; i < formData.multiImages.length; i++) {
           const url = uploadedUrls.pop();
-          if (url) imageUrlList.unshift(url); // unshift保持正确的顺序
+          if (url) imageUrlList.unshift(url); // unshift to maintain correct order
         }
       }
 
-      // 处理 endFrame - 如果是字符串 URL，直接使用；如果是 File，从上传结果中获取
+      // Handle endFrame - if it's a string URL, use directly; if it's a File, get from upload result
       if (formData.endFrame) {
         if (formData.endFrame instanceof File) {
           endFrameUrl = uploadedUrls.pop()!;
@@ -153,7 +153,7 @@ export default function useVideoFormSubmit(options: UseVideoFormSubmitOptions) {
         }
       }
 
-      // 处理 startFrame - 如果是字符串 URL，直接使用；如果是 File，从上传结果中获取
+      // Handle startFrame - if it's a string URL, use directly; if it's a File, get from upload result
       if (formData.startFrame) {
         if (formData.startFrame instanceof File) {
           startFrameUrl = uploadedUrls.pop()!;
@@ -169,7 +169,7 @@ export default function useVideoFormSubmit(options: UseVideoFormSubmitOptions) {
 
 
   /**
-   * 处理表单提交
+   * Handle form submission
    */
   const handleSubmit = useCallback(
     async (formData: VideoFormData, currentModel: VideoModel) => {
@@ -201,10 +201,10 @@ export default function useVideoFormSubmit(options: UseVideoFormSubmitOptions) {
       setIsSubmitting(true);
 
       try {
-        // 上传文件
+        // Upload files
         const { startFrameUrl, endFrameUrl, imageUrlList, audioUrl } = await uploadFiles(formData);
 
-        // 统一使用 imageUrlList 管理所有图片（首帧、尾帧、多图等）
+        // Uniformly use imageUrlList to manage all images (start frame, end frame, multi-images, etc.)
         const finalImageUrlList: string[] = [];
         if (startFrameUrl) finalImageUrlList.push(startFrameUrl);
         if (endFrameUrl) finalImageUrlList.push(endFrameUrl);
@@ -226,7 +226,7 @@ export default function useVideoFormSubmit(options: UseVideoFormSubmitOptions) {
           audio_url: audioUrl || undefined,
         });
 
-        // Flaq API 成功时返回 code: 0 或 200
+        // Flaq API returns code: 0 or 200 on success
         if ((res.code !== 0 && res.code !== 200) || !res.data?.task_id) {
           toast.error(res.message || 'Video task submit failed');
           return;
@@ -254,7 +254,7 @@ export default function useVideoFormSubmit(options: UseVideoFormSubmitOptions) {
         addProcessingTask(res.data.task_id, 'video', videoType);
         startTaskPolling(res.data.task_id, 'video');
 
-        // 成功处理
+        // Success handling
         showConfettiFireworks(3000);
         toast.success(res.message || 'Video task submitted.');
       } catch (error: any) {

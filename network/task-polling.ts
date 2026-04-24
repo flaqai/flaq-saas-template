@@ -102,7 +102,7 @@ async function pollTask(task: PollingTask): Promise<void> {
 
     scheduleNext(task);
   } catch (error) {
-    // 如果是 clientKey 未配置的错误，停止轮询
+    // If clientKey is not configured, stop polling
     if (error instanceof Error && error.message.includes('client key')) {
       const errorMsg = 'Please configure your Flaq client key in settings first.';
       if (task.type === 'image') failImageHistory(task.traceId, errorMsg);
@@ -111,7 +111,7 @@ async function pollTask(task: PollingTask): Promise<void> {
       return;
     }
 
-    // 其他错误继续重试
+    // Retry on other errors
     scheduleNext(task);
   }
 }
@@ -120,7 +120,7 @@ export function startTaskPolling(traceId: string, type: 'image' | 'video', submi
   if (typeof window === 'undefined') return;
   if (!traceId || activePolls.has(traceId)) return;
 
-  // 检查 clientKey 是否配置
+  // Check if clientKey is configured
   try {
     getClientOpenApiConfig();
   } catch (error) {

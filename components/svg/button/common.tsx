@@ -6,8 +6,8 @@ interface IconProps {
 }
 
 /**
- * AI Generation 图标
- * 渐变色星星图标，用于 AI 生成相关按钮
+ * AI Generation Icon
+ * Gradient star icon for AI generation related buttons
  */
 export function AiGenerationIcon({ className }: IconProps) {
   return (
@@ -41,9 +41,9 @@ export function AiGenerationIcon({ className }: IconProps) {
 }
 
 /**
- * AI 优化/增强图标
- * 渐变色星星图标，用于优化提示词等增强功能按钮
- * 与 AiGenerationIcon 使用相同的渐变色方案
+ * AI Optimize/Enhance Icon
+ * Gradient star icon for enhancement features like prompt optimization
+ * Uses the same gradient color scheme as AiGenerationIcon
  */
 export function AiEnhanceIcon(props: React.SVGProps<SVGSVGElement>) {
   return (

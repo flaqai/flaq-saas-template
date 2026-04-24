@@ -107,7 +107,7 @@ const VideoHistory = forwardRef<ScrollRef, VideoHistoryProps>(({ onClickImage, o
   const t = useTranslations('components.video-form.history');
 
   const handleClickImg = (videoData: NonNullable<typeof data>[number]) => {
-    // 如果视频失败或没有videoUrl，不处理点击
+    // If video failed or has no videoUrl, don't handle click
     if (videoData.status === 'fail' || !videoData.videoUrl) {
       return;
     }
@@ -117,12 +117,12 @@ const VideoHistory = forwardRef<ScrollRef, VideoHistoryProps>(({ onClickImage, o
       name: videoData.videoUrl.split('/').pop()!,
       videoSrc: videoData.videoUrl,
       posterSrc: videoData.videoThumbnailUrl,
-      coverImg: videoData.coverImage || videoData.videoThumbnailUrl, // 供详情弹窗/展示使用
+      coverImg: videoData.coverImage || videoData.videoThumbnailUrl, // For detail modal/display use
       model: '', // TODO: video model
-      platformName: videoData.platformName, // 详情弹窗的 ModelTag 依赖它
-      ratio: videoData.ratio, // 详情弹窗的 ratio 依赖它
-      duration: videoData.duration, // 详情弹窗的 duration 依赖它
-      createTime: videoData.createTime, // 详情弹窗的 generatedTime 依赖它
+      platformName: videoData.platformName, // Detail modal's ModelTag depends on it
+      ratio: videoData.ratio, // Detail modal's ratio depends on it
+      duration: videoData.duration, // Detail modal's duration depends on it
+      createTime: videoData.createTime, // Detail modal's generatedTime depends on it
       isAllowExtend: !!videoData.isAllowExtend,
       prompt: videoData.prompt,
       startFrame: videoData.imageUrl,

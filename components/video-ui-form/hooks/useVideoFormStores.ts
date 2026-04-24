@@ -1,13 +1,13 @@
 /**
- * 视频表单状态管理 Hook
+ * Video form state management Hook
  *
- * 统一管理视频表单所需的所有 Zustand stores
- * 减少主组件中的 hooks 调用，提高可维护性
+ * Centrally manages all Zustand stores required for video form
+ * Reduces hooks calls in main component, improves maintainability
  *
  * @example
  * ```tsx
  * const stores = useVideoFormStores();
- * // 使用 stores.uploadFilesToStorageThroughBackEnd 等
+ * // Use stores.uploadFilesToStorageThroughBackEnd etc.
  * ```
  */
 
@@ -18,47 +18,47 @@ import useUploadFiles from '@/hooks/use-upload-files';
 import useUpdateUserInfo from '@/hooks/useUpdateUserInfo';
 
 /**
- * 视频表单状态管理
+ * Video form state management
  *
- * 将 17 个分散的 hooks 调用统一到一个 hook 中
- * 提高代码可读性和可维护性
+ * Consolidates 17 scattered hooks calls into one hook
+ * Improves code readability and maintainability
  */
 export function useVideoFormStores() {
   // ============================================
-  // 对话框控制
+  // Dialog control
   // ============================================
   const setOpenPricingDialogStore = usePricingDialogStore((state) => state.setOpen);
 
   // ============================================
-  // 表单状态
+  // Form state
   // ============================================
   const resetDefault = useVideoFormStore((state) => state.resetDefault);
   const defaultPrompt = useVideoFormDefaultStore((state) => state.prompt);
 
   // ============================================
-  // 工具函数
+  // Utility functions
   // ============================================
   const uploadFilesToStorageThroughBackEnd = useUploadFiles();
   const { updateUserInfoWithDelay } = useUpdateUserInfo();
 
   return {
-    // 向后兼容的空占位，避免核心表单链路继续依赖登录态
+    // Backward compatible empty placeholder, avoid core form flow continuing to depend on login state
     userInfo: null,
     isPaidUser: true,
 
-    // 对话框
+    // Dialog
     setOpenPricingDialogStore,
 
-    // 表单状态
+    // Form state
     resetDefault,
     defaultPrompt,
-    // 工具函数
+    // Utility functions
     uploadFilesToStorageThroughBackEnd,
     updateUserInfoWithDelay,
   };
 }
 
 /**
- * 类型导出，方便在其他地方使用
+ * Type export for convenient use elsewhere
  */
 export type VideoFormStores = ReturnType<typeof useVideoFormStores>;

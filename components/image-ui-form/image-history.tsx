@@ -96,7 +96,7 @@ const ImageHistory = forwardRef<ScrollRef, ImageHistoryProps>(
     const t = useTranslations('components.image-form.history');
     const imageType = useImageContext();
 
-    // 根据 imageObjContext 选择对应的 updateImageObj
+    // Select corresponding updateImageObj based on imageObjContext
     const updateImageObj = useImageFormStore((state) => {
       if (imageObjContext === 'start-frame') return state.updateStartFrameImageObj;
       if (imageObjContext === 'end-frame') return state.updateEndFrameImageObj;
@@ -112,7 +112,7 @@ const ImageHistory = forwardRef<ScrollRef, ImageHistoryProps>(
 
     const hasData = displayData.length > 0;
 
-    // 当 imageType 变化时，重置为默认预设图片
+    // Reset to default preset image when imageType changes
     useEffect(() => {
       resetDefault();
       // eslint-disable-next-line react-hooks/exhaustive-deps

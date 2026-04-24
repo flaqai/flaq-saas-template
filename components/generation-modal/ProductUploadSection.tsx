@@ -6,7 +6,7 @@ import { SubjectIcon, ObjectIcon } from '@/components/svg/form/image-upload-with
 import { FrameImageUpload } from '@/components/form-fields';
 import type { FrameImageUploadRef } from '@/components/form-fields';
 
-// 空的模态框组件，因为 ProductUploadSection 不需要模态框
+// Empty modal component, as ProductUploadSection doesn't need a modal
 function EmptyModal() {
   return null;
 }

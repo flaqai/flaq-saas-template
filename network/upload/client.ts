@@ -17,8 +17,8 @@ export interface CreateSignedUrlResponse {
 }
 
 /**
- * 通用上传接口预留：
- * 暂时沿用 createSignedUrl 命名，后续再切到图床或后端代理。
+ * Generic upload interface placeholder:
+ * Currently using createSignedUrl naming, will switch to image hosting or backend proxy later.
  */
 export interface UploadAdapter {
   createSignedUrl(input: CreateSignedUrlRequest): Promise<SignedUrlItem[]>;

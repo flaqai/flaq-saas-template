@@ -35,46 +35,46 @@ export default function HomeCarousel({ title, description, className, data }: { 
     const diff = (index - currentIndex + data.length) % data.length;
 
     if (diff === 0) {
-      // 当前卡片，跳转到对应页面
+      // Current card, navigate to corresponding page
       const card = data[index];
       if (card.href) {
         router.push(card.href);
       }
     } else if (diff === 1 || diff === -(data.length - 1)) {
-      // 右侧卡片，切换到下一张
+      // Right card, switch to next
       goToNext();
     } else if (diff === data.length - 1 || diff === -1) {
-      // 左侧卡片，切换到上一张
+      // Left card, switch to previous
       goToPrevious();
     }
   };
 
   const getCardStyle = (index: number) => {
     const diff = (index - currentIndex + data.length) % data.length;
-    
+
     if (diff === 0) {
-      // 中间卡片
+      // Center card
       return {
         transform: 'translateX(0%) scale(1)',
         zIndex: 30,
         opacity: 1,
       };
     } else if (diff === 1 || diff === -(data.length - 1)) {
-      // 右侧卡片
+      // Right card
       return {
         transform: 'translateX(70%) scale(0.85)',
         zIndex: 20,
         opacity: 0.6,
       };
     } else if (diff === data.length - 1 || diff === -1) {
-      // 左侧卡片
+      // Left card
       return {
         transform: 'translateX(-70%) scale(0.85)',
         zIndex: 20,
         opacity: 0.6,
       };
     } else {
-      // 隐藏的卡片
+      // Hidden cards
       return {
         transform: 'translateX(0%) scale(0.7)',
         zIndex: 10,
@@ -88,7 +88,7 @@ export default function HomeCarousel({ title, description, className, data }: { 
       <SubHeading title={title} description={description} />
 
       <div className='relative mx-auto w-full max-w-[1200px] px-4'>
-        {/* 卡片容器 */}
+        {/* Card container */}
         <div className='relative aspect-[16/9] w-full'>
           {data.map((card, index) => {
             const style = getCardStyle(index);
@@ -101,9 +101,9 @@ export default function HomeCarousel({ title, description, className, data }: { 
                   'absolute left-1/2 top-1/2 aspect-[16/9] w-[95%] -translate-x-1/2 -translate-y-1/2 transition-all duration-500 ease-out lg:w-[85%] cursor-pointer'
                 )}
               >
-                {/* 卡片内容 */}
+                {/* Card content */}
                 <div className='relative h-full w-full overflow-hidden rounded-2xl shadow-2xl lg:rounded-3xl'>
-                  {/* 媒体内容 */}
+                  {/* Media content */}
                   {card.media.type === 'video' ? (
                     <video
                       className='h-full w-full object-contain select-none'
@@ -131,11 +131,11 @@ export default function HomeCarousel({ title, description, className, data }: { 
                     />
                   )}
 
-                  {/* 底部渐变模糊 - 从底往上逐渐清晰 */}
+                  {/* Bottom gradient blur - gradually clear from bottom to top */}
                   <div className='absolute inset-x-0 bottom-0 h-[15%] backdrop-blur-[8px]' style={{ maskImage: 'linear-gradient(to top, black 0%, transparent 100%)' }} />
                   <div className='absolute inset-x-0 bottom-0 h-[15%] bg-gradient-to-t from-black/40 via-black/15 to-transparent' />
 
-                  {/* 左上角类型标识 - 毛玻璃效果 */}
+                  {/* Top-left type label - frosted glass effect */}
                   <div className='absolute left-3 top-3 flex flex-row items-center justify-center gap-2.5 rounded-lg bg-black/20 px-4 py-2.5 backdrop-blur-[9px]'>
                     <span className='text-sm font-medium text-white lg:text-base'>
                       {card.type}
@@ -147,7 +147,7 @@ export default function HomeCarousel({ title, description, className, data }: { 
           })}
         </div>
 
-        {/* 左右切换按钮 */}
+        {/* Left and right navigation buttons */}
         <button
           onClick={goToPrevious}
           className='absolute left-0 top-1/2 z-40 -translate-y-1/2 text-white transition hover:scale-110 lg:left-[2%]'
@@ -163,7 +163,7 @@ export default function HomeCarousel({ title, description, className, data }: { 
           <ChevronRight className='size-10 lg:size-12' strokeWidth={2.5} />
         </button>
 
-        {/* 底部指示器 */}
+        {/* Bottom indicators */}
         <div className='absolute -bottom-4 left-1/2 z-40 flex -translate-x-1/2 gap-2'>
           {data.map((_, index) => (
             <button

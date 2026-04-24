@@ -78,7 +78,7 @@ export default function NavigationDrawer({ open, setOpen }: { open: boolean; set
     setIsOpen(open);
   }, [open]);
 
-  // 锁定 body 滚动
+  // Lock body scroll
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';

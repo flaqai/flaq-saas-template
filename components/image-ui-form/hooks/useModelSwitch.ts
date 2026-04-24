@@ -2,16 +2,16 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import type { UseFormReturn } from 'react-hook-form';
 
 /**
- * 模型切换处理 Hook（改进版）
+ * Model switch handling Hook (improved version)
  *
- * 职责：
- * 1. 检测模型版本切换
- * 2. 返回是否需要重置字段的标记
+ * Responsibilities:
+ * 1. Detect model version switch
+ * 2. Return flag indicating whether fields need to be reset
  *
- * 设计说明：
- * - 不再直接调用回调，而是返回 needsReset 标记
- * - 由外层根据 ratioOptions 变化后再执行重置
- * - 解决闭包捕获旧值的时序问题
+ * Design notes:
+ * - No longer directly calls callback, but returns needsReset flag
+ * - Outer layer executes reset after ratioOptions change
+ * - Solves timing issue of closure capturing old values
  */
 export function useModelSwitch(params: {
   selectedModelVersion?: string;
@@ -24,20 +24,20 @@ export function useModelSwitch(params: {
   useEffect(() => {
     if (!selectedModelVersion) return;
 
-    // 检测是否为模型版本切换
-    // 初次加载时 prevModelVersionRef.current 为 null，不触发
+    // Detect if it's a model version switch
+    // When first loading, prevModelVersionRef.current is null, don't trigger
     const isModelSwitch = prevModelVersionRef.current !== null &&
                           prevModelVersionRef.current !== selectedModelVersion;
 
     if (isModelSwitch) {
-      // 设置需要重置的标记，而不是直接调用回调
+      // Set flag indicating reset is needed, instead of directly calling callback
       setNeedsReset(true);
 
-      // 可选：仍然调用回调用于日志或其他用途
+      // Optional: still call callback for logging or other purposes
       onModelSwitch?.(prevModelVersionRef.current, selectedModelVersion);
     }
 
-    // 更新 ref（记录当前模型版本）
+    // Update ref (record current model version)
     prevModelVersionRef.current = selectedModelVersion;
   }, [selectedModelVersion, onModelSwitch]);
 
@@ -49,16 +49,16 @@ export function useModelSwitch(params: {
 }
 
 /**
- * 字段重置处理 Hook（改进版）
+ * Field reset handling Hook (improved version)
  *
- * 职责：
- * 1. 监听 needsReset 标记
- * 2. 当 needsReset 为 true 且配置就绪时，重置字段为默认值
+ * Responsibilities:
+ * 1. Listen to needsReset flag
+ * 2. When needsReset is true and configuration is ready, reset fields to default values
  *
- * 设计说明：
- * - 直接接收 ratioOptions/resolutionOptions 作为依赖
- * - 确保在新配置计算完成后再执行重置
- * - 解决闭包捕获旧值的问题
+ * Design notes:
+ * - Directly receives ratioOptions/resolutionOptions as dependencies
+ * - Ensures reset is executed after new configuration is calculated
+ * - Solves the problem of closure capturing old values
  */
 export function useFieldReset(params: {
   form: UseFormReturn<any>;
@@ -73,11 +73,11 @@ export function useFieldReset(params: {
 }) {
   const { form, needsReset, clearResetFlag, ratioOptions, resolutionOptions, priorityRules } = params;
 
-  // 监听 needsReset 和配置变化，在配置就绪后执行重置
+  // Listen to needsReset and configuration changes, execute reset when configuration is ready
   useEffect(() => {
     if (!needsReset) return;
 
-    // 选择最佳选项的辅助函数
+    // Helper function to select the best option
     const selectBestOption = (
       availableOptions: Array<{ value: string; name: string }>,
       priorities?: string[]
@@ -86,7 +86,7 @@ export function useFieldReset(params: {
         return undefined;
       }
 
-      // 按优先级列表查找第一个可用值
+      // Find the first available value according to the priority list
       if (priorities && priorities.length > 0) {
         for (const priority of priorities) {
           const found = availableOptions.find(opt => opt.value === priority);
@@ -96,7 +96,7 @@ export function useFieldReset(params: {
         }
       }
 
-      // 都没找到，返回第一个选项
+      // If none found, return the first option
       return availableOptions[0]?.value;
     };
 
@@ -130,11 +130,11 @@ export function useFieldReset(params: {
     } else if (newResolution) {
       form.setValue('resolution', newResolution);
     } else if (resolutionOptions.length === 0) {
-      // 当模型没有 resolution 配置时，清空字段
+      // When model has no resolution configuration, clear the field
       form.setValue('resolution', '');
     }
 
-    // 清除重置标记
+    // Clear reset flag
     clearResetFlag();
   }, [needsReset, ratioOptions, resolutionOptions, priorityRules, form, clearResetFlag]);
 }

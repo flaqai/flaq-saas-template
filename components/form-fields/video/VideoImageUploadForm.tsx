@@ -83,7 +83,7 @@ const VideoImageUploadForm = forwardRef<
 
     const updateFile = async (file: File | Blob | null | string) => {
       if (typeof file === 'string') {
-        // 直接用 URL，不转 File（避免 CORS 问题）
+        // Use URL directly, skip File conversion (avoids CORS issues)
         setFileUrl(file);
         setOriginalImageUrl({
           id: nanoid(),
@@ -176,14 +176,14 @@ const VideoImageUploadForm = forwardRef<
 
     useEffect(() => {
       if (videoFormImageSrc) {
-        // 直接用 URL，不转 File（避免 CORS 问题）
+        // Use URL directly, skip File conversion (avoids CORS issues)
         setFileUrl(videoFormImageSrc);
         setOriginalImageUrl({
           id: nanoid(),
           previewUrl: videoFormImageSrc,
           file: new File([], 'remote-image', { type: 'image/png' }),
         });
-        // 设置为 URL 字符串，提交时后端会处理
+        // Set as URL string; backend will handle it on submit
         methods.setValue(name, videoFormImageSrc);
         if (afterSetImage) {
           afterSetImage();

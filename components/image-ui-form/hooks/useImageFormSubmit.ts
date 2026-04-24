@@ -1,11 +1,11 @@
 /**
- * 图片表单提交逻辑 Hook
+ * Image form submission logic Hook
  *
- * 封装表单提交的完整流程：
- * 1. 表单验证（必填字段）
- * 2. 文件上传处理
- * 3. API 调用
- * 4. 成功/失败处理
+ * Encapsulates the complete form submission process:
+ * 1. Form validation (required fields)
+ * 2. File upload handling
+ * 3. API call
+ * 4. Success/failure handling
  *
  * @example
  * ```tsx
@@ -39,7 +39,7 @@ import type { ImageFormData } from '../types';
 import type { ImageModel } from '@/lib/constants/image/types';
 
 /**
- * useImageFormSubmit 的参数
+ * Parameters for useImageFormSubmit
  */
 interface UseImageFormSubmitOptions {
   imageFormType: string;
@@ -52,7 +52,7 @@ interface UseImageFormSubmitOptions {
 }
 
 /**
- * 图片表单提交 Hook
+ * Image form submission Hook
  */
 export function useImageFormSubmit(options: UseImageFormSubmitOptions) {
   const {
@@ -72,7 +72,7 @@ export function useImageFormSubmit(options: UseImageFormSubmitOptions) {
   const uploadFilesToStorageThroughBackEnd = useUploadFiles();
 
   /**
-   * 处理表单提交
+   * Handle form submission
    */
   const handleSubmit = useCallback(
     async (formData: ImageFormData, event?: React.BaseSyntheticEvent) => {
@@ -81,7 +81,7 @@ export function useImageFormSubmit(options: UseImageFormSubmitOptions) {
       event?.stopPropagation();
       sendGAEventBtnClicked(submitBtnId);
 
-      // 根据表单数据（有无图片）选择具体的模型
+      // Select specific model based on form data (with or without images)
       const hasImagesInForm =
         (formData.images && formData.images.length > 0) ||
         formData.subjectImage ||
@@ -114,13 +114,13 @@ export function useImageFormSubmit(options: UseImageFormSubmitOptions) {
         }
       }
 
-      // 声明 res 以便在 catch 块中访问
+      // Declare res to access in catch block
       let res;
 
       setIsSubmitting(true);
 
       try {
-        // 上传图片 - 支持 File 和 URL 混合
+        // Upload images - supports mixed File and URL
         const filesToUpload: FileType[] = [];
         const existingImageUrls: string[] = [];
 
@@ -135,7 +135,7 @@ export function useImageFormSubmit(options: UseImageFormSubmitOptions) {
           }
         });
 
-        // 处理 subjectImage 和 objectImage（用于 product-to-video 等场景）
+        // Handle subjectImage and objectImage (for product-to-video scenarios)
         if (formData.subjectImage) {
           if (typeof formData.subjectImage === 'string') {
             existingImageUrls.push(formData.subjectImage);
@@ -154,7 +154,7 @@ export function useImageFormSubmit(options: UseImageFormSubmitOptions) {
           }
         }
 
-        // 处理 objectImages 数组（用于 virtual-try-on 等多图场景）
+        // Handle objectImages array (for virtual-try-on multi-image scenarios)
         if (formData.objectImages && formData.objectImages.length > 0) {
           formData.objectImages.forEach((img: File | string) => {
             if (typeof img === 'string') {
@@ -169,12 +169,12 @@ export function useImageFormSubmit(options: UseImageFormSubmitOptions) {
           filesToUpload.length > 0 ? await uploadFilesToStorageThroughBackEnd(filesToUpload) : [];
         const allImageUrls = [...uploadedUrls, ...existingImageUrls];
 
-        // 格式化 prompt
+        // Format prompt
         const finalPrompt = formatPrompt
           ? formatPrompt(formData.prompt || '')
           : formData.prompt || '';
 
-        // 使用工具函数构建请求数据
+        // Build request data using utility function
         const reqData = buildImageGenerationRequest({
           formData,
           modelToUse,
@@ -187,7 +187,7 @@ export function useImageFormSubmit(options: UseImageFormSubmitOptions) {
 
         const { code, message, data } = res;
 
-        // Flaq API 成功时返回 code: 0 或 200
+        // Flaq API returns code: 0 or 200 on success
         if ((code !== 0 && code !== 200) || !data?.task_id) {
           throw new Error(message);
         }
@@ -205,15 +205,15 @@ export function useImageFormSubmit(options: UseImageFormSubmitOptions) {
           userImageUrlList: allImageUrls,
         });
 
-        // 兼容现有状态存储，并直接启动轮询，避免依赖全局 UI 组件触发。
+        // Compatible with existing state storage, and directly start polling to avoid relying on global UI component triggers.
         addProcessingTask(data.task_id, 'image', imageFormType);
         startTaskPolling(data.task_id, 'image');
 
-        // 显示成功提示和特效
+        // Show success message and effects
         showConfettiFireworks(3000);
         toast.success(message || 'Image task submitted.');
       } catch (error: any) {
-        // 提交失败时移除全局轮询任务
+        // Remove global polling task on submission failure
         if (res?.data?.task_id) {
           removeProcessingTask(res.data.task_id);
         }

@@ -26,25 +26,25 @@ const ALL_AVAILABLE_VERSIONS: ImageModelVersionConfig[] = [
 ];
 
 interface ImageGenerationModalProps {
-  // 以下三个属性通过 cloneElement 注入，因此标记为可选
+  // The following three properties are injected via cloneElement, so marked as optional
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   onImageSelect?: (imageUrl: string) => void;
   generateTabTitle: string;
   historyTabTitle: string;
   confirmButtonText?: string;
-  // 条件显示控制
+  // Conditional display control
   showMultiImageUpload?: boolean;
   showAspectRatio?: boolean;
   showResolution?: boolean;
   useBottomActionArea?: boolean;
   requireImageUpload?: boolean;
-  // 默认值配置
+  // Default value configuration
   defaultAspectRatio?: string;
   // Slot props
   customUploadSection?: React.ReactNode;
   customHintsSection?: React.ReactNode;
-  // 支持首尾帧独立轮询状态
+  // Support independent polling state for start and end frames
   imageObjContext?: 'default' | 'start-frame' | 'end-frame';
 }
 
@@ -75,14 +75,14 @@ export default function ImageGenerationModal({
   const { data: imageHistory, total: imageHistoryTotal, isLoading } = useUserImageHistory(pageNum, 30);
   const updateImageObj = useImageFormStore((state) => state.updateImageObj);
 
-  // 默认使用 Nano Banana Pro (Gemini 3 Pro Image Preview)
+  // Default to Nano Banana Pro (Gemini 3 Pro Image Preview)
   const defaultVersion = NANO_BANANA_PROVIDER.versions.find((v) => v.modelVersion === 'nano-banana-pro') || NANO_BANANA_PROVIDER.versions[0];
 
-  // 当 modal 关闭时重置 tab，但保留 imageObj 以便轮询完成后能保存结果
+  // Reset tab when modal closes, but keep imageObj to allow polling to complete and save results
   useEffect(() => {
     if (!open) {
       setActiveTab('generate');
-      // 不重置 imageObj，允许后台轮询继续并保存结果
+      // Don't reset imageObj, allow background polling to continue and save results
     }
   }, [open]);
 

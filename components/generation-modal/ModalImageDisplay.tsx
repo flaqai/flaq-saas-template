@@ -23,7 +23,7 @@ export default function ModalImageDisplay({ onImageSelect, imageObjContext = 'de
 
   const formType = useImageContext();
 
-  // 根据 imageObjContext 选择对应的 imageObj 和 updateImageObj
+  // Select corresponding imageObj and updateImageObj based on imageObjContext
   const imageObj = useImageFormStore((state) => {
     if (imageObjContext === 'start-frame') return state.startFrameImageObj;
     if (imageObjContext === 'end-frame') return state.endFrameImageObj;
@@ -46,7 +46,7 @@ export default function ModalImageDisplay({ onImageSelect, imageObjContext = 'de
   const [imageType, setImageType] = useState<ImageType>(imageTypesList[0]);
   const [showFormatMenu, setShowFormatMenu] = useState(false);
 
-  // 检测图片真实格式并设为默认
+  // Detect actual image format and set as default
   useEffect(() => {
     if (!imageObj || typeof imageObj !== 'object' || !imageObj.src) return;
 
@@ -82,7 +82,7 @@ export default function ModalImageDisplay({ onImageSelect, imageObjContext = 'de
     previewImgSrc = imageObj.src;
   }
 
-  // 按钮显示条件：有图片且不是 fallback
+  // Button display condition: has image and is not fallback
   const shouldShowButtons = imageObj && mode !== 'fallback';
 
   const onDownload = async () => {
@@ -147,7 +147,7 @@ export default function ModalImageDisplay({ onImageSelect, imageObjContext = 'de
               </button>
             </Box>
 
-            {/* 下载按钮 + 格式选择 */}
+            {/* Download button + format selection */}
             <Box className='order-2 gap-1 rounded-lg p-1 lg:order-none'>
               <div className='relative flex h-full items-center rounded-lg bg-[#1c1d20]'>
                 <button

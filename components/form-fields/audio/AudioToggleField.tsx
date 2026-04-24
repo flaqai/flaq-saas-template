@@ -13,8 +13,8 @@ interface AudioToggleFieldProps {
 }
 
 /**
- * 音频开启开关组件
- * 用于给用户选择是否生成带有声音的视频
+ * Audio enable toggle component
+ * Allows users to choose whether to generate video with sound
  */
 export default function AudioToggleField({ show = false }: AudioToggleFieldProps) {
   const t = useTranslations('components.video-form');

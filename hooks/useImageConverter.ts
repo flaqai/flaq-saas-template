@@ -25,19 +25,19 @@ const useImageConverter = (): UseImageConverterResult => {
     setError(null);
 
     try {
-      // 移除文件名中的扩展名
+      // Remove file extension from filename
       const nameWithoutExt = imageName.replace(/\.[^/.]+$/, '');
 
-      // 使用代理 API 避免 CORS 问题
+      // Use proxy API to avoid CORS issues
       const proxyUrl = `/api/proxy-image?url=${encodeURIComponent(imageUrl)}`;
       const response = await fetch(proxyUrl);
       const blob = await response.blob();
 
-      // 检测原始图片格式
+      // Detect original image format
       const originalType = blob.type.split('/')[1]; // e.g., 'png', 'jpeg', 'webp'
       const normalizedOriginalType = originalType === 'jpeg' ? 'jpg' : originalType;
 
-      // 如果目标格式和原图格式相同，直接下载不转换
+      // If target format matches original format, download directly without conversion
       if (normalizedOriginalType === type) {
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);

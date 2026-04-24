@@ -15,7 +15,7 @@ import { cn } from '@/lib/utils';
 import { Form } from '@/components/ui/form';
 import SubHeading from '@/components/form/SubHeading';
 
-// 通用表单组件
+// Generic form components
 import {
   PromptField,
   AudioSupportField,
@@ -28,7 +28,7 @@ import {
 } from '@/components/form-fields';
 import type { MultiImageUploadFieldRef, ImageUploadFieldRef, AudioUploadFieldRef } from '@/components/form-fields';
 
-// 本地 hooks 和 utils
+// Local hooks and utils
 import { useVideoFormStores } from './hooks/useVideoFormStores';
 import useVideoFormSubmit from './hooks/useVideoFormSubmit';
 import useModelToggle from './hooks/useModelToggle';
@@ -42,19 +42,19 @@ import VideoDisplay from './VideoDisplay';
 import VideoHistorySection from './VideoHistorySection';
 import type { VideoHistoryRequest } from '@/network/video/history';
 
-// 本地类型
+// Local types
 import type { VideoFormData } from './types';
 
 // ============================================
-// 配置常量
+// Configuration constants
 // ============================================
 
-// 注意：模型选择逻辑已统一移至 lib/utils/videoModelService.ts
+// Note: Model selection logic has been unified and moved to lib/utils/videoModelService.ts
 
 /**
  * VideoFormBase Props
  *
- * UI 显示控制：通过 show* props 明确控制每个字段的显示（对标 image-form）
+ * UI display control: Explicitly control each field's display via show* props (aligned with image-form)
  */
 interface VideoFormBaseProps {
   submitBtnId: string;
@@ -63,10 +63,10 @@ interface VideoFormBaseProps {
   formTitle?: string;
   uploadImageTitle?: string;
   slotNode?: React.ReactNode;
-  requireImageUpload?: boolean; // 当前页面是否需要图片上传才能生成
-  showAllVideoHistory?: boolean; // 历史记录是否显示所有类型（不过滤）
+  requireImageUpload?: boolean; // Whether current page requires image upload to generate
+  showAllVideoHistory?: boolean; // Whether history shows all types (no filter)
 
-  // UI 显示控制
+  // UI display control
   showInput?: boolean;
   showVideoModelVersion?: boolean;
   modelVersionDisplayMode?: 'model' | 'label' | 'both';
@@ -79,7 +79,7 @@ interface VideoFormBaseProps {
   showAudioUpload?: boolean;
   allowedProviders?: string[];
 
-  // 默认值优先级（对标 image-form 的 defaultValuePriority）
+  // Default value priority (aligned with image-form's defaultValuePriority)
   defaultValuePriority?: {
     ratio?: string[];
     duration?: string[];
@@ -94,10 +94,10 @@ export default function VideoFormBase({
   formTitle,
   uploadImageTitle,
   slotNode,
-  requireImageUpload = false, // 默认不强制要求上传图片
-  showAllVideoHistory = false, // 默认不显示所有历史
+  requireImageUpload = false, // Default: no forced image upload required
+  showAllVideoHistory = false, // Default: don't show all history
 
-  // UI 显示控制 props
+  // UI display control props
   showInput = true,
   showVideoModelVersion = true,
   modelVersionDisplayMode = 'model',
@@ -109,7 +109,7 @@ export default function VideoFormBase({
   showAudio = true,
   showAudioUpload = true,
 
-  // 默认值优先级 props
+  // Default value priority props
   defaultValuePriority,
   allowedProviders,
 }: VideoFormBaseProps) {
@@ -122,7 +122,7 @@ export default function VideoFormBase({
   void _audioDuration; // Reserved for future use
 
   // ============================================
-  // 统一状态管理 (替换原来的 17 个 hooks)
+  // Unified state management (replaces original 17 hooks)
   // ============================================
   const stores = useVideoFormStores();
   const {
@@ -147,18 +147,18 @@ export default function VideoFormBase({
   });
 
   // ============================================
-  // 表单初始化
+  // Form initialization
   // ============================================
-  // 计算初始默认值（只在组件首次挂载时执行一次）
+  // Calculate initial default values (only executed once on component mount)
   const getInitialDefaultValues = (): Partial<VideoFormData> => {
     const initialModelVersion = defaultValues?.modelVersion || VideoModelService.getDefaultModel();
 
-    // 获取初始模型配置，用于提取默认的 duration 和 resolution
-    // 初始状态没有图片，所以使用 text-to-video 模式，默认关闭音频
+    // Get initial model config to extract default duration and resolution
+    // Initial state has no images, so use text-to-video mode with audio disabled by default
     const versionConfig = getVersionConfig(initialModelVersion);
     const initialModel = selectVideoModelByGenerationType(versionConfig, false, undefined, undefined, false);
 
-    // 提取初始的 duration 和 resolution 默认值
+    // Extract initial duration and resolution default values
     const initialDuration = initialModel?.options?.duration ? `${initialModel.options.duration}s` : undefined;
     const initialResolution = initialModel?.options?.resolution;
 
@@ -174,7 +174,7 @@ export default function VideoFormBase({
     };
   };
 
-  // 使用 useRef 保存初始默认值，确保在整个组件生命周期中不变
+  // Use useRef to save initial default values, ensuring they remain unchanged throughout component lifecycle
   const initialDefaultValuesRef = useRef<Partial<VideoFormData>>(getInitialDefaultValues());
 
   const form = useForm<VideoFormData>({
@@ -190,7 +190,7 @@ export default function VideoFormBase({
   const multiImages = form.watch('multiImages');
   const enableAudio = form.watch('enableAudio');
 
-  // 判断用户是否上传了图片（用于自动判断生成类型）
+  // Check if user has uploaded images (for auto-determining generation type)
   const hasImages = useMemo(() => {
     if (requireImageUpload) return true;
     const hasStartFrame = !!(startFrame && (startFrame instanceof File || typeof startFrame === 'string'));
@@ -200,14 +200,13 @@ export default function VideoFormBase({
   }, [startFrame, endFrame, multiImages, requireImageUpload]);
 
   // ============================================
-  // 业务逻辑：使用新的 useVideoModelConfig hook
+  // Business logic: Use new useVideoModelConfig hook
   // ============================================
   const { versionConfig: currentVersionConfig, uiConfig, selectModel } = useVideoModelConfig({
     selectedModelVersion: modelVersion,
     hasImages,
   });
 
-  // 从 uiConfig 获取选项 TODO：需对比方案实现，再决定去留
   const {
     durationOptions,
     resolutionOptions,
@@ -220,13 +219,13 @@ export default function VideoFormBase({
     multiImageMaxImages
   } = uiConfig;
 
-  // 获取当前模型（用于显示 credit 等信息）
+  // Get current model (for displaying credit and other info)
   const currentModel = useMemo(() => {
     return selectModel(hasImages, selectedDuration, selectedResolution, enableAudio) ?? undefined;
   }, [selectModel, hasImages, selectedDuration, selectedResolution, enableAudio]);
 
   // ============================================
-  // 表单同步逻辑 (提取到 useFormSync hook)
+  // Form sync logic (extracted to useFormSync hook)
   // ============================================
   useFormSync({
     form,
@@ -242,7 +241,7 @@ export default function VideoFormBase({
   });
 
   // ============================================
-  // 模型切换逻辑 (提取到 useModelToggle hook)
+  // Model toggle logic (extracted to useModelToggle hook)
   // ============================================
   const { handleEndFrameToggle } = useModelToggle({
     form,
@@ -250,7 +249,7 @@ export default function VideoFormBase({
   });
 
   // ============================================
-  // 表单提交逻辑 (提取到 useVideoFormSubmit hook)
+  // Form submit logic (extracted to useVideoFormSubmit hook)
   // ============================================
   const { handleSubmit: submitForm, isSubmitting } = useVideoFormSubmit({
     videoType,
@@ -261,26 +260,26 @@ export default function VideoFormBase({
   });
 
   const onSubmit = async (formData: VideoFormData) => {
-    // 校验是否需要强制上传图片
+    // Validate if image upload is required
     if (requireImageUpload) {
       const hasUploadedImage = !!(
         formData.startFrame &&
         (formData.startFrame instanceof File || typeof formData.startFrame === 'string')
       );
-      
+
       if (!hasUploadedImage) {
-        toast.error(t('error.image-required')); // 需要添加翻译
+        toast.error(t('error.image-required')); // Need to add translation
         return;
       }
     }
 
-    // 判断提交时是否有图片（用于自动选择模型）
+    // Check if there are images at submit time (for auto-selecting model)
     const hasImagesAtSubmit = !!(
       formData.startFrame &&
       (formData.startFrame instanceof File || typeof formData.startFrame === 'string')
     );
 
-    // 使用新的 selectModel 函数自动选择模型
+    // Use new selectModel function to auto-select model
     const formSubmitVideoModel = selectModel(hasImagesAtSubmit, formData.duration, formData.resolution, formData.enableAudio);
 
     if (!formSubmitVideoModel) {
@@ -288,7 +287,7 @@ export default function VideoFormBase({
       return;
     }
 
-    // 调用提取的表单提交逻辑
+    // Call extracted form submit logic
     await submitForm(formData, formSubmitVideoModel);
   };
 
@@ -308,8 +307,8 @@ export default function VideoFormBase({
             </div>
           )}
           <div className='flex flex-1 flex-col gap-2.5 overflow-y-auto pb-20 lg:items-stretch custom-scrollbar'>
-            
-            {/* 模型版本选择 */}
+
+            {/* Model version selection */}
             {showVideoModelVersion && (
               <>
                 <div className='flex items-center justify-between gap-3'>
@@ -341,16 +340,16 @@ export default function VideoFormBase({
               </>
             )}
 
-            {/* 音频支持提示（纯展示，用于不可控音频的模型，如 Veo） */}
+            {/* Audio support hint (display only, for models with uncontrollable audio like Veo) */}
             <AudioSupportField show={showAudio && supportsAudio && !supportsOptionalAudio} />
 
-            {/* 音频选项：是否开启生成的音频（如 Seedance 1.5、Kling 等支持可选音频的模型） */}
+            {/* Audio option: whether to enable generated audio (for models with optional audio like Seedance 1.5, Kling) */}
             <AudioToggleField show={showAudio && supportsOptionalAudio} />
 
-            {/* 音频上传字段（根据模型的 audioUrl 配置决定是否显示） */}
+            {/* Audio upload field (display based on model's audioUrl config) */}
             <AudioUploadField show={showAudioUpload && supportsAudioUrl} ref={audioUploadRef} />
 
-            {/* 多图上传区域 */}
+            {/* Multi-image upload area */}
             {multiImageMaxImages > 0 && (
               <MultiImageUploadField
                 name='multiImages'
@@ -359,9 +358,9 @@ export default function VideoFormBase({
               />
             )}
 
-            {/* 起始/结束帧合并区域，右侧开关控制是否启用尾帧 */}
+            {/* Start/end frame merged area, right switch controls whether to enable end frame */}
             <StartEndFrameField
-              currentModel={currentModel} // TODO: product 页面需单独处理首尾帧的识别与传入，使用单独的产品上传组件
+              currentModel={currentModel} // TODO: product page needs separate handling for start/end frame recognition and passing, use separate product upload component
               showStartFrame={showStartFrame}
               showEndFrame={showEndFrame}
               onEndFrameToggle={handleEndFrameToggle}
@@ -371,15 +370,15 @@ export default function VideoFormBase({
               supportsEndFrameFromConfig={supportsEndFrame}
             />
 
-            {/* 自定义插槽节点 */}
+            {/* Custom slot node */}
             {slotNode}
 
-            {/* Prompt 输入 */}
+            {/* Prompt input */}
             <PromptField show={showInput} />
 
           </div>
 
-          {/* 底部操作区域 */}
+          {/* Bottom action area */}
           <BottomActionArea
             durationOptions={durationOptions}
             ratioOptions={ratioOptions}

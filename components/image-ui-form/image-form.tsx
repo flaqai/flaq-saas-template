@@ -15,7 +15,7 @@ import { supportsGenerationType } from '@/lib/utils/imageModelService';
 import { Form } from '@/components/ui/form';
 import SubHeading from '@/components/form/SubHeading';
 
-// 通用表单组件
+// Common form components
 import {
   PromptField,
   ModelVersionField,
@@ -37,11 +37,11 @@ import type { ImageFormData, ImageFormProps } from './types';
 import { useModelConfig, useModelSwitch, useFieldReset } from './hooks';
 import { useImageFormSubmit } from './hooks/useImageFormSubmit';
 
-// 重新导出类型，保持向后兼容
+// Re-export types for backward compatibility
 export type { ImageFormData, ImageFormProps } from './types';
 
 // ============================================
-// 主组件
+// Main component
 // ============================================
 
 export default function ImageForm({
@@ -109,7 +109,7 @@ export default function ImageForm({
   // ============================================
   // Store states
   // ============================================
-  // 根据 imageObjContext 选择对应的 imageObj 和 updateImageObj
+  // Select corresponding imageObj and updateImageObj based on imageObjContext
   const imageObj = useImageFormStore((state) => {
     if (imageObjContext === 'start-frame') return state.startFrameImageObj;
     if (imageObjContext === 'end-frame') return state.endFrameImageObj;
@@ -138,7 +138,7 @@ export default function ImageForm({
   const resetImageFormDefault = useImageFormDefaultStore((state) => state.resetDefault);
 
   // ============================================
-  // 表单初始化
+  // Form initialization
   // ============================================
   const form = useForm<ImageFormData>({
     defaultValues: {
@@ -147,11 +147,11 @@ export default function ImageForm({
       modelVersion: '',
       aspectRatio: '',
       resolution: '',
-      ...defaultValues, // 优先使用页面传入的默认值
+      ...defaultValues, // Prioritize default values passed from page
     },
   });
 
-  // 监听 store 中的 prompt 并填充到表单
+  // Listen to prompt in store and populate form
   useEffect(() => {
     if (defaultPrompt) {
       form.setValue('prompt', defaultPrompt);
@@ -160,7 +160,7 @@ export default function ImageForm({
   }, [defaultPrompt, form, resetImageFormDefault]);
 
   // ============================================
-  // 业务逻辑：模型选择
+  // Business logic: Model selection
   // ============================================
   const selectedModelVersion = form.watch('modelVersion');
   const imagesValue = form.watch('images');
@@ -168,20 +168,20 @@ export default function ImageForm({
   const objectImageValue = form.watch('objectImage');
   const objectImagesValue = form.watch('objectImages');
 
-  // 判断是否有图片：检查 images 数组或 subject/object 图片
-  // 注意：只有用户真正上传/选择图片时，这些字段才会有值（File 或 string URL）
+  // Check if there are images: check images array or subject/object images
+  // Note: These fields only have values when user actually uploads/selects images (File or string URL)
   const hasImages = (imagesValue?.length > 0) ||
                     !!(subjectImageValue && (subjectImageValue instanceof File || typeof subjectImageValue === 'string')) ||
                     !!(objectImageValue && (objectImageValue instanceof File || typeof objectImageValue === 'string')) ||
                     !!(objectImagesValue && objectImagesValue.length > 0);
 
-  // 使用 useModelConfig Hook 解析模型配置
+  // Use useModelConfig Hook to parse model configuration
   const { versionConfig, uiConfig, selectModel } = useModelConfig({
     selectedModelVersion,
     customVersionList,
   });
 
-  // 别名：保持向后兼容
+  // Aliases: maintain backward compatibility
   const selectedVersionConfig = versionConfig;
   const ratioOptions = uiConfig.ratioOptions;
   const resolutionOptions = uiConfig.resolutionOptions;
@@ -189,7 +189,7 @@ export default function ImageForm({
   const maxImagesSupported = uiConfig.maxImages;
 
   // ============================================
-  // 图片上传配置
+  // Image upload configuration
   // ============================================
   const shouldShowUpload = imageUploadMode !== 'none' && (
     imageUploadMode === 'single' || supportsImageInput
@@ -199,7 +199,7 @@ export default function ImageForm({
     ? 1
     : (supportsImageInput ? maxImagesSupported : 1);
 
-  // UI 显示用的选项（转换格式）
+  // Options for UI display (format conversion)
   const ratioOptionsForUI = useMemo(() =>
     ratioOptions.map(item => ({
       name: item.name,
@@ -216,19 +216,19 @@ export default function ImageForm({
     [resolutionOptions]
   );
 
-  // 用于 UI 显示的模型（credit 计算等）
+  // Model for UI display (credit calculation, etc.)
   const modelForDisplay = useMemo(() =>
     selectModel(hasImages),
     [selectModel, hasImages]
   );
   void modelForDisplay;
 
-  // 使用模型切换检测 Hook（返回 needsReset 标记）
+  // Use model switch detection Hook (returns needsReset flag)
   const { needsReset, clearResetFlag } = useModelSwitch({
     selectedModelVersion,
   });
 
-  // 使用字段重置 Hook（监听 needsReset 和配置变化）
+  // Use field reset Hook (listen to needsReset and config changes)
   useFieldReset({
     form,
     needsReset,
@@ -238,13 +238,13 @@ export default function ImageForm({
     priorityRules: defaultValuePriority,
   });
 
-  // 包装 selectModel 以匹配 hook 的类型要求（null -> undefined）
+  // Wrap selectModel to match hook's type requirements (null -> undefined)
   const selectModelWrapper = useCallback((hasImages: boolean) => {
     const model = selectModel(hasImages);
     return model === null ? undefined : model;
   }, [selectModel]);
 
-  // 使用表单提交 Hook
+  // Use form submission Hook
   const { handleSubmit: handleFormSubmit, isSubmitting } = useImageFormSubmit({
     imageFormType,
     selectModel: selectModelWrapper,
@@ -256,7 +256,7 @@ export default function ImageForm({
   });
 
   // ============================================
-  // 事件处理
+  // Event handling
   // ============================================
   const resetAll = useCallback(() => {
     form.reset();
@@ -276,18 +276,18 @@ export default function ImageForm({
   };
 
   // ============================================
-  // 表单提交
+  // Form submission
   // ============================================
   const onSubmit = async (formData: ImageFormData, event?: React.BaseSyntheticEvent) => {
-    // 检查是否正在提交或轮询中
+    // Check if currently submitting or polling
     if (isSubmitting || isPolling) return;
 
-    // 调用 hook 的提交逻辑
+    // Call hook's submission logic
     await handleFormSubmit(formData, event);
   };
 
   // ============================================
-  // 渲染
+  // Render
   // ============================================
   return (
     <ImageContenxtProvider imageFormType={imageFormType}>
@@ -301,7 +301,7 @@ export default function ImageForm({
         <Form {...form}>
           <form
             onSubmit={(e) => {
-              e.stopPropagation(); // 阻止 React Portal 事件冒泡到父级表单
+              e.stopPropagation(); // Prevent React Portal event bubbling to parent form
               form.handleSubmit(onSubmit)(e);
             }}
             className='no-scrollbar relative isolate z-40 flex h-auto w-full shrink-0 flex-col gap-3 rounded-3xl bg-[#1c1d20] p-3.5 lg:h-full lg:w-[351px]'
@@ -388,7 +388,7 @@ export default function ImageForm({
             {/* Custom slot after model selection */}
             {slotNodeAfterModel}
 
-            {/* Unified Image Upload - 根据 maxImages 配置自动适配单图或多图模式 */}
+            {/* Unified Image Upload - automatically adapts to single or multiple image mode based on maxImages config */}
             {shouldShowUpload && (
               <UnifiedImageUploadField
                 title={actualMaxImages > 1 ? uploadImagesTitle : undefined}
@@ -417,11 +417,11 @@ export default function ImageForm({
 
             {/* Template Selector */}
             {showTemplateSelector && (
-              <TemplateSelector 
+              <TemplateSelector
                 templates={imageTemplateList || []}
                 translationNamespace={translationNamespace}
-                templateFieldName='template' // TODO: 考虑合并几个属性，统一对象传入
-                promptFieldName='prompt' // TODO: 考虑合并几个属性，统一对象传入
+                templateFieldName='template' // TODO: Consider merging several properties, pass as unified object
+                promptFieldName='prompt' // TODO: Consider merging several properties, pass as unified object
               />
             )}
 

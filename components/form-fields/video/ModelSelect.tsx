@@ -40,12 +40,12 @@ export default function ModelSelect({
   const { control, watch, setValue } = useFormContext();
   const selectedModelVersion = watch(name);
 
-  // 记录上一次的 hasImages 状态，用于检测变化
+  // Track previous hasImages state to detect changes
   const prevHasImages = useRef<boolean>(hasImages);
 
-  // 根据 hasImages 动态过滤模型版本列表
-  // 使用 getFilteredVisibleProviders（排除特殊用途模型，按渠道控制 WAN）
-  // 有图片时，只显示支持 image-to-video 的版本
+  // Dynamically filter model version list based on hasImages
+  // Use getFilteredVisibleProviders (excludes special-purpose models, controls WAN by channel)
+  // When images are present, only show versions that support image-to-video
   const modelVersions = useMemo(() => {
     const visibleProviders = getFilteredVisibleProviders(true);
     const providers = allowedProviders
@@ -68,34 +68,34 @@ export default function ModelSelect({
     return allVisibleVersions;
   }, [hasImages, allowedProviders, videoType]);
 
-  // 对模型版本列表进行排序：
-  // 1. 将当前选中模型的品牌的所有版本放在前面
-  // 2. 在该品牌内，将选中的版本置顶
+  // Sort model version list:
+  // 1. Put all versions of the currently selected model's brand first
+  // 2. Within that brand, pin the selected version to the top
   const sortedVersions = useMemo(() => {
     if (!selectedModelVersion || !modelVersions.length) return modelVersions;
 
-    // 找到选中的版本
+    // Find the selected version
     const selectedVersion = modelVersions.find((v) => v.modelVersion === selectedModelVersion);
     if (!selectedVersion) return modelVersions;
 
     const selectedProvider = selectedVersion.provider;
 
-    // 按品牌分组
+    // Group by brand
     const sameProviderVersions = modelVersions.filter(
       (v) => v.provider === selectedProvider && v.modelVersion !== selectedModelVersion,
     );
     const otherProviderVersions = modelVersions.filter((v) => v.provider !== selectedProvider);
 
-    // 返回：选中的版本 + 同品牌其他版本 + 其他品牌版本
+    // Return: selected version + other versions from same brand + versions from other brands
     return [selectedVersion, ...sameProviderVersions, ...otherProviderVersions];
   }, [modelVersions, selectedModelVersion]);
 
-  // 格式化范围显示（将数组转换为 min-max 格式）
+  // Format range display (convert array to min-max format)
   const formatRangeLabel = (values: string[], unit: string) => {
     if (values.length === 0) return '';
     if (values.length === 1) return values[0];
 
-    // 提取数值部分并排序
+    // Extract numeric parts and sort
     const numbers = values
       .map((v) => parseInt(v.replace(/\D/g, ''), 10))
       .filter((n) => !Number.isNaN(n))
@@ -109,43 +109,43 @@ export default function ModelSelect({
     return `${min}-${max}${unit}`;
   };
 
-  // 为每个模型版本生成特性列表
+  // Generate feature list for each model version
   const getVersionFeatures = (version: ModelVersionConfig) => {
     const features = [];
 
-    // 添加时长信息（从 options.duration 数组）
+    // Add duration info (from options.duration array)
     if (version.options.duration && version.options.duration.length > 0) {
       const durationLabel = formatRangeLabel(version.options.duration, 's');
       features.push({ icon: 'duration' as const, label: durationLabel });
     }
 
-    // 添加分辨率信息（从 options.resolution 数组）
+    // Add resolution info (from options.resolution array)
     if (version.options.resolution && version.options.resolution.length > 0) {
       const resolutionLabel = formatRangeLabel(version.options.resolution, 'p');
       features.push({ icon: 'resolution' as const, label: resolutionLabel });
     }
 
-    // 添加音频输入能力
+    // Add audio input capability
     if (version.options?.audioUrl || version.options?.audio) {
       features.push({ icon: 'audio' as const, label: 'Audio Upload' });
     }
 
-    // 添加声音生成能力
+    // Add sound generation capability
     if (version.options?.sound) {
       features.push({ icon: 'sound' as const, label: 'Sound' });
     }
 
-    // 添加背景音乐能力
+    // Add background music capability
     if (version.options?.bgm) {
       features.push({ icon: 'bgm' as const, label: 'BGM' });
     }
 
-    // 添加风格控制能力
+    // Add style control capability
     if (version.options?.style?.length) {
       features.push({ icon: 'style' as const, label: 'Style' });
     }
 
-    // 添加结束帧信息
+    // Add end frame info
     if (version.options?.endFrame?.isSupported) {
       features.push({ icon: 'endFrame' as const, label: 'End frame' });
     }
@@ -153,37 +153,37 @@ export default function ModelSelect({
     return features;
   };
 
-  // 获取模型版本的显示名称：默认直接显示 flaq model_name
+  // Get display name for model version: defaults to showing flaq model_name directly
   const getVersionDisplayName = (version: ModelVersionConfig) => {
     if (displayMode === 'label') return version.name;
     if (displayMode === 'both') return `${version.modelVersion} / ${version.name}`;
     return version.modelVersion;
   };
 
-  // 当 hasImages 改变时，检查当前模型是否仍然可用
-  // 如果用户上传了图片但当前模型不支持 image-to-video，则自动切换
+  // When hasImages changes, check if the current model is still available
+  // If the user uploads images but the current model does not support image-to-video, switch automatically
   useEffect(() => {
     if (!sortedVersions.length) return;
 
-    // 只在 hasImages 真正改变时才执行逻辑
+    // Only execute logic when hasImages actually changes
     if (prevHasImages.current === hasImages) {
       return;
     }
 
-    // 更新上一次的 hasImages 状态
+    // Update the previous hasImages state
     prevHasImages.current = hasImages;
 
-    // 检查当前选择是否在新列表中
+    // Check if the current selection is in the new list
     const isCurrentInList = sortedVersions.some((v) => v.modelVersion === selectedModelVersion);
     if (isCurrentInList) {
-      // 当前选择在列表中，无需切换
+      // Current selection is in the list, no need to switch
       return;
     }
 
-    // 当前选择不在列表中，需要切换到支持的版本（同品牌优先）
+    // Current selection is not in the list, need to switch to a supported version (same brand preferred)
     const currentProvider = getVideoProviderByModelVersion(selectedModelVersion);
 
-    // 优先选择同品牌的模型
+    // Prefer selecting a model from the same brand
     let newModelVersion = sortedVersions[0]?.modelVersion;
 
     if (currentProvider && newModelVersion) {
@@ -206,7 +206,7 @@ export default function ModelSelect({
         <FormItem className='space-y-0'>
           <Select onValueChange={field.onChange} value={field.value ?? ''} name={name}>
             <FormControl>
-              {/* 模型版本列表，选择器触发按钮 */}
+              {/* Model version list, selector trigger button */}
               <SelectTrigger className='w-full border border-[#303030] rounded-xl text-sm bg-[#1f1f1f] text-white'>
                 <div className='flex items-center gap-2'>
                   {selectedModelVersion && getModelIcon(selectedModelVersion) ? (

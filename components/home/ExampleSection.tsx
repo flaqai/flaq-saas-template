@@ -53,18 +53,18 @@ export default function ExampleSection({
   const [copied, setCopied] = useState(false);
   const playerRefs = useRef<(YouTubePlayer | null)[]>([]);
 
-  // 点击图片跳转到 AI 图片生成页面并填充 prompt
+  // Click image to navigate to AI image generation page and fill prompt
   const handleImageClick = (prompt: string) => {
     setImagePrompt(prompt);
     router.push('/image-to-image');
   };
 
-  // 初始化滚动位置到中间组
+  // Initialize scroll position to the middle group
   useEffect(() => {
     const container = imageScrollRef.current;
     if (!container || images.length === 0) return;
 
-    // 一开始就阻止 scroll 监听
+    // Block scroll listener from the start
     isScrollingRef.current = true;
 
     const initScroll = () => {
@@ -76,12 +76,12 @@ export default function ExampleSection({
         container.scrollLeft = itemCenter - containerWidth / 2;
         setCurrentImageIndex(0);
 
-        // 初始化完成后重置标志
+        // Reset flag after initialization is complete
         setTimeout(() => {
           isScrollingRef.current = false;
         }, 50);
       } else {
-        // 如果元素还没准备好，继续重试
+        // If element is not ready yet, keep retrying
         setTimeout(initScroll, 50);
       }
     };
@@ -100,7 +100,7 @@ export default function ExampleSection({
     };
   }, [images]);
 
-  // 图片无缝循环滚动监听 - 改进版本
+  // Image seamless loop scroll listener - improved version
   useEffect(() => {
     const container = imageScrollRef.current;
     if (!container || images.length === 0) return;
@@ -108,19 +108,19 @@ export default function ExampleSection({
     let scrollEndTimer: NodeJS.Timeout | null = null;
 
     const handleScroll = () => {
-      // 如果是手动滚动或正在调整位置，跳过
+      // Skip if manual scroll or position is being adjusted
       if (isScrollingRef.current || isManualScrollRef.current) return;
 
-      // 清除之前的定时器
+      // Clear previous timer
       if (scrollEndTimer) clearTimeout(scrollEndTimer);
 
-      // 滚动停止后 100ms 再检查并跳转
+      // Check and jump 100ms after scroll stops
       scrollEndTimer = setTimeout(() => {
         const scrollLeft = container.scrollLeft;
         const clientWidth = container.clientWidth;
         const centerPosition = scrollLeft + clientWidth / 2;
 
-        // 找到当前中心位置最近的图片
+        // Find the image closest to current center position
         let currentIdx = 0;
         let currentEl: HTMLDivElement | null = null;
         let minDist = Infinity;
@@ -140,19 +140,19 @@ export default function ExampleSection({
 
         const oneSetLength = images.length;
 
-        // 判断是否需要跳转
+        // Check if a jump is needed
         if (currentIdx >= oneSetLength * 2 || currentIdx < oneSetLength) {
-          // 计算在当前图片内的相对偏移
+          // Calculate relative offset within the current image
           const elCenter = currentEl.offsetLeft + currentEl.offsetWidth / 2;
           const offsetFromCenter = centerPosition - elCenter;
 
-          // 目标是第二组对应的图片
+          // Target is the corresponding image in the second group
           const normalizedIdx = currentIdx % oneSetLength;
           const targetIdx = oneSetLength + normalizedIdx;
           const targetEl = imageItemRefs.current[targetIdx];
           if (!targetEl) return;
 
-          // 计算新的 scrollLeft，保持相同的相对偏移
+          // Calculate new scrollLeft, maintaining the same relative offset
           const targetCenter = targetEl.offsetLeft + targetEl.offsetWidth / 2;
           container.scrollLeft = targetCenter + offsetFromCenter - clientWidth / 2;
         }
@@ -166,7 +166,7 @@ export default function ExampleSection({
     };
   }, [images]);
 
-  // 图片自动滚动
+  // Auto scroll images
   useEffect(() => {
     if (!autoPlay) return;
 
@@ -183,7 +183,7 @@ export default function ExampleSection({
     return () => clearInterval(intervalId);
   }, [autoPlay]);
 
-  // 视频自动切换
+  // Auto switch videos
   useEffect(() => {
     if (!autoPlay) return;
 
@@ -194,7 +194,7 @@ export default function ExampleSection({
     return () => clearInterval(intervalId);
   }, [videos.length, autoPlay]);
 
-  // 图片轮播控制 - 极简版
+  // Image carousel control - minimal version
   const goToPreviousImage = () => {
     const container = imageScrollRef.current;
     if (!container) return;
@@ -213,7 +213,7 @@ export default function ExampleSection({
     container.scrollBy({ left: itemWidth, behavior: 'smooth' });
   };
 
-  // 视频切换时停止当前播放的视频并重置播放状态
+  // Stop current playing video and reset playback state when switching videos
   const stopCurrentVideo = () => {
     const currentPlayer = playerRefs.current[videoCurrentIndex];
     if (currentPlayer && typeof currentPlayer.stopVideo === 'function') {
@@ -221,7 +221,7 @@ export default function ExampleSection({
     }
   };
 
-  // 视频轮播控制
+  // Video carousel control
   const goToPreviousVideo = () => {
     stopCurrentVideo();
     setVideoCurrentIndex((prev) => (prev - 1 + videos.length) % videos.length);
@@ -234,12 +234,12 @@ export default function ExampleSection({
 
   return (
     <section className='relative w-full py-15 bg-black'>
-      {/* 主标题和描述 */}
+      {/* Main title and description */}
       <SubHeading title={title} description={description} />
 
-      {/* 图片示例部分 */}
+      {/* Image examples section */}
       <div className='mt-9'>
-        {/* 标题和导航按钮 */}
+        {/* Title and navigation buttons */}
         <div className='mx-auto max-w-[1200px] px-4 flex items-start justify-between'>
           <div className="flex flex-col items-start text-left mx-0">
             <h2 className="text-[18px] font-semibold text-white md:text-[18px] md:leading-[26px] md:tracking-[0.36px]">
@@ -252,7 +252,7 @@ export default function ExampleSection({
             )}
           </div>
 
-          {/* 切换按钮 */}
+          {/* Navigation buttons */}
           <div className='flex items-center gap-3'>
             <button
               onClick={goToPreviousImage}
@@ -271,7 +271,7 @@ export default function ExampleSection({
           </div>
         </div>
 
-        {/* 图片轮播容器 */}
+        {/* Image carousel container */}
         <div
           ref={imageScrollRef}
           className='mt-3 overflow-x-scroll overflow-y-hidden [&::-webkit-scrollbar]:hidden'
@@ -299,7 +299,7 @@ export default function ExampleSection({
                     loading='eager'
                   />
 
-                  {/* 底部渐变遮罩和 Prompt */}
+                  {/* Bottom gradient overlay and Prompt */}
                   <div className='absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent transition-all duration-300 opacity-0 group-hover:opacity-100 px-4 pb-4 pt-20'>
                     <p className='text-xs text-white/90 line-clamp-4 leading-relaxed'>
                       {item.prompt}
@@ -312,9 +312,9 @@ export default function ExampleSection({
         </div>
       </div>
 
-      {/* 视频示例部分 */}
+      {/* Video examples section */}
       <div className='mt-9 mx-auto max-w-[1200px] px-4'>
-        {/* 标题和导航按钮 */}
+        {/* Title and navigation buttons */}
         <div className='flex items-start justify-between'>
           <div className='flex flex-col items-start text-left mx-0'>
             <h3 className='text-[18px] font-semibold text-white md:text-[18px] md:leading-[26px] md:tracking-[0.36px]'>{videoExamplesTitle}</h3>
@@ -323,7 +323,7 @@ export default function ExampleSection({
             </p>
           </div>
 
-          {/* 切换按钮 */}
+          {/* Navigation buttons */}
           <div className='flex items-center gap-3'>
             <button
               onClick={goToPreviousVideo}
@@ -342,9 +342,9 @@ export default function ExampleSection({
           </div>
         </div>
 
-        {/* 视频内容区域 */}
+        {/* Video content area */}
         <div className='mt-3 grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-6'>
-          {/* YouTube 播放器 */}
+          {/* YouTube player */}
           <div className='relative overflow-hidden rounded-xl bg-[#383838] aspect-video'>
             {videos.map((video, index) => (
               <div
@@ -375,9 +375,9 @@ export default function ExampleSection({
             ))}
           </div>
 
-          {/* 视频信息和Prompt */}
+          {/* Video info and Prompt */}
           <div className='flex flex-col gap-4 rounded-xl bg-[#16171B] p-4'>
-            {/* Prompt 标题和复制按钮 */}
+            {/* Prompt title and copy button */}
             <div className='flex items-center justify-start gap-3'>
               <p className='text-sm font-medium text-white'>{promptLabel}</p>
               <button
@@ -393,7 +393,7 @@ export default function ExampleSection({
               </button>
             </div>
 
-            {/* 视频Prompt */}
+            {/* Video Prompt */}
             <p className='text-xs text-white/70 line-clamp-10'>
               {videos[videoCurrentIndex].prompt}
             </p>

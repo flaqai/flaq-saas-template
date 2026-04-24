@@ -7,7 +7,7 @@ import { useTranslations } from 'next-intl';
 import useCopyToClipboard from '@/hooks/useCopyToClipboard';
 import ImageExpiredIcon from '@/components/svg/image/ImageExpiredIcon';
 
-// 图片过期占位符组件
+// Image expired placeholder component
 export function ImageExpiredPlaceholder({
   className = '',
   iconClassName = 'h-6 w-6',
@@ -29,13 +29,13 @@ export function ImageExpiredPlaceholder({
   );
 }
 
-// 元数据参数项类型
+// Metadata item type
 export interface MetadataItem {
   label: string;
   value: string | number;
 }
 
-// 元数据行组件
+// Metadata row component
 export function MetadataRow({ items }: { items: MetadataItem[] }) {
   return (
     <div className='flex flex-wrap items-center gap-2 text-sm leading-[22px]'>
@@ -49,7 +49,7 @@ export function MetadataRow({ items }: { items: MetadataItem[] }) {
   );
 }
 
-// 模型标签组件
+// Model tag component
 export function ModelTag({ modelName }: { modelName?: string }) {
   if (!modelName) return null;
 
@@ -62,7 +62,7 @@ export function ModelTag({ modelName }: { modelName?: string }) {
   );
 }
 
-// 提示词区域组件
+// Prompt section component
 export function PromptSection({ prompt, translationKey = 'Profile.image-history.detail' }: { prompt?: string; translationKey?: string }) {
   const { isCopied, copyToClipboard } = useCopyToClipboard();
   const t = useTranslations(translationKey);
@@ -89,13 +89,13 @@ export function PromptSection({ prompt, translationKey = 'Profile.image-history.
   );
 }
 
-// 版权说明组件
+// Copyright text component
 export function CopyrightText({ translationKey = 'Profile.image-history.detail' }: { translationKey?: string }) {
   const t = useTranslations(translationKey);
   return <p className='text-sm leading-[22px] text-[#777]'>{t('copyright')}</p>;
 }
 
-// 底部操作按钮容器
+// Bottom action button container
 export function ModalActions({ children }: { children: React.ReactNode }) {
   return (
     <div className='flex shrink-0 items-center gap-2 border-t border-[#34353b] p-3'>
@@ -104,12 +104,12 @@ export function ModalActions({ children }: { children: React.ReactNode }) {
   );
 }
 
-// 操作按钮组（左侧）
+// Action button group (left side)
 export function ActionButtonGroup({ children }: { children: React.ReactNode }) {
   return <div className='flex shrink-0 gap-2'>{children}</div>;
 }
 
-// 下载按钮
+// Download button
 export function DownloadButton({ onClick, disabled = false }: { onClick: () => void; disabled?: boolean }) {
   return (
     <button
@@ -123,7 +123,7 @@ export function DownloadButton({ onClick, disabled = false }: { onClick: () => v
   );
 }
 
-// 删除按钮
+// Delete button
 export function DeleteButton({
   onClick,
   disabled = false,
@@ -143,7 +143,7 @@ export function DeleteButton({
   );
 }
 
-// 模态框头部
+// Modal header
 export function ModalHeader({ title, onClose }: { title: string; onClose: () => void }) {
   return (
     <div className='flex shrink-0 items-center justify-between border-b border-[#34353b] p-3'>
@@ -161,12 +161,12 @@ export function ModalHeader({ title, onClose }: { title: string; onClose: () => 
   );
 }
 
-// 滚动内容区域
+// Scrollable content area
 export function ScrollableContent({ children }: { children: React.ReactNode }) {
   return <div className='flex flex-1 flex-col gap-3 overflow-y-auto p-3 custom-scrollbar'>{children}</div>;
 }
 
-// 媒体网格组件（用于 Images 和 Frames）
+// Media grid component (for Images and Frames)
 export function MediaGrid({
   title,
   mediaUrls,

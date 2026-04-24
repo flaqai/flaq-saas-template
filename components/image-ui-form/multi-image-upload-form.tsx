@@ -64,7 +64,7 @@ const MultiImageUploadForm: ForwardRefRenderFunction<
   const [images, setImages] = useState<ImageItem[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // 使用 useEffect 来同步 images 状态到表单
+  // Use useEffect to sync images state to form
   useEffect(() => {
     const files = images.map((img) => img.file).filter((file) => file !== null) as File[];
     methods.setValue(name, files);
@@ -140,11 +140,11 @@ const MultiImageUploadForm: ForwardRefRenderFunction<
 
     const accepted = acceptTypes && acceptTypes.length > 0 ? acceptTypes : acceptedImageTypes;
 
-    // 1) 类型过滤（例如剔除 webp）
+    // 1) Type filtering (e.g., exclude webp)
     const typeFiltered = files.filter((file) => accepted.includes(file.type));
     if (typeFiltered.length === 0) return;
 
-    // 2) 外部校验（例如比例校验）
+    // 2) External validation (e.g., aspect ratio validation)
     let validated: File[] = typeFiltered;
     if (validateFileBeforeAdd) {
       const results: File[] = [];
@@ -153,7 +153,7 @@ const MultiImageUploadForm: ForwardRefRenderFunction<
           const ok = await validateFileBeforeAdd(file);
           if (ok) results.push(file);
         } catch (_) {
-          // 忽略异常，认为不通过
+          // Ignore exceptions, consider as failed
         }
       }
       validated = results;

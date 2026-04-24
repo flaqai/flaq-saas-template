@@ -25,17 +25,17 @@ const StartEndFrameField = forwardRef<ImageUploadFieldRef, StartEndFrameFieldPro
     const { control } = useFormContext();
     const t = useTranslations('components.video-form');
 
-    // 优先使用从 uiConfig 传入的配置（版本级并集），否则回退到 currentModel（单个模型）
+    // Prefer config passed in from uiConfig (version-level union); fall back to currentModel (single model)
     const supportsStartFrame = supportsImageInput ?? currentModel?.options?.startFrame?.isSupported;
     const supportsEndFrame = supportsEndFrameFromConfig ?? currentModel?.options?.endFrame?.isSupported;
 
-    // 决定是否显示起始帧和结束帧
-    // 如果模型支持 startFrame，就显示（不管是文生还是图生）
-    // 如果模型支持 endFrame，就显示
+    // Decide whether to show start frame and end frame
+    // Show start frame if the model supports startFrame (regardless of text-to-video or image-to-video)
+    // Show end frame if the model supports endFrame
     const shouldShowStartFrame = showStartFrame && supportsStartFrame;
     const shouldShowEndFrame = showEndFrame && supportsEndFrame;
 
-    // 如果两者都不显示，不渲染该组件
+    // If neither should be shown, do not render this component
     if (!shouldShowStartFrame && !shouldShowEndFrame) {
       return null;
     }
@@ -46,10 +46,10 @@ const StartEndFrameField = forwardRef<ImageUploadFieldRef, StartEndFrameFieldPro
         name='enableEndFrame'
         render={({ field }) => (
           <FormItem className='flex w-full flex-col gap-2.5 space-y-0'>
-            {/* 标题区域 */}
+            {/* Title area */}
             <div className='flex items-center justify-between'>
               <FormLabel className='cursor-pointer text-sm font-normal'>
-                {/* 如果有结束帧开关，显示 "Start Frame / End Frame" */}
+                {/* If there is an end frame toggle, show "Start Frame / End Frame" */}
                 {shouldShowEndFrame ? (
                   <>
                     {shouldShowStartFrame && (
@@ -61,11 +61,11 @@ const StartEndFrameField = forwardRef<ImageUploadFieldRef, StartEndFrameFieldPro
                     <span className='text-white/70'>{t('endFrame')}</span>
                   </>
                 ) : (
-                  /* 如果只有起始帧，显示自定义标题或默认 "Upload Image" */
+                  /* If only start frame, show custom title or default "Upload Image" */
                   <span className='text-white/70'>{uploadImageTitle || t('image')}</span>
                 )}
               </FormLabel>
-              {/* 只有在显示结束帧时才显示开关 */}
+              {/* Only show toggle when end frame is displayed */}
               {shouldShowEndFrame && (
                 <FormControl>
                   <Switch
@@ -85,15 +85,15 @@ const StartEndFrameField = forwardRef<ImageUploadFieldRef, StartEndFrameFieldPro
               )}
             </div>
 
-            {/* 起始/结束帧布局 */}
+            {/* Start/end frame layout */}
             <div className='flex w-full flex-col gap-2.5 lg:flex-row'>
-              {/* 起始帧 */}
+              {/* Start frame */}
               {shouldShowStartFrame && (
                 <div className='flex-1'>
                   <ImageUploadField name='startFrame' ref={ref} label={t('startFrame')} />
                 </div>
               )}
-              {/* 结束帧（仅在开关打开时显示） */}
+              {/* End frame (only shown when toggle is on) */}
               {shouldShowEndFrame && field.value && (
                 <div className='flex-1'>
                   <ImageUploadField name='endFrame' label={t('endFrame')} />

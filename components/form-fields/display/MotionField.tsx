@@ -47,10 +47,10 @@ export default function MotionField({
     setValue('selectedMotion', motion);
     setIsModalOpen(false);
     
-    // 1. 触发回调（如果有）
+    // 1. Trigger callback (if available)
     onMotionChange?.(motion.value, motion);
     
-    // 2. 自动跳转（如果不是当前页面且有跳转路径）
+    // 2. Auto-navigate (if not on current page and has navigation path)
     if (motion.id !== currentMotionId && motion.href) {
       router.push(motion.href);
     }

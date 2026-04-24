@@ -51,7 +51,7 @@ export default function ImageDetailModal({ open, onOpenChange, onDelete, image }
   const [showFormatMenu, setShowFormatMenu] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  // 检测图片真实格式并设为默认
+  // Detect actual image format and set as default
   useEffect(() => {
     if (!open || !image.url) return;
 
@@ -64,7 +64,7 @@ export default function ImageDetailModal({ open, onOpenChange, onDelete, image }
     if (!image.url) return;
 
     try {
-      // 使用代理 API 避免 CORS 问题
+      // Use proxy API to avoid CORS issues
       const proxyUrl = `/api/proxy-image?url=${encodeURIComponent(image.url)}`;
       const response = await fetch(proxyUrl);
       const blob = await response.blob();
@@ -102,7 +102,7 @@ export default function ImageDetailModal({ open, onOpenChange, onDelete, image }
 
     const aspectRatio = width / height;
 
-    // 定义常见比例及其容差
+    // Define common ratios and their tolerance
     const commonRatios = [
       { ratio: 16 / 9, display: '16:9' },
       { ratio: 4 / 3, display: '4:3' },
@@ -115,7 +115,7 @@ export default function ImageDetailModal({ open, onOpenChange, onDelete, image }
       { ratio: 9 / 21, display: '9:21' },
     ];
 
-    // 查找最接近的常见比例（容差 3%）
+    // Find closest common ratio (3% tolerance)
     const tolerance = 0.03;
     for (const { ratio, display } of commonRatios) {
       if (Math.abs(aspectRatio - ratio) / ratio < tolerance) {
@@ -123,13 +123,13 @@ export default function ImageDetailModal({ open, onOpenChange, onDelete, image }
       }
     }
 
-    // 如果没有匹配的常见比例，使用 GCD 简化
+    // If no common ratio matches, simplify using GCD
     const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));
     const divisor = gcd(width, height);
     const ratioW = width / divisor;
     const ratioH = height / divisor;
 
-    // 如果简化后的比例数字仍然很大，不显示比例
+    // If simplified ratio numbers are still large, don't display ratio
     if (ratioW > 50 || ratioH > 50) {
       return '';
     }
@@ -184,7 +184,7 @@ export default function ImageDetailModal({ open, onOpenChange, onDelete, image }
     return `${value.toFixed(fixed)} ${units[unitIndex]}`;
   };
 
-  // 构建元数据项（构建顺序决定参数展示排序）
+  // Build metadata items (build order determines parameter display order)
   const getMetadataItems = (): MetadataItem[] => {
     const items: MetadataItem[] = [];
 
@@ -210,7 +210,7 @@ export default function ImageDetailModal({ open, onOpenChange, onDelete, image }
     return items;
   };
 
-  // 获取模型版本名称
+  // Get model version name
   const getModelVersionName = () => {
     if (!image.modelName) return undefined;
     return getImageModelVersionName(image.modelName) || image.modelName;

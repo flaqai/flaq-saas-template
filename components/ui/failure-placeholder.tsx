@@ -5,27 +5,27 @@ import { useTranslations } from 'next-intl';
 
 interface FailurePlaceholderProps {
   /**
-   * 容器的类名，用于自定义样式
+   * Container class name for custom styling
    */
   className?: string;
   /**
-   * 文本内容，默认为"哎呀！生成失败了！"
+   * Text content, defaults to "Oops! Generation failed!"
    */
   text?: string;
   /**
-   * 图标大小，默认为48x48
+   * Icon size, defaults to 48x48
    */
   iconSize?: number;
   /**
-   * 是否显示时间戳
+   * Whether to display timestamp
    */
   showTimestamp?: boolean;
   /**
-   * 时间戳文本
+   * Timestamp text
    */
   timestamp?: string;
   /**
-   * 点击事件处理
+   * Click event handler
    */
   onClick?: () => void;
 }

@@ -6,7 +6,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { useTranslations } from 'next-intl';
 import { ExampleIcon } from '@/components/svg/section/common';
 
-// 统一色值，与image-showcase-section一致，参考 file_context_0
+// Unified color values, consistent with image-showcase-section, reference file_context_0
 const BG_COLOR = 'bg-[#141516]';
 const TEXT_COLOR = 'text-white/70';
 const BORDER_COLOR = 'border border-[#2f2f2f]';

@@ -28,13 +28,13 @@ export default function AudioFilePreviewCard({
   const [waveformData, setWaveformData] = useState<number[]>([]);
   const [isGeneratingWaveform, setIsGeneratingWaveform] = useState(false);
 
-  // 裁剪状态持久化
+  // Trim state persistence
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(0);
   const [isDraggingStart, setIsDraggingStart] = useState(false);
   const [isDraggingEnd, setIsDraggingEnd] = useState(false);
 
-  // 进度指示器拖动状态
+  // Progress indicator drag state
   const [isDraggingProgress, setIsDraggingProgress] = useState(false);
   const [isProgressHandleHovered, setIsProgressHandleHovered] = useState(false);
 
@@ -46,7 +46,7 @@ export default function AudioFilePreviewCard({
 
   const audioContext = useContext(videoAudioContext);
 
-  // 生成波形数据（始终生成，用于默认显示）
+  // Generate waveform data (always generate for default display)
   const generateWaveform = useCallback(async (url: string) => {
     setIsGeneratingWaveform(true);
     try {
@@ -79,7 +79,7 @@ export default function AudioFilePreviewCard({
     }
   }, []);
 
-  // 绘制波形
+  // Draw waveform
   const drawWaveform = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas || waveformData.length === 0) return;
@@ -125,14 +125,14 @@ export default function AudioFilePreviewCard({
     };
   }, [file]);
 
-  // 始终生成波形（无论是否显示裁剪器）
+  // Always generate waveform (regardless of whether trimmer is shown)
   useEffect(() => {
     if (audioUrl) {
       generateWaveform(audioUrl);
     }
   }, [audioUrl, generateWaveform]);
 
-  // 动画绘制波形
+  // Animate waveform drawing
   useEffect(() => {
     if (waveformData.length > 0) {
       const animate = () => {
@@ -150,24 +150,24 @@ export default function AudioFilePreviewCard({
     return undefined;
   }, [waveformData, drawWaveform]);
 
-  // 时间转位置
+  // Convert time to position
   const timeToPosition = (time: number) => {
     if (!waveformContainerRef.current || duration === 0) return 0;
     return (time / duration) * waveformContainerRef.current.offsetWidth;
   };
 
-  // 位置转时间
+  // Convert position to time
   const positionToTime = (position: number) => {
     if (!waveformContainerRef.current || duration === 0) return 0;
     const ratio = position / waveformContainerRef.current.offsetWidth;
     return Math.max(0, Math.min(duration, ratio * duration));
   };
 
-  // 点击音轨跳转
+  // Click waveform to jump
   const handleWaveformClick = (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
     if (isDraggingProgress || isDraggingStart || isDraggingEnd) return;
 
-    // 如果刚刚完成拖动，忽略这次点击
+    // If just finished dragging, ignore this click
     if (justFinishedDraggingRef.current) {
       justFinishedDraggingRef.current = false;
       return;
@@ -181,7 +181,7 @@ export default function AudioFilePreviewCard({
     const x = clientX - rect.left;
     let newTime = positionToTime(x);
 
-    // 如果开启裁剪模式，限制在裁剪区域内
+    // If trim mode is enabled, limit to trim area
     if (showTrimmer) {
       newTime = Math.max(startTime, Math.min(endTime, newTime));
     }
@@ -189,7 +189,7 @@ export default function AudioFilePreviewCard({
     audioRef.current.currentTime = newTime;
   };
 
-  // 进度指示器拖动
+  // Progress indicator drag
   const handleProgressHandleMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
     e.stopPropagation();
     e.preventDefault();
@@ -207,7 +207,7 @@ export default function AudioFilePreviewCard({
       const x = clientX - rect.left;
       let newTime = positionToTime(x);
 
-      // 如果开启裁剪模式，限制在裁剪区域内
+      // If trim mode is enabled, limit to trim area
       if (showTrimmer) {
         newTime = Math.max(startTime, Math.min(endTime, newTime));
       }
@@ -226,7 +226,7 @@ export default function AudioFilePreviewCard({
     }, 50);
   }, []);
 
-  // 裁剪边界器拖动
+  // Trim boundary drag
   const handleTrimBoundaryMouseDown = (type: 'start' | 'end') => (e: React.MouseEvent | React.TouchEvent) => {
     e.stopPropagation();
     e.preventDefault();
@@ -283,7 +283,7 @@ export default function AudioFilePreviewCard({
       if (isPlaying) {
         audioRef.current.pause();
       } else {
-        // 如果显示裁剪器且当前进度在裁剪范围外，跳转到开始位置
+        // If trimmer is shown and current progress is outside trim range, jump to start position
         if (showTrimmer && (currentTime < startTime || currentTime >= endTime)) {
           audioRef.current.currentTime = startTime;
         }
@@ -298,19 +298,19 @@ export default function AudioFilePreviewCard({
     onDelete();
   };
 
-  // 切换裁剪模式
+  // Toggle trim mode
   const handleToggleTrimmer = () => {
     const newShowTrimmer = !showTrimmer;
     setShowTrimmer(newShowTrimmer);
 
-    // 切换到裁剪模式时，通知父组件裁剪范围
+    // When switching to trim mode, notify parent component of trim range
     if (newShowTrimmer) {
       onTrimChange?.(startTime, endTime);
       const trimmedDuration = endTime - startTime;
       onDurationChange?.(trimmedDuration);
       audioContext?.setAudioDuration?.(trimmedDuration);
     } else {
-      // 切换回完整模式时，重置为完整时长
+      // When switching back to full mode, reset to full duration
       onTrimChange?.(0, duration);
       onDurationChange?.(duration);
       audioContext?.setAudioDuration?.(duration);
@@ -324,14 +324,14 @@ export default function AudioFilePreviewCard({
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
 
-  // 音频事件监听
+  // Audio event listeners
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio || !audioUrl) return undefined;
 
     const handleTimeUpdate = () => {
       setCurrentTime(audio.currentTime);
-      // 如果显示裁剪器且播放到结束位置，跳转到开始位置
+      // If trimmer is shown and playback reaches end position, jump to start position
       if (showTrimmer && audio.currentTime >= endTime) {
         audio.pause();
         audio.currentTime = startTime;
@@ -342,7 +342,7 @@ export default function AudioFilePreviewCard({
     const handleLoadedMetadata = () => {
       setDuration(audio.duration);
       setEndTime(audio.duration);
-      // 初始化时使用完整时长
+      // Use full duration on initialization
       if (!showTrimmer) {
         onDurationChange?.(audio.duration);
         audioContext?.setAudioDuration?.(audio.duration);
@@ -373,7 +373,7 @@ export default function AudioFilePreviewCard({
     };
   }, [audioUrl, showTrimmer, startTime, endTime, onDurationChange, audioContext]);
 
-  // 进度指示器拖动监听
+  // Progress indicator drag listeners
   useEffect(() => {
     if (!isDraggingProgress) return undefined;
 
@@ -390,7 +390,7 @@ export default function AudioFilePreviewCard({
     };
   }, [isDraggingProgress, handleProgressDragMove, handleProgressDragEnd]);
 
-  // 裁剪边界器拖动监听
+  // Trim boundary drag listeners
   useEffect(() => {
     if (!isDraggingStart && !isDraggingEnd) return undefined;
 
@@ -447,7 +447,7 @@ export default function AudioFilePreviewCard({
             </div>
           </div>
 
-          {/* 波形 + 进度指示器 + 裁剪边界器 */}
+          {/* Waveform + progress indicator + trim boundaries */}
           <div className='w-full space-y-1'>
             <span className='text-xs text-white/40'>
               {formatTime(currentTime)}/{formatTime(duration, true)}
@@ -472,13 +472,13 @@ export default function AudioFilePreviewCard({
                 </div>
               ) : (
                 <>
-                  {/* 波形 Canvas */}
+                  {/* Waveform Canvas */}
                   <canvas ref={canvasRef} className='h-full w-full rounded-md' />
 
-                  {/* 裁剪边界器 - 仅在 showTrimmer 时显示 */}
+                  {/* Trim boundaries - only shown when showTrimmer is true */}
                   {showTrimmer && (
                     <>
-                      {/* 左边界 */}
+                      {/* Left boundary */}
                       <div
                         role='slider'
                         tabIndex={0}
@@ -511,7 +511,7 @@ export default function AudioFilePreviewCard({
                         </div>
                       </div>
 
-                      {/* 右边界 */}
+                      {/* Right boundary */}
                       <div
                         role='slider'
                         tabIndex={0}
@@ -546,12 +546,12 @@ export default function AudioFilePreviewCard({
                     </>
                   )}
 
-                  {/* 进度指示器 - 始终显示 */}
+                  {/* Progress indicator - always shown */}
                   <div
                     className='pointer-events-none absolute top-0 z-30 h-full w-0.5 bg-[#427cf1]'
                     style={{ left: `${progressPosition}px` }}
                   >
-                    {/* 顶部圆形拖动手柄 */}
+                    {/* Top circular drag handle */}
                     <div
                       role='slider'
                       tabIndex={0}
@@ -593,7 +593,7 @@ export default function AudioFilePreviewCard({
               )}
             </div>
 
-            {/* 裁剪信息 - 仅在裁剪模式显示 */}
+            {/* Trim info - only shown in trim mode */}
             {showTrimmer && (
               <div className='flex items-center justify-between text-xs text-white/60'>
                 <span>

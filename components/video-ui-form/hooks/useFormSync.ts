@@ -1,12 +1,12 @@
 /**
- * 表单同步逻辑 Hook
+ * Form synchronization logic Hook
  *
- * 封装表单字段自动同步的所有 useEffect：
- * 1. 监听模型变化，自动同步 ratio（画面比例）
- * 2. 监听模型变化，自动同步 duration 和 resolution
- * 3. 监听模型变化，自动同步 enableEndFrame
+ * Encapsulates all useEffect for automatic form field synchronization:
+ * 1. Listen to model changes, automatically sync ratio (aspect ratio)
+ * 2. Listen to model changes, automatically sync duration and resolution
+ * 3. Listen to model changes, automatically sync enableEndFrame
  *
- * 这些 useEffect 确保当用户切换模型或上传/删除图片时，表单字段自动适配
+ * These useEffect ensure form fields automatically adapt when user switches models or uploads/deletes images
  *
  * @example
  * ```tsx
@@ -31,7 +31,7 @@ import { type VideoModel, type ModelVersionConfig } from '@/lib/constants/video/
 import type { VideoFormData, FormOption } from '../types';
 
 /**
- * useFormSync 的参数
+ * Parameters for useFormSync
  */
 interface UseFormSyncOptions {
   form: UseFormReturn<VideoFormData>;
@@ -83,9 +83,9 @@ function pickBestValue(params: {
 }
 
 /**
- * 表单同步逻辑 Hook
+ * Form synchronization logic Hook
  *
- * 将 useEffect 整合到一个 hook 中，使主组件更简洁
+ * Integrates useEffect into one hook to make the main component cleaner
  */
 export default function useFormSync(options: UseFormSyncOptions) {
   const {
@@ -103,7 +103,7 @@ export default function useFormSync(options: UseFormSyncOptions) {
 
   const prevModelVersionRef = useRef<string | null>(null);
 
-  // 检测模型是否切换（在所有 useEffect 之前计算）
+  // Detect if model has switched (calculate before all useEffect)
   const isModelSwitch =
     prevModelVersionRef.current !== null && prevModelVersionRef.current !== modelVersion;
 
@@ -204,7 +204,7 @@ export default function useFormSync(options: UseFormSyncOptions) {
     }
   }, [modelVersion, currentModel, form, isModelSwitch]);
 
-  // 统一更新 ref（放在所有 effect 执行完后）
+  // Update ref uniformly (after all effects have executed)
   useEffect(() => {
     prevModelVersionRef.current = modelVersion;
   }, [modelVersion]);

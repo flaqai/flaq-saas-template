@@ -36,7 +36,7 @@ export default function BottomActionArea({
   const t = useTranslations('components.video-form');
   const form = useFormContext();
 
-  // 为选项添加图标
+  // Add icons to options
   const durationOptionsWithIcon = durationOptions?.map((opt) => ({
     ...opt,
     leftIcon: <Clock className='size-4 text-[#777777]' />,
@@ -54,16 +54,16 @@ export default function BottomActionArea({
 
   return (
     <div className='mt-auto flex flex-col gap-1 bg-[#1c1d20]'>
-      {/* 上层：表单选项集成区 */}
+      {/* Top layer: Form options integration area */}
       <div className='flex flex-wrap items-center gap-1'>
-        {/* Duration 时长 */}
+        {/* Duration */}
         <FormField
           control={form.control}
           name='duration'
           render={({ field }) => (
             <FormItem className={cn(
               'flex-1 space-y-0',
-              // 使用 CSS 隐藏而不是条件渲染，避免字段卸载导致值丢失
+              // Use CSS to hide instead of conditional rendering to avoid field unmounting and value loss
               (!showDuration || !durationOptionsWithIcon || durationOptionsWithIcon.length === 0) && 'hidden'
             )}>
               <FormControl>
@@ -77,14 +77,14 @@ export default function BottomActionArea({
           )}
         />
 
-        {/* Ratio 比例 */}
+        {/* Ratio */}
         <FormField
           control={form.control}
           name={ratioFieldName}
           render={({ field }) => (
             <FormItem className={cn(
               'flex-1 space-y-0',
-              // 使用 CSS 隐藏而不是条件渲染，避免字段卸载导致值丢失
+              // Use CSS to hide instead of conditional rendering to avoid field unmounting and value loss
               (!showRatio || !ratioOptionsWithIcon || ratioOptionsWithIcon.length === 0) && 'hidden'
             )}>
               <FormControl>
@@ -98,14 +98,14 @@ export default function BottomActionArea({
           )}
         />
 
-        {/* Resolution 分辨率 */}
+        {/* Resolution */}
         <FormField
           control={form.control}
           name={resolutionFieldName}
           render={({ field }) => (
             <FormItem className={cn(
               'flex-1 space-y-0',
-              // 使用 CSS 隐藏而不是条件渲染，避免字段卸载导致值丢失
+              // Use CSS to hide instead of conditional rendering to avoid field unmounting and value loss
               (!showResolution || !resolutionOptionsWithIcon || resolutionOptionsWithIcon.length === 0) && 'hidden'
             )}>
               <FormControl>
@@ -120,9 +120,9 @@ export default function BottomActionArea({
         />
       </div>
 
-      {/* 下层：生成按钮 */}
+      {/* Bottom layer: Generate button */}
       <div className='flex items-center gap-1'>
-        {/* 生成按钮 */}
+        {/* Generate button */}
         <button
           type='submit'
           disabled={isSubmitting}

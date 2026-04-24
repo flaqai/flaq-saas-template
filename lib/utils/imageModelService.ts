@@ -1,7 +1,7 @@
 import type { ImageModel, ImageGenerationType, ResolutionOption, RatioOption } from '@/lib/constants/image/types';
 
 /**
- * 检查模型是否支持特定的生成类型
+ * Check if model supports a specific generation type
  */
 export function supportsGenerationType(model: ImageModel, generationType: ImageGenerationType): boolean {
   return (
@@ -11,21 +11,21 @@ export function supportsGenerationType(model: ImageModel, generationType: ImageG
 }
 
 /**
- * 获取分辨率选项
+ * Get resolution options
  */
 export function getResolutionOptions(model: ImageModel): ResolutionOption[] {
   return model.options.resolution || [];
 }
 
 /**
- * 获取比例选项
+ * Get ratio options
  */
 export function getRatioOptions(model: ImageModel): RatioOption[] {
   return model.options.ratio || [];
 }
 
 /**
- * 获取模型的图片输入要求
+ * Get model's image input requirements
  */
 export function getImageInputRequirements(model: ImageModel) {
   return model.options.imageInput || { required: false, isSupported: false };

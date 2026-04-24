@@ -64,7 +64,7 @@ const FrameImageUploadSection = forwardRef<FrameImageUploadSectionRef, FrameImag
 
     const modelVersion = methods.watch('modelVersion');
 
-    // 用版本级配置判断是否支持尾帧，不依赖 hasImages
+    // Use version-level config to determine end frame support, independent of hasImages
     const supportsEndFrame = useMemo(
       () => !!getVersionConfig(modelVersion)?.options.endFrame?.isSupported,
       [modelVersion],

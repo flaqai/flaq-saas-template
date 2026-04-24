@@ -9,14 +9,14 @@ import {
 } from '@/lib/constants/video/';
 
 /**
- * 检查模型是否支持特定的生成类型
+ * Check if the model supports a specific generation type
  */
 export function supportsGenerationType(model: VideoModel, generationType: VideoGenerationType): boolean {
   return model.generationType === generationType;
 }
 
 /**
- * 根据模型配置和用户选择的参数，计算实际需要的 credit
+ * Calculate the actual credit required based on model configuration and user-selected parameters
  */
 export function calculateVideoCredit(
   model: VideoModel,
@@ -26,41 +26,41 @@ export function calculateVideoCredit(
     resolution?: string;
   }
 ): number {
-  // Video 模型目前通常是固定 credit
-  // 如果未来需要动态 credit，可以在这里扩展
+  // Video models currently use fixed credit
+  // Can be extended here if dynamic credit is needed in the future
   return model.credit;
 }
 
 /**
- * 获取模型的首帧配置
+ * Get the start frame configuration of the model
  */
 export function getStartFrameConfig(model: VideoModel) {
   return model.options.startFrame;
 }
 
 /**
- * 获取模型的尾帧配置
+ * Get the end frame configuration of the model
  */
 export function getEndFrameConfig(model: VideoModel) {
   return model.options.endFrame;
 }
 
 /**
- * 检查模型是否需要图片输入
+ * Check if the model requires image input
  */
 export function requiresImageInput(model: VideoModel): boolean {
   return model.options.startFrame?.required === true;
 }
 
 /**
- * 检查模型是否支持图片输入
+ * Check if the model supports image input
  */
 export function supportsImageInput(model: VideoModel): boolean {
   return model.options.startFrame?.isSupported === true || model.options.endFrame?.isSupported === true;
 }
 
 /**
- * 获取模型版本配置
+ * Get model version configuration
  */
 export function getVersionConfig(modelVersionStr?: string) {
   if (!modelVersionStr) return undefined;
@@ -72,7 +72,7 @@ export function getVersionConfig(modelVersionStr?: string) {
 }
 
 /**
- * 根据模型版本和参数获取匹配的模型
+ * Get matching model based on model version and parameters
  */
 export function getCurrentModel(
   modelVersionStr?: string,
@@ -100,7 +100,7 @@ export function getCurrentModel(
 }
 
 /**
- * 获取默认模型版本
+ * Get default model version
  */
 export function getDefaultModel(): string {
   const providers = getFilteredProviders(true);
@@ -112,21 +112,21 @@ export function getDefaultModel(): string {
 }
 
 /**
- * 判断模型是否支持音频
+ * Check if the model supports audio
  */
 export function modelSupportsAudio(model: VideoModel | undefined): boolean {
   return !!(model && model.options.audio);
 }
 
 /**
- * 判断模型是否支持尾帧
+ * Check if the model supports end frame
  */
 export function modelSupportsEndFrame(model: VideoModel | undefined): boolean {
   return !!model?.options.endFrame?.isSupported;
 }
 
 /**
- * 根据音频/尾帧需求查找合适的模型版本
+ * Find suitable model version based on audio/end frame requirements
  */
 export function pickModelVersion(options: {
   audio?: boolean;

@@ -8,7 +8,7 @@ export interface RadioButtonOption {
   id: string;
   value: string;
   name: string;
-  prompt?: string; // 选中时要设置的 prompt
+  prompt?: string; // Prompt to set when selected
 }
 
 interface RadioButtonGroupProps {
@@ -39,7 +39,7 @@ export default function RadioButtonGroup({
   const handleChange = (value: string) => {
     setValue(fieldName, value);
     
-    // 自动更新 prompt（如果有）
+    // Auto-update prompt (if available)
     const selectedOption = options.find(opt => opt.value === value);
     if (selectedOption?.prompt) {
       setValue('prompt', selectedOption.prompt);

@@ -1,9 +1,9 @@
 /**
- * 模型切换逻辑 Hook
+ * Model switching logic Hook
  *
- * 封装尾帧开关的模型切换逻辑：
- * 1. 检查当前模型是否支持目标功能
- * 2. 如果不支持，自动切换到支持的模型
+ * Encapsulates model switching logic for end frame toggle:
+ * 1. Check if current model supports target feature
+ * 2. If not supported, automatically switch to a supported model
  *
  * @example
  * ```tsx
@@ -22,7 +22,7 @@ import type { VideoModel } from '@/lib/constants/video/';
 import type { VideoFormData } from '../types';
 
 /**
- * useModelToggle 的参数
+ * Parameters for useModelToggle
  */
 interface UseModelToggleOptions {
   form: UseFormReturn<VideoFormData>;
@@ -30,13 +30,13 @@ interface UseModelToggleOptions {
 }
 
 /**
- * 模型切换逻辑 Hook
+ * Model switching logic Hook
  */
 export default function useModelToggle(options: UseModelToggleOptions) {
   const { form, t } = options;
 
   /**
-   * 能力判断工具
+   * Capability check utilities
    */
   const modelSupportsAudio = useCallback(
     (model: VideoModel | undefined) => VideoModelService.modelSupportsAudio(model),
@@ -49,11 +49,11 @@ export default function useModelToggle(options: UseModelToggleOptions) {
   );
 
   /**
-   * 根据音频/尾帧需求查找合适的模型版本
+   * Find suitable model version based on audio/end frame requirements
    */
   const pickModelVersion = useCallback(
     (opts: { audio?: boolean; endFrame?: boolean }) => {
-      // 根据 startFrame 是否有值判断 hasImages
+      // Determine hasImages based on whether startFrame has a value
       const startFrame = form.getValues('startFrame');
       const hasImages = !!(startFrame && (startFrame instanceof File || typeof startFrame === 'string'));
 
@@ -68,37 +68,37 @@ export default function useModelToggle(options: UseModelToggleOptions) {
   );
 
   /**
-   * 开关尾帧
-   * @returns 返回最终的开关状态（true 表示开启，false 表示关闭）
+   * Toggle end frame
+   * @returns Returns the final toggle state (true means enabled, false means disabled)
    */
   const handleEndFrameToggle = useCallback(
     (enabled: boolean): boolean => {
       const formData = form.getValues();
       const currentModelVersion = formData.modelVersion;
 
-      // 如果要关闭尾帧，直接关闭即可
+      // If disabling end frame, just disable it
       if (!enabled) {
         return false;
       }
 
-      // 检查当前版本是否支持尾帧（使用版本级配置，而不是具体模型）
+      // Check if current version supports end frame (using version-level config, not specific model)
       const versionConfig = VideoModelService.getVersionConfig(currentModelVersion);
       const versionSupportsEndFrame = !!versionConfig?.options.endFrame?.isSupported;
 
       if (versionSupportsEndFrame) {
-        // 当前版本支持，直接开启
+        // Current version supports it, enable directly
         return true;
       }
 
-      // 当前版本不支持尾帧，尝试找到支持的版本
+      // Current version doesn't support end frame, try to find a supported version
       const newModelVersion = pickModelVersion({ endFrame: true });
 
       if (newModelVersion) {
-        // 找到了支持的版本，切换过去
+        // Found a supported version, switch to it
         form.setValue('modelVersion', newModelVersion);
         return true;
       } else {
-        // 找不到支持尾帧的版本，保持开关关闭
+        // Can't find a version that supports end frame, keep toggle disabled
         return false;
       }
     },
@@ -107,12 +107,12 @@ export default function useModelToggle(options: UseModelToggleOptions) {
   );
 
   /**
-   * 开关音频：优先保证音频，必要时降级关闭尾帧
-   * @deprecated 不再使用音频控制功能，保留此函数仅为兼容性
+   * Toggle audio: prioritize audio, downgrade to disable end frame if necessary
+   * @deprecated Audio control feature is no longer used, this function is kept for compatibility only
    */
   const handleAudioToggle = useCallback(
     (enabled: boolean) => {
-      // 音频控制已废弃，不执行任何操作
+      // Audio control is deprecated, no operation performed
       console.warn('handleAudioToggle is deprecated and should not be used');
     },
     [],
@@ -121,7 +121,7 @@ export default function useModelToggle(options: UseModelToggleOptions) {
   return {
     handleAudioToggle,
     handleEndFrameToggle,
-    // 也导出能力判断工具，以便在其他地方使用
+    // Also export capability check utilities for use elsewhere
     modelSupportsAudio,
     modelSupportsEndFrame,
   };

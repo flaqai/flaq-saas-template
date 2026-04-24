@@ -43,7 +43,7 @@ export default function ImageDisplay() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [showFormatMenu, setShowFormatMenu] = useState(false);
 
-  // 检测图片真实格式并设为默认
+  // Detect actual image format and set as default
   useEffect(() => {
     if (!imageObj || typeof imageObj !== 'object' || !imageObj.src) return;
 
@@ -85,7 +85,7 @@ export default function ImageDisplay() {
     previewImgSrc = imageObj.src;
   }
 
-  // 预设图片（fallback）或没有 imageObj 时禁用所有操作按钮
+  // Preset image (fallback) or no imageObj disables all action buttons
   const btnDisabled = !imageObj || imageObj === 'loading' || mode === 'fallback';
 
   const onDownload = async () => {
@@ -121,8 +121,8 @@ export default function ImageDisplay() {
       className='flex h-[440px] w-full flex-col overflow-hidden rounded-2xl contain-strict lg:flex-1'
     >
       <div className='relative flex size-full flex-col rounded-2xl bg-[#1c1d20]'>
-        
-        {/* 图片显示区域 - 使用flex-1自动占用剩余空间 */}
+
+        {/* Image display area - uses flex-1 to automatically occupy remaining space */}
         <div className='relative flex flex-1 items-center justify-center overflow-hidden p-2'>
           {previewImgSrc && (
             <>
@@ -160,11 +160,11 @@ export default function ImageDisplay() {
           )}
         </div>
 
-        {/* 工具栏区域 */}
+        {/* Toolbar area */}
         {!btnDisabled && (
           <div className='relative flex flex-none flex-wrap items-start justify-between gap-2 rounded-b-xl bg-[#1c1d20] p-2 lg:items-center lg:gap-3'>
 
-            {/* 左侧信息：时间、分辨率、模型 */}
+            {/* Left info: time, resolution, model */}
             <div className="flex flex-col gap-1 text-xs text-white/60">
               <div className="flex items-center gap-1.5">
                 {imageObj.createTime && (
@@ -186,10 +186,10 @@ export default function ImageDisplay() {
               )}
             </div>
 
-            {/* 右侧操作按钮 */}
+            {/* Right action buttons */}
             <div className='flex flex-wrap items-center gap-1'>
 
-              {/* 提示词 */}
+              {/* Prompt */}
               {imageObj.prompt && (
                 <div className='flex h-9 items-center gap-1 rounded-xl border border-[#303030] bg-[#1c1d20] px-2 lg:h-10'>
                   <CopyBtn content={imageObj.prompt} />
@@ -217,7 +217,7 @@ export default function ImageDisplay() {
                 </div>
               )}
 
-              {/* 图片详情 */}
+              {/* Image detail */}
               <button
                 type='button'
                 onClick={onShowDetail}
@@ -226,7 +226,7 @@ export default function ImageDisplay() {
                 {t('imageDetail')}
               </button>
 
-              {/* 下载按钮 + 格式选择 */}
+              {/* Download button + format selection */}
               <div className='relative flex h-9 items-center rounded-xl border border-[#303030] bg-[#1c1d20] lg:h-10'>
                 <button
                   type='button'
@@ -266,7 +266,7 @@ export default function ImageDisplay() {
                 )}
               </div>
 
-              {/* 删除 */}
+              {/* Delete */}
               <button
                 type='button'
                 onClick={() => setOpenDeleteDialog(true)}

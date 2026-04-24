@@ -2,7 +2,7 @@
 
 import type { RatioConfig } from './types';
 
-// 比例配置
+// Ratio configuration
 export const RATIO_16_9: RatioConfig = {
   name: '16:9',
   value: '16:9',

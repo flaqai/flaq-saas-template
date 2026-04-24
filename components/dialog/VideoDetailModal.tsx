@@ -81,7 +81,7 @@ export default function VideoDetailModal({ open, onOpenChange, onDelete, video }
     return '00:05';
   };
 
-  // 构建元数据项
+  // Build metadata items
   const getMetadataItems = (): MetadataItem[] => {
     const items: MetadataItem[] = [];
 
@@ -100,7 +100,7 @@ export default function VideoDetailModal({ open, onOpenChange, onDelete, video }
     return items;
   };
 
-  // 获取模型版本名称
+  // Get model version name
   const getModelVersionName = () => {
     if (!video.platformName) return undefined;
     return getVideoModelVersionName(video.platformName) || video.platformName;

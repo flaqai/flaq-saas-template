@@ -4,32 +4,32 @@ import { maxSizeMB } from '../constants';
 
 /* eslint-disable import/prefer-default-export */
 /**
- * 下载文件
- * @param {String} path - 下载地址/下载请求地址。
- * @param {String} filename - 下载文件的名字（考虑到兼容性问题，最好加上后缀名）
+ * Download file
+ * @param {String} path - Download address/download request address
+ * @param {String} filename - Name of the downloaded file (best to include extension for compatibility)
  */
 export function downloadFile(path: string, filename: string) {
-  // 使用代理 API 避免 CORS 问题
+  // Use proxy API to avoid CORS issues
   const proxyUrl = `/api/proxy-image?url=${encodeURIComponent(path)}`;
 
   const xhr = new XMLHttpRequest();
   xhr.open('GET', proxyUrl, true);
-  xhr.responseType = 'blob'; // 直接获取Blob数据
+  xhr.responseType = 'blob'; // Get Blob data directly
 
   xhr.onload = function () {
     if (xhr.status === 200 || xhr.status === 304) {
       const blob = xhr.response;
-      const downloadUrl = URL.createObjectURL(blob); // 从Blob创建一个URL
+      const downloadUrl = URL.createObjectURL(blob); // Create a URL from Blob
 
       const a = document.createElement('a');
       a.href = downloadUrl;
-      a.download = filename; // 设置文件名
+      a.download = filename; // Set filename
       document.body.appendChild(a);
-      a.click(); // 模拟点击实现下载
+      a.click(); // Simulate click to trigger download
 
-      // 清理资源
+      // Clean up resources
       document.body.removeChild(a);
-      URL.revokeObjectURL(downloadUrl); // 释放URL对象占用的资源
+      URL.revokeObjectURL(downloadUrl); // Release resources occupied by URL object
     }
   };
 
@@ -37,7 +37,7 @@ export function downloadFile(path: string, filename: string) {
 }
 
 export async function getFileByUrl(url: string): Promise<File> {
-  // 使用代理 API 避免 CORS 问题
+  // Use proxy API to avoid CORS issues
   const proxyUrl = `/api/proxy-image?url=${encodeURIComponent(url)}`;
   const response = await fetch(proxyUrl);
 
@@ -127,13 +127,13 @@ export async function shouldCompressImageFileList(fileList: FileType[], xMB: num
 export type ImageFormatType = 'WEBP' | 'PNG' | 'JPG';
 
 /**
- * 检测图片的真实格式
- * @param imageUrl 图片URL
- * @returns 格式字符串 (WEBP/PNG/JPG) 或 null
+ * Detect the actual format of an image
+ * @param imageUrl Image URL
+ * @returns Format string (WEBP/PNG/JPG) or null
  */
 export async function detectImageFormat(imageUrl: string): Promise<ImageFormatType | null> {
   try {
-    // 使用代理 API 避免 CORS 问题
+    // Use proxy API to avoid CORS issues
     const proxyUrl = `/api/proxy-image?url=${encodeURIComponent(imageUrl)}`;
     const response = await fetch(proxyUrl);
     const blob = await response.blob();

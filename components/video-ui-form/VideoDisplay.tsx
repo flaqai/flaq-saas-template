@@ -80,7 +80,7 @@ export default function VideoDisplay() {
     previewVideoSrc = videoObj.videoSrc;
   }
 
-  // 预设视频（fallback）或没有 videoObj 时禁用所有操作按钮
+  // Disable all action buttons when preset video (fallback) or no videoObj
   const btnDisabled = !videoObj || mode === 'fallback';
 
   return (
@@ -132,7 +132,7 @@ export default function VideoDisplay() {
         {!btnDisabled && (
           <div className='relative flex flex-none items-center justify-end gap-1 rounded-b-xl bg-[#1c1d20] p-2'>
 
-            {/* 提示词 */}
+            {/* Prompt */}
             {videoObj?.prompt && (
               <div className='flex h-9 items-center gap-1 rounded-xl border border-[#303030] bg-[#1c1d20] px-2 lg:h-10'>
                 <CopyBtn content={videoObj.prompt} />
@@ -160,7 +160,7 @@ export default function VideoDisplay() {
               </div>
             )}
 
-            {/* 视频详情 */}
+            {/* Video detail */}
             <button
               type='button'
               onClick={onShowDetail}
@@ -169,7 +169,7 @@ export default function VideoDisplay() {
               {t('videoDetail')}
             </button>
 
-            {/* 下载 */}
+            {/* Download */}
             <button
               type='button'
               onClick={onDownload}
@@ -179,7 +179,7 @@ export default function VideoDisplay() {
               <Download className='size-4 text-white lg:size-5' />
             </button>
 
-            {/* 删除 */}
+            {/* Delete */}
             <button
               type='button'
               onClick={() => setOpenDeleteDialog(true)}

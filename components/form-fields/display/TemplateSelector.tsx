@@ -8,24 +8,24 @@ import { cn } from '@/lib/utils';
 import SubHeading from '@/components/form/SubHeading';
 
 interface TemplateSelectorProps {
-  // 模板数据
+  // Template data
   templates: Array<{
     key: string;
     imageUrl: string;
     prompt: string;
   }>;
 
-  // 默认选中的模板 key
+  // Default selected template key
   defaultTemplate?: string;
 
-  // 翻译命名空间前缀
+  // Translation namespace prefix
   translationNamespace: string;
 
-  // 表单字段名
+  // Form field names
   templateFieldName?: string;
   promptFieldName?: string;
 
-  // 标题
+  // Title
   title?: string;
 }
 

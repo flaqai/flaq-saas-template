@@ -6,7 +6,7 @@ import type { MotionOption } from '@/components/form-fields/display/MotionField'
 import type { ImageFormType } from '../image-context-provider';
 
 /**
- * 图片表单数据类型
+ * Image form data type
  */
 export interface ImageFormData {
   prompt?: string;
@@ -18,7 +18,7 @@ export interface ImageFormData {
 }
 
 /**
- * 图片表单 Props
+ * Image form Props
  */
 export interface ImageFormProps {
   className?: string;
@@ -28,7 +28,7 @@ export interface ImageFormProps {
   promptTitle?: string;
   uploadImagesTitle?: string;
 
-  // 自定义模型列表
+  // Custom model list
   customModelList?: ImageModel[];
   customVersionList?: ImageModelVersionConfig[];
 
@@ -48,16 +48,16 @@ export interface ImageFormProps {
   translationNamespace?: string;
 
   /**
-   * 图片上传模式
-   * - `'none'` - 不显示上传组件
-   * - `'single'` - 强制单图上传（maxImages=1）
-   * - `'auto'` - 根据模型配置自动决定（默认）
+   * Image upload mode
+   * - `'none'` - Do not show upload component
+   * - `'single'` - Force single image upload (maxImages=1)
+   * - `'auto'` - Automatically decide based on model configuration (default)
    */
   imageUploadMode?: 'none' | 'single' | 'auto';
 
   /**
-   * 是否必须上传图片才能生成
-   * 设置为 true 时，提交表单前会验证是否已上传图片
+   * Whether image upload is required for generation
+   * When set to true, validates if images are uploaded before form submission
    */
   requireImageUpload?: boolean;
 
@@ -76,7 +76,7 @@ export interface ImageFormProps {
   radioButtonGroupTranslationNamespace?: string;
   onRadioButtonGroupChange?: (value: string) => void;
 
-  // 表单值优先级配置
+  // Form value priority configuration
   defaultValuePriority?: {
     aspectRatio?: string[];
     resolution?: string[];
@@ -90,7 +90,7 @@ export interface ImageFormProps {
   slotNodeAfter?: React.ReactNode;
   customRightContent?: React.ReactNode;
 
-  // 支持首尾帧独立轮询状态
+  // Support independent polling status for start and end frames
   imageObjContext?: 'default' | 'start-frame' | 'end-frame';
 
   // Schema & defaults
@@ -105,7 +105,7 @@ export interface ImageFormProps {
 }
 
 /**
- * 表单验证结果
+ * Form validation result
  */
 export interface FormValidationResult {
   valid: boolean;
@@ -113,7 +113,7 @@ export interface FormValidationResult {
 }
 
 /**
- * 宽高比解析结果
+ * Aspect ratio parse result
  */
 export interface AspectRatioParseResult {
   width: number;

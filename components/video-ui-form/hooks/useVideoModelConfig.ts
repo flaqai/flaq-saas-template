@@ -1,10 +1,10 @@
 /**
- * 视频模型配置解析 Hook
+ * Video model configuration parsing Hook
  *
- * 对标 image-form 的 useModelConfig，职责：
- * 1. 根据 modelVersion 获取版本配置
- * 2. 根据 hasImages 动态计算 UI 配置（ratio/resolution/duration 选项）
- * 3. 提供模型选择函数（供提交时使用）
+ * Corresponds to image-form's useModelConfig, responsibilities:
+ * 1. Get version configuration based on modelVersion
+ * 2. Dynamically calculate UI configuration based on hasImages (ratio/resolution/duration options)
+ * 3. Provide model selection function (for use during submission)
  *
  * @example
  * ```tsx
@@ -52,18 +52,18 @@ export interface UseVideoModelConfigResult {
 }
 
 /**
- * 视频模型配置解析 Hook
+ * Video model configuration parsing Hook
  */
 export function useVideoModelConfig(params: VideoModelConfigParams): UseVideoModelConfigResult {
   const { selectedModelVersion, hasImages } = params;
 
-  // 1. 获取版本配置
+  // 1. Get version configuration
   const versionConfig = useMemo(() => {
     if (!selectedModelVersion) return undefined;
     return getVersionConfig(selectedModelVersion);
   }, [selectedModelVersion]);
 
-  // 2. 计算支持的生成类型
+  // 2. Calculate supported generation types
   const supportedTypes = useMemo(() => {
     if (!versionConfig) return [];
     const types: ('text-to-video' | 'image-to-video')[] = [];
@@ -76,12 +76,12 @@ export function useVideoModelConfig(params: VideoModelConfigParams): UseVideoMod
     return types;
   }, [versionConfig]);
 
-  // 3. UI 配置（根据 hasImages 动态计算）
+  // 3. UI configuration (dynamically calculated based on hasImages)
   const uiConfig = useMemo(() => {
     return computeUIOptionsForVersion(versionConfig, hasImages);
   }, [versionConfig, hasImages]);
 
-  // 4. 模型选择函数（供提交时使用）
+  // 4. Model selection function (for use during submission)
   const selectModel = useMemo(() => {
     return (hasImagesAtSubmit: boolean, duration?: string, resolution?: string, enableAudio?: boolean): VideoModel | null => {
       return selectVideoModelByGenerationType(versionConfig, hasImagesAtSubmit, duration, resolution, enableAudio);

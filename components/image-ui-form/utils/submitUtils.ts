@@ -4,7 +4,7 @@ import type { CreateImageTaskRequest } from '@/network/image/client';
 import { removeEmptyProperties } from '@/lib/utils/objectUtils';
 
 /**
- * 验证图片表单
+ * Validate image form
  */
 export function validateImageForm(params: {
   formData: ImageFormData;
@@ -18,18 +18,18 @@ export function validateImageForm(params: {
   }
 
   if (requireImageUpload) {
-    // 检查是否使用 product 模式（subjectImage + objectImage/objectImages）
+    // Check if using product mode (subjectImage + objectImage/objectImages)
     const isProductMode = 'subjectImage' in formData || 'objectImage' in formData || 'objectImages' in formData;
 
     if (isProductMode) {
-      // product 模式需要 subject 和 object 都有
+      // Product mode requires both subject and object
       const hasObjectImage = formData.objectImage ||
         (formData.objectImages && formData.objectImages.length > 0);
       if (!formData.subjectImage || !hasObjectImage) {
         return { valid: false, error: 'noImageUpload' };
       }
     } else {
-      // 普通模式只需要 images 有值
+      // Normal mode only requires images to have value
       if (!formData.images || formData.images.length === 0) {
         return { valid: false, error: 'noImageUpload' };
       }
@@ -40,7 +40,7 @@ export function validateImageForm(params: {
 }
 
 /**
- * 解析宽高比
+ * Parse aspect ratio
  */
 export function parseAspectRatio(aspectRatio?: string): AspectRatioParseResult {
   if (!aspectRatio) {
@@ -62,10 +62,10 @@ export function parseAspectRatio(aspectRatio?: string): AspectRatioParseResult {
 }
 
 /**
- * 构建图片生成请求数据
+ * Build image generation request data
  *
- * 注意：使用 removeEmptyProperties 过滤掉空值字段（'', undefined, null）
- * 避免发送无效字段给后端导致对接问题
+ * Note: Uses removeEmptyProperties to filter out empty value fields ('', undefined, null)
+ * Avoids sending invalid fields to backend causing integration issues
  */
 export function buildImageGenerationRequest(params: {
   formData: ImageFormData;
@@ -88,16 +88,16 @@ export function buildImageGenerationRequest(params: {
     resolution: formData.resolution || undefined,
   };
 
-  // 过滤掉空值字段（'', undefined, null）
+  // Filter out empty value fields ('', undefined, null)
   return removeEmptyProperties<CreateImageTaskRequest>(rawRequest);
 }
 
 /**
- * 验证图片文件
+ * Validate image file
  *
- * 检查项：
- * 1. 宽高比范围（0.33 - 3.0）
- * 2. 图片是否可加载
+ * Checks:
+ * 1. Aspect ratio range (0.33 - 3.0)
+ * 2. Whether image can be loaded
  */
 export async function validateImageFile(params: {
   file: File;
@@ -109,7 +109,7 @@ export async function validateImageFile(params: {
 }): Promise<boolean> {
   const { file, errorMessages, onError } = params;
 
-  // 检查宽高比
+  // Check aspect ratio
   const ok = await new Promise<boolean>((resolve) => {
     const img = new Image();
 
@@ -123,7 +123,7 @@ export async function validateImageFile(params: {
         resolve(true);
       }
 
-      // 清理 URL
+      // Clean up URL
       URL.revokeObjectURL(img.src);
     };
 

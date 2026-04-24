@@ -70,11 +70,11 @@ function audioBufferToWav(buffer: AudioBuffer): Blob {
 }
 
 /**
- * 裁剪音频文件
- * @param audioFile 原始音频文件
- * @param startTime 开始时间（秒）
- * @param endTime 结束时间（秒）
- * @returns 裁剪后的音频文件
+ * Trim audio file
+ * @param audioFile Original audio file
+ * @param startTime Start time (seconds)
+ * @param endTime End time (seconds)
+ * @returns Trimmed audio file
  */
 export default async function trimAudioFile(
   audioFile: File,
@@ -90,14 +90,14 @@ export default async function trimAudioFile(
   const endSample = Math.floor(endTime * sampleRate);
   const trimmedLength = endSample - startSample;
 
-  // 创建新的 AudioBuffer
+  // Create new AudioBuffer
   const trimmedBuffer = audioContext.createBuffer(
     audioBuffer.numberOfChannels,
     trimmedLength,
     sampleRate,
   );
 
-  // 复制裁剪范围内的音频数据
+  // Copy audio data within the trimmed range
   for (let channel = 0; channel < audioBuffer.numberOfChannels; channel += 1) {
     const originalData = audioBuffer.getChannelData(channel);
     const trimmedData = trimmedBuffer.getChannelData(channel);
@@ -106,21 +106,21 @@ export default async function trimAudioFile(
     }
   }
 
-  // 将 AudioBuffer 转换为 WAV 格式的 Blob
+  // Convert AudioBuffer to WAV format Blob
   const wavBlob = audioBufferToWav(trimmedBuffer);
 
-  // 获取原始文件类型，如果是 mp3/mpeg 格式，映射为 audio/mpeg
+  // Get original file type, map to audio/mpeg if it's mp3/mpeg format
   const originalType = audioFile.type;
   let outputType = 'audio/wav';
   let outputExt = '.wav';
 
-  // 如果原始文件是 mp3/mpeg 格式，保持为 mpeg 类型（后端接受）
+  // If original file is mp3/mpeg format, keep as mpeg type (accepted by backend)
   if (originalType === 'audio/mpeg' || originalType === 'audio/mp3') {
     outputType = 'audio/mpeg';
     outputExt = '.mp3';
   }
 
-  // 创建新的 File 对象
+  // Create new File object
   const originalName = audioFile.name;
   const nameWithoutExt = originalName.replace(/\.[^/.]+$/, '');
   const trimmedFile = new File([wavBlob], `${nameWithoutExt}_trimmed${outputExt}`, {

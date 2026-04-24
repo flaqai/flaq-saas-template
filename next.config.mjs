@@ -56,7 +56,7 @@ const nextConfig = {
   },
   images: {
     unoptimized: false,
-    // Next 16 默认阻止解析到私有 IP 的图片优化，只在明确需要时通过环境变量开启。
+    // Next 16 blocks image optimization for private IPs by default; enable via environment variable only if explicitly needed.
     dangerouslyAllowLocalIP: allowLocalImageOptimization,
     remotePatterns: imageRemotePatterns.length > 0 ? imageRemotePatterns : defaultImageRemotePatterns,
   },

@@ -81,12 +81,12 @@ export default function Navigation() {
               <img src='/images/logo.png' alt={t('title')} title={t('title')} className='size-12 md:size-16' />
             </Link>
           </div>
-          {/* pc */}
+          {/* PC */}
           <div className='hidden h-10 items-center gap-3 lg:flex'>
             {NavLinks.map((item) => (
               <div key={item.code}>
                 {item.children ? (
-                  // 客户端挂载后才渲染 Radix Popover，避免 hydration id 不一致
+                  // Only render Radix Popover after client mount to avoid hydration id mismatch
                   mounted ? (
                     <NavPopover label={item.label} isHighLight={false} navDataList={item.children} />
                   ) : (
@@ -146,7 +146,7 @@ export default function Navigation() {
             >
               <Settings2 className='h-4 w-4 lg:h-[18px] lg:w-[18px]' />
             </button>
-            {/* mobile */}
+            {/* Mobile */}
             <div className='mx-2 flex items-center gap-x-4 lg:hidden'>
               <MenuBtn open={open} onClick={() => setOpen(!open)} />
             </div>

@@ -187,7 +187,7 @@ const MultiImageUploadFieldWithDrag = forwardRef<
       .flat()
       .map((ext) => ext.replace('.', ''))
       .filter((ext, index, arr) => {
-        // 去重：如果是 jpeg，跳过（保留 jpg）
+        // Deduplicate: skip jpeg if jpg is present
         if (ext === 'jpeg' && arr.includes('jpg')) return false;
         return true;
       })

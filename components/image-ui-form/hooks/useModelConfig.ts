@@ -4,12 +4,12 @@ import { ALL_IMAGE_PROVIDERS } from '@/lib/constants/image';
 import { supportsGenerationType } from '@/lib/utils/imageModelService';
 
 /**
- * 模型配置解析 Hook
+ * Model configuration parsing Hook
  *
- * 职责：
- * 1. 根据 modelVersion 获取版本配置
- * 2. 提供 UI 配置（ratio/resolution 选项）
- * 3. 提供模型选择函数（供提交时使用）
+ * Responsibilities:
+ * 1. Get version configuration based on modelVersion
+ * 2. Provide UI configuration (ratio/resolution options)
+ * 3. Provide model selection function (for use during submission)
  */
 export function useModelConfig(params: {
   selectedModelVersion?: string;
@@ -17,17 +17,17 @@ export function useModelConfig(params: {
 }) {
   const { selectedModelVersion, customVersionList } = params;
 
-  // 1. 获取版本配置
+  // 1. Get version configuration
   const versionConfig = useMemo(() => {
     if (!selectedModelVersion) return null;
 
-    // 优先从 customVersionList 中查找
+    // Prioritize searching from customVersionList
     if (customVersionList) {
       const config = customVersionList.find(v => v.modelVersion === selectedModelVersion);
       return config || null;
     }
 
-    // 否则从 ALL_IMAGE_PROVIDERS 中查找
+    // Otherwise search from ALL_IMAGE_PROVIDERS
     const config = ALL_IMAGE_PROVIDERS
       .flatMap(p => p.versions)
       .find(v => v.modelVersion === selectedModelVersion);
@@ -35,7 +35,7 @@ export function useModelConfig(params: {
     return config || null;
   }, [selectedModelVersion, customVersionList]);
 
-  // 2. UI 配置（来自 version 级别，不受内部模型切换影响）
+  // 2. UI configuration (from version level, not affected by internal model switching)
   const uiConfig = useMemo(() => {
     if (!versionConfig) {
       return {
@@ -65,7 +65,7 @@ export function useModelConfig(params: {
     return config;
   }, [versionConfig]);
 
-  // 3. 模型选择函数（根据是否有图片选择具体模型）
+  // 3. Model selection function (select specific model based on whether there are images)
   const selectModel = useMemo(() => {
     return (hasImages: boolean): ImageModel | null => {
       if (!versionConfig) return null;
