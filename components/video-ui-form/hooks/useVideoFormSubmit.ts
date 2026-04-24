@@ -28,6 +28,7 @@ import { shouldCompressImageFileList, type FileType } from '@/lib/utils/fileUtil
 import { showConfettiFireworks } from '@/lib/utils/uiUtils';
 import { sendGAEventBtnClicked } from '@/lib/utils/analyticsUtils';
 import trimAudioFile from '@/lib/utils/audioUtils';
+import { startTaskPolling } from '@/network/task-polling';
 import type { VideoModel } from '@/lib/constants/video/';
 import type { VideoFormStores } from './useVideoFormStores';
 import type { VideoFormData } from '../types';
@@ -225,7 +226,8 @@ export default function useVideoFormSubmit(options: UseVideoFormSubmitOptions) {
           audio_url: audioUrl || undefined,
         });
 
-        if (res.code !== 200 || !res.data?.task_id) {
+        // Flaq API 成功时返回 code: 0 或 200
+        if ((res.code !== 0 && res.code !== 200) || !res.data?.task_id) {
           toast.error(res.message || 'Video task submit failed');
           return;
         }
@@ -250,6 +252,7 @@ export default function useVideoFormSubmit(options: UseVideoFormSubmitOptions) {
         });
 
         addProcessingTask(res.data.task_id, 'video', videoType);
+        startTaskPolling(res.data.task_id, 'video');
 
         // 成功处理
         showConfettiFireworks(3000);

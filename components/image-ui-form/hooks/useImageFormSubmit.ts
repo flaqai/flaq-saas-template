@@ -32,6 +32,7 @@ import { sendGAEventBtnClicked } from '@/lib/utils/analyticsUtils';
 import { FileType } from '@/lib/utils/fileUtils';
 import { showConfettiFireworks } from '@/lib/utils/uiUtils';
 import useUploadFiles from '@/hooks/use-upload-files';
+import { startTaskPolling } from '@/network/task-polling';
 
 import { buildImageGenerationRequest } from '../utils/submitUtils';
 import type { ImageFormData } from '../types';
@@ -186,7 +187,8 @@ export function useImageFormSubmit(options: UseImageFormSubmitOptions) {
 
         const { code, message, data } = res;
 
-        if (code !== 200 || !data?.task_id) {
+        // Flaq API 成功时返回 code: 0 或 200
+        if ((code !== 0 && code !== 200) || !data?.task_id) {
           throw new Error(message);
         }
 
@@ -203,8 +205,9 @@ export function useImageFormSubmit(options: UseImageFormSubmitOptions) {
           userImageUrlList: allImageUrls,
         });
 
-        // 添加到全局轮询状态，后台处理生成任务
+        // 兼容现有状态存储，并直接启动轮询，避免依赖全局 UI 组件触发。
         addProcessingTask(data.task_id, 'image', imageFormType);
+        startTaskPolling(data.task_id, 'image');
 
         // 显示成功提示和特效
         showConfettiFireworks(3000);
