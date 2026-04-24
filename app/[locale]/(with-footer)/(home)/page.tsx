@@ -1,9 +1,8 @@
-import Image from 'next/image';
 import { getTranslations } from 'next-intl/server';
 
 import { numberList } from '@/lib/utils/arrayUtils';
 import Faq from '@/components/Faq';
-import HeroFormSection from '@/components/home/new-section/HeroFormSection';
+import HeroSection from '@/components/home/new-section/HeroSection';
 import ExampleSection from '@/components/home/ExampleSection';
 import CoreFeaturesCards from '@/components/home/CoreFeaturesCards';
 import HomeCarousel from '@/components/home/HomeCarousel';
@@ -97,23 +96,32 @@ export default async function Page() {
 
   return (
     <div className='relative w-full'>
-      <Image
-        priority
-        className='absolute -top-[70px] left-0 -z-10 hidden h-screen w-full lg:block'
-        alt='bg'
-        width={1920}
-        height={1134}
-        src='https://cdn.heydream.im/heydream/background/pc/pc1.webp'
-      />
-      <Image
-        priority
-        className='absolute -top-[70px] left-0 -z-10 block h-screen w-full lg:hidden'
+      <div className='absolute -top-[70px] left-0 -z-10 flex hidden h-screen w-full items-center justify-center lg:block'>
+        <img
+          alt='bg'
+          width={1920}
+          height={1134}
+          src='https://cdn.flaq.ai/flaq/home_page/background/background_web.webp'
+          style={{
+            objectFit: 'contain',
+            width: '100%',
+            height: '100%',
+            objectPosition: 'center',
+          }}
+        />
+      </div>
+      <img
+        className='absolute -top-[70px] left-0 -z-10 block h-[150vh] w-full lg:hidden'
         alt='bg-mobile'
         width={375}
         height={428}
-        src='https://cdn.heydream.im/heydream/background/mobile/mobile1.webp'
+        src='https://cdn.flaq.ai/flaq/home_page/background/background_phone.webp'
+        style={{
+          objectFit: 'cover',
+          objectPosition: 'top',
+        }}
       />
-      <HeroFormSection />
+      <HeroSection />
       <HomeCarousel data={carouselData} title={t('carousel.title')} description={t('carousel.description')} className='mb-12 lg:mb-20' />
       <CoreFeaturesCards
         title={t('unique-features.title')}
