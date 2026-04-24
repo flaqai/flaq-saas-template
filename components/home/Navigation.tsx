@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { Settings2 } from 'lucide-react';
 import { getLanguagePaths } from '@/i18n/languages';
 import { Link } from '@/i18n/navigation';
 import { useLocale, useTranslations } from 'next-intl';
@@ -9,6 +10,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { NAV_LINKS } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 
+import OpenApiSettingsDialog from '../dialog/OpenApiSettingsDialog';
 import LocaleSwitcher from '../LocaleSwitcher';
 import MenuBtn from './MenuBtn';
 import NavigationDrawer from './NavigationDrawer';
@@ -20,6 +22,7 @@ export default function Navigation() {
   const locale = useLocale();
 
   const [open, setOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -61,6 +64,7 @@ export default function Navigation() {
 
   return (
     <>
+      <OpenApiSettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
       <header
         className={cn(
           'sticky top-0 left-0 z-50 flex h-[64px] w-full bg-transparent px-3 lg:px-10',
@@ -106,14 +110,23 @@ export default function Navigation() {
               </div>
             ))}
           </div>
-          <div className='absolute right-0 flex items-center'>
-            <div className='bg-color-5 flex items-center gap-x-1 rounded lg:gap-x-3'>
+          <div className='absolute right-0 flex items-center gap-2'>
+            <div className='bg-color-5 rounded'>
               {mounted ? (
                 <LocaleSwitcher />
               ) : (
                 <div className='flex h-8 w-[80px] items-center gap-1 rounded-lg px-2 text-white/40 lg:h-11' />
               )}
             </div>
+            <button
+              type='button'
+              onClick={() => setSettingsOpen(true)}
+              className='bg-color-5 flex h-8 w-8 items-center justify-center rounded-lg text-white/70 transition-colors hover:bg-white/10 hover:text-white lg:h-11 lg:w-11'
+              aria-label='Open API settings'
+              title='Open API settings'
+            >
+              <Settings2 className='h-4 w-4 lg:h-[18px] lg:w-[18px]' />
+            </button>
             {/* mobile */}
             <div className='mx-2 flex items-center gap-x-4 lg:hidden'>
               <MenuBtn open={open} onClick={() => setOpen(!open)} />
