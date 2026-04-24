@@ -27,18 +27,29 @@ function VideoItem({
   createTime,
   status,
   onDelete,
+  ratio,
 }: {
   imgSrc: string;
   onClick: () => void;
   createTime: number;
   status: VideoHistoryItem['status'];
   onDelete?: () => void;
+  ratio?: string;
 }) {
+  const calculateWidth = (ratioStr?: string) => {
+    if (!ratioStr) return 130;
+    const [w, h] = ratioStr.split(':').map(Number);
+    if (!w || !h) return 130;
+    return Math.min(Math.round((130 * w) / h), 195);
+  };
+
+  const width = calculateWidth(ratio);
   if (status === 'pending' || status === 'processing') {
     return (
       <div
+        style={{ width: `${width}px` }}
         className={cn(
-          'relative flex h-[130px] w-[195px] shrink-0 items-center justify-center rounded-lg border border-[#303030] bg-[#2a2b2f]',
+          'relative flex h-[130px] shrink-0 items-center justify-center rounded-lg border border-[#303030] bg-[#2a2b2f]',
         )}
       >
         <Spinning />
@@ -47,7 +58,7 @@ function VideoItem({
   }
   if (status === 'fail') {
     return (
-      <div className='relative h-[130px] w-[195px] shrink-0'>
+      <div style={{ width: `${width}px` }} className='relative h-[130px] shrink-0'>
         <FailurePlaceholder className='h-full' iconSize={32} />
         {onDelete && (
           <button
@@ -67,6 +78,7 @@ function VideoItem({
 
   return (
     <div
+      style={{ width: `${width}px` }}
       className={cn(
         'group relative flex h-[130px] shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-[#2a2b2f] transition-all duration-200 hover:bg-[#323339]',
       )}
@@ -75,7 +87,7 @@ function VideoItem({
       <img
         src={imgSrc}
         alt='imgSrc'
-        className='h-full w-auto bg-contain transition-all duration-200 group-hover:scale-110'
+        className='h-full w-full object-cover transition-all duration-200 group-hover:scale-110'
         loading='lazy'
         decoding='async'
         fetchPriority='high'
@@ -167,10 +179,11 @@ const VideoHistory = forwardRef<ScrollRef, VideoHistoryProps>(({ onClickImage, o
         data.map((el) => (
           <VideoItem
             key={el.id}
-            imgSrc={el.coverImage || el.imageUrl}
+            imgSrc={el.coverImage || el.imageUrl || '/images/cover/video-cover.png'}
             onClick={() => handleClickImg(el)}
             createTime={el.createTime}
             status={el.status}
+            ratio={el.ratio}
             onDelete={el.status === 'fail' ? () => handleDelete(el.id) : undefined}
           />
         ))}
