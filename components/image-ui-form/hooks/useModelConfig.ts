@@ -41,6 +41,7 @@ export function useModelConfig(params: {
       return {
         ratioOptions: [],
         resolutionOptions: [],
+        qualityOptions: [],
         supportsImageInput: false,
         maxImages: 0,
       };
@@ -58,6 +59,7 @@ export function useModelConfig(params: {
     const config = {
       ratioOptions: versionConfig.options?.ratio || [],
       resolutionOptions: versionConfig.options?.resolution || [],
+      qualityOptions: versionConfig.options?.quality || [],
       supportsImageInput,
       maxImages,
     };

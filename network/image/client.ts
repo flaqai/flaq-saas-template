@@ -8,6 +8,7 @@ export interface CreateImageTaskRequest {
   width: number;
   height: number;
   resolution?: string;
+  quality?: string;
   image_url_list?: string[];
   seed?: number;
   negative_prompt?: string;

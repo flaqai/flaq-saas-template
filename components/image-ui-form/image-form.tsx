@@ -25,6 +25,7 @@ import {
   TemplateSelector,
 } from '@/components/form-fields';
 import type { UnifiedImageUploadFieldRef } from '@/components/form-fields';
+import QualityField from '@/components/form-fields/input/QualityField';
 import BottomActionArea from '@/components/form-fields/action/BottomActionArea';
 
 import ImageContenxtProvider from './image-context-provider';
@@ -147,6 +148,7 @@ export default function ImageForm({
       modelVersion: '',
       aspectRatio: '',
       resolution: '',
+      quality: '',
       ...defaultValues, // Prioritize default values passed from page
     },
   });
@@ -185,6 +187,7 @@ export default function ImageForm({
   const selectedVersionConfig = versionConfig;
   const ratioOptions = uiConfig.ratioOptions;
   const resolutionOptions = uiConfig.resolutionOptions;
+  const qualityOptions = uiConfig.qualityOptions;
   const supportsImageInput = uiConfig.supportsImageInput;
   const maxImagesSupported = uiConfig.maxImages;
 
@@ -235,6 +238,7 @@ export default function ImageForm({
     clearResetFlag,
     ratioOptions,
     resolutionOptions,
+    qualityOptions,
     priorityRules: defaultValuePriority,
   });
 
@@ -429,6 +433,13 @@ export default function ImageForm({
             {showPromptInput && (
               <PromptField show title={promptTitle || t('enterPrompt')} translationNamespace='components.image-form' />
             )}
+
+            {/* Quality Field */}
+            <QualityField
+              qualityOptions={qualityOptions.map(q => ({ name: q.name, value: q.value }))}
+              show={qualityOptions.length > 0}
+              translationNamespace='components.image-form'
+            />
 
             {/* Custom slot after input fields */}
             {slotNodeFuncAfterInput?.(form)}

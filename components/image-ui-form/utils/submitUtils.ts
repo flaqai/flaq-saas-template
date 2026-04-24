@@ -86,6 +86,7 @@ export function buildImageGenerationRequest(params: {
     height: isAutoRatio ? 1 : height || 1,
     image_url_list: uploadedUrls.length > 0 ? uploadedUrls : undefined,
     resolution: formData.resolution || undefined,
+    quality: formData.quality || undefined,
   };
 
   // Filter out empty value fields ('', undefined, null)

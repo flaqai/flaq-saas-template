@@ -5,6 +5,7 @@ export const GEMINI_IMAGE_MODELS: TemplateModelConfig[] = [
     id: 'nano-banana-pro',
     label: 'Nano Banana Pro',
     mediaType: 'image',
+    provider: 'gemini',
     request: {
       endpoint: 'image',
       modelName: 'nano-banana-pro',
@@ -22,6 +23,7 @@ export const GEMINI_IMAGE_MODELS: TemplateModelConfig[] = [
     id: 'nano-banana-pro-edit',
     label: 'Nano Banana Pro Edit',
     mediaType: 'image',
+    provider: 'gemini',
     request: {
       endpoint: 'image',
       modelName: 'nano-banana-pro-edit',
@@ -39,6 +41,7 @@ export const GEMINI_IMAGE_MODELS: TemplateModelConfig[] = [
     id: 'nano-banana-2',
     label: 'Nano Banana 2',
     mediaType: 'image',
+    provider: 'gemini',
     request: {
       endpoint: 'image',
       modelName: 'nano-banana-2',
@@ -56,6 +59,7 @@ export const GEMINI_IMAGE_MODELS: TemplateModelConfig[] = [
     id: 'nano-banana-2-edit',
     label: 'Nano Banana 2 Edit',
     mediaType: 'image',
+    provider: 'gemini',
     request: {
       endpoint: 'image',
       modelName: 'nano-banana-2-edit',

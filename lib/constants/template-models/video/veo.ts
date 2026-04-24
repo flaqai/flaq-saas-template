@@ -17,7 +17,6 @@ export const VEO_VIDEO_MODELS: TemplateModelConfig[] = [
     },
     params: {
       ratio: ['16:9', '9:16'],
-      resolution: ['720p'],
     },
   },
   {
@@ -36,7 +35,6 @@ export const VEO_VIDEO_MODELS: TemplateModelConfig[] = [
     },
     params: {
       ratio: ['16:9', '9:16'],
-      resolution: ['720p'],
     },
   },
   {
@@ -55,7 +53,6 @@ export const VEO_VIDEO_MODELS: TemplateModelConfig[] = [
     },
     params: {
       ratio: ['16:9', '9:16'],
-      resolution: ['720p'],
     },
   },
   {
@@ -74,7 +71,6 @@ export const VEO_VIDEO_MODELS: TemplateModelConfig[] = [
     },
     params: {
       ratio: ['16:9', '9:16'],
-      resolution: ['720p'],
     },
   },
 ];

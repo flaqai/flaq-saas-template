@@ -66,12 +66,14 @@ export function useFieldReset(params: {
   clearResetFlag: () => void;
   ratioOptions: Array<{ value: string; name: string }>;
   resolutionOptions: Array<{ value: string; name: string }>;
+  qualityOptions?: Array<{ value: string; name: string }>;
   priorityRules?: {
     aspectRatio?: string[];
     resolution?: string[];
+    quality?: string[];
   };
 }) {
-  const { form, needsReset, clearResetFlag, ratioOptions, resolutionOptions, priorityRules } = params;
+  const { form, needsReset, clearResetFlag, ratioOptions, resolutionOptions, qualityOptions = [], priorityRules } = params;
 
   // Listen to needsReset and configuration changes, execute reset when configuration is ready
   useEffect(() => {
@@ -134,7 +136,25 @@ export function useFieldReset(params: {
       form.setValue('resolution', '');
     }
 
+    const newQuality = selectBestOption(
+      qualityOptions,
+      priorityRules?.quality || ['medium', 'high', 'low']
+    );
+
+    const currentQuality = form.getValues('quality');
+
+    const canKeepCurrentQuality = !!currentQuality &&
+      qualityOptions.some((option) => option.value === currentQuality);
+
+    if (canKeepCurrentQuality) {
+      form.setValue('quality', currentQuality);
+    } else if (newQuality) {
+      form.setValue('quality', newQuality);
+    } else if (qualityOptions.length === 0) {
+      form.setValue('quality', '');
+    }
+
     // Clear reset flag
     clearResetFlag();
-  }, [needsReset, ratioOptions, resolutionOptions, priorityRules, form, clearResetFlag]);
+  }, [needsReset, ratioOptions, resolutionOptions, qualityOptions, priorityRules, form, clearResetFlag]);
 }

@@ -22,5 +22,9 @@ export const getModelIcon = (modelValue: string): string => {
     return '/images/model-icon/veo.svg';
   }
 
+  if (lowerValue.startsWith('gpt')) {
+    return '/images/model-icon/openai.svg';
+  }
+
   return '';
 };

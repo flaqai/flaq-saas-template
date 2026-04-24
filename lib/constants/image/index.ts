@@ -2,6 +2,7 @@
 
 import {
   GEMINI_IMAGE_MODELS,
+  GPT_IMAGE_MODELS,
   SEEDREAM_IMAGE_MODELS,
   type TemplateModelConfig,
 } from '@/lib/constants/template-models';
@@ -50,6 +51,15 @@ function toResolutionOptions(resolutions?: string[]): ResolutionOption[] | undef
   }));
 }
 
+function toQualityOptions(qualities?: string[]): Array<{ name: string; value: string }> | undefined {
+  if (!qualities?.length) return undefined;
+
+  return qualities.map((value) => ({
+    name: value.charAt(0).toUpperCase() + value.slice(1),
+    value,
+  }));
+}
+
 function toImageGenerationType(model: TemplateModelConfig): ImageGenerationType {
   const imageInput = model.inputs.image;
   if (imageInput?.supported) {
@@ -72,6 +82,7 @@ function toImageModel(model: TemplateModelConfig): ImageModel {
   const options: ImageModelOptions = {
     ratio: toRatioOptions(model.params?.ratio),
     resolution: toResolutionOptions(model.params?.resolution),
+    quality: toQualityOptions(model.params?.quality),
     imageInput: imageInput?.supported
       ? {
           required: imageInput.required,
@@ -86,7 +97,7 @@ function toImageModel(model: TemplateModelConfig): ImageModel {
   };
 
   return {
-    provider: model.request.modelName.startsWith('seedream') ? 'seedream' : 'gemini',
+    provider: model.provider || 'unknown',
     modelVersion: model.request.modelName,
     model: model.request.modelName,
     name: model.label,
@@ -114,6 +125,7 @@ function toVersionConfig(model: TemplateModelConfig): ImageModelVersionConfig {
     options: {
       resolution: mappedModel.options.resolution,
       ratio: mappedModel.options.ratio,
+      quality: mappedModel.options.quality,
     },
     models: [mappedModel],
   };
@@ -121,6 +133,7 @@ function toVersionConfig(model: TemplateModelConfig): ImageModelVersionConfig {
 
 const GEMINI_VERSION_CONFIGS: ImageModelVersionConfig[] = GEMINI_IMAGE_MODELS.map(toVersionConfig);
 const SEEDREAM_VERSION_CONFIGS: ImageModelVersionConfig[] = SEEDREAM_IMAGE_MODELS.map(toVersionConfig);
+const GPT_VERSION_CONFIGS: ImageModelVersionConfig[] = GPT_IMAGE_MODELS.map(toVersionConfig);
 
 export const GEMINI_PROVIDER: ImageProviderConfig = {
   provider: 'gemini',
@@ -136,16 +149,25 @@ export const SEEDREAM_PROVIDER: ImageProviderConfig = {
   versions: SEEDREAM_VERSION_CONFIGS,
 };
 
+export const GPT_PROVIDER: ImageProviderConfig = {
+  provider: 'openai',
+  name: 'OpenAI',
+  versions: GPT_VERSION_CONFIGS,
+};
+
 export const ALL_IMAGE_PROVIDERS: ImageProviderConfig[] = [
   SEEDREAM_PROVIDER,
   GEMINI_PROVIDER,
+  GPT_PROVIDER,
 ];
 
 const GEMINI_ALL_MODELS: ImageModel[] = GEMINI_PROVIDER.versions.flatMap((version) => version.models);
 const SEEDREAM_ALL_MODELS: ImageModel[] = SEEDREAM_PROVIDER.versions.flatMap((version) => version.models);
+const GPT_ALL_MODELS: ImageModel[] = GPT_PROVIDER.versions.flatMap((version) => version.models);
 export const ALL_IMAGE_MODELS: ImageModel[] = [
   ...SEEDREAM_ALL_MODELS,
   ...GEMINI_ALL_MODELS,
+  ...GPT_ALL_MODELS,
 ];
 
 export function getImageModelVersionName(modelName: string): string | undefined {

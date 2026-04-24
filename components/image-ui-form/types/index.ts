@@ -14,6 +14,7 @@ export interface ImageFormData {
   modelVersion?: string;
   aspectRatio?: string;
   resolution?: string;
+  quality?: string;
   [key: string]: any;
 }
 
@@ -80,6 +81,7 @@ export interface ImageFormProps {
   defaultValuePriority?: {
     aspectRatio?: string[];
     resolution?: string[];
+    quality?: string[];
   };
 
   // Custom nodes

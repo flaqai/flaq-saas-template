@@ -11,6 +11,7 @@ import Heading from '@/components/internal-page/heading';
 const DEFAULT_PRIORITY = {
   aspectRatio: ['16:9', '1:1'],
   resolution: ['2k'],
+  quality: ['medium', 'high', 'low'],
 };
 
 const DEFAULT_VALUES = {
@@ -19,6 +20,7 @@ const DEFAULT_VALUES = {
   modelVersion: 'nano-banana-pro-edit',
   aspectRatio: '16:9',
   resolution: '2k',
+  quality: 'medium',
 };
 
 const EXAMPLE_IMAGE_LIST = [

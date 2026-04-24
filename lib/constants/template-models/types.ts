@@ -2,6 +2,7 @@ export type TemplateModelConfig = {
   id: string;
   label: string;
   mediaType: 'image' | 'video';
+  provider?: string;
 
   request: {
     endpoint: 'image' | 'video';
@@ -29,6 +30,7 @@ export type TemplateModelConfig = {
     duration?: number[];
     durationRange?: { min: number; max: number };
     style?: string[];
+    quality?: string[];
     seed?: boolean;
     negativePrompt?: boolean;
     guidanceScale?: boolean;

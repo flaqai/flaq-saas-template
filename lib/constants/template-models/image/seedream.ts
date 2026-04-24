@@ -5,6 +5,7 @@ export const SEEDREAM_IMAGE_MODELS: TemplateModelConfig[] = [
     id: 'seedream-4.5',
     label: 'Seedream 4.5',
     mediaType: 'image',
+    provider: 'seedream',
     request: {
       endpoint: 'image',
       modelName: 'seedream-v4.5',
@@ -22,6 +23,7 @@ export const SEEDREAM_IMAGE_MODELS: TemplateModelConfig[] = [
     id: 'seedream-4.5-edit',
     label: 'Seedream 4.5 Edit',
     mediaType: 'image',
+    provider: 'seedream',
     request: {
       endpoint: 'image',
       modelName: 'seedream-v4.5-edit',
@@ -39,6 +41,7 @@ export const SEEDREAM_IMAGE_MODELS: TemplateModelConfig[] = [
     id: 'seedream-5.0',
     label: 'Seedream 5.0',
     mediaType: 'image',
+    provider: 'seedream',
     request: {
       endpoint: 'image',
       modelName: 'seedream-v5.0',
@@ -56,6 +59,7 @@ export const SEEDREAM_IMAGE_MODELS: TemplateModelConfig[] = [
     id: 'seedream-5.0-edit',
     label: 'Seedream 5.0 Edit',
     mediaType: 'image',
+    provider: 'seedream',
     request: {
       endpoint: 'image',
       modelName: 'seedream-v5.0-edit',
