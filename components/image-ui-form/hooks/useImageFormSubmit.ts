@@ -187,8 +187,8 @@ export function useImageFormSubmit(options: UseImageFormSubmitOptions) {
 
         const { code, message, data } = res;
 
-        // Flaq API returns code: 0 or 200 on success
-        if ((code !== 0 && code !== 200) || !data?.task_id) {
+        // Flaq API returns business code 0 on success
+        if (code !== 0 || !data?.task_id) {
           throw new Error(message);
         }
 

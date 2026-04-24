@@ -226,8 +226,8 @@ export default function useVideoFormSubmit(options: UseVideoFormSubmitOptions) {
           audio_url: audioUrl || undefined,
         });
 
-        // Flaq API returns code: 0 or 200 on success
-        if ((res.code !== 0 && res.code !== 200) || !res.data?.task_id) {
+        // Flaq API returns business code 0 on success
+        if (res.code !== 0 || !res.data?.task_id) {
           toast.error(res.message || 'Video task submit failed');
           return;
         }
