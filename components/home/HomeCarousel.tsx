@@ -8,11 +8,6 @@ import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 import SubHeading from '../internal-page/sub-heading';
 
-interface ModelTag {
-  name: string;
-  icon: string;
-}
-
 export interface CarouselCard {
   type: string;
   media: {
@@ -20,7 +15,6 @@ export interface CarouselCard {
     src: string;
     poster?: string;
   };
-  models: ModelTag[];
   href?: string;
 }
 
@@ -146,27 +140,6 @@ export default function HomeCarousel({ title, description, className, data }: { 
                     <span className='text-sm font-medium text-white lg:text-base'>
                       {card.type}
                     </span>
-                  </div>
-
-                  {/* 左下角模型标签 - 毛玻璃效果 */}
-                  <div className='absolute bottom-2 left-2 flex flex-wrap items-center gap-1 lg:bottom-2 lg:left-2 lg:gap-0'>
-                    {card.models.map((model, idx) => (
-                      <div
-                        key={idx}
-                        className='flex items-center gap-1.5 rounded-full px-2.5 py-1 lg:px-3 lg:py-1.5'                      
-                      >
-                        <Image
-                          src={model.icon}
-                          alt={model.name}
-                          width={16}
-                          height={16}
-                          className='size-4 lg:size-5'
-                        />
-                        <span className='text-xs font-normal text-white lg:text-sm'>
-                          {model.name}
-                        </span>
-                      </div>
-                    ))}
                   </div>
                 </div>
               </div>

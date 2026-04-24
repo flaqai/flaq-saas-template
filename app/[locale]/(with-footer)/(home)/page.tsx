@@ -48,12 +48,6 @@ export default async function Page() {
         src: 'https://cdn.heydream.im/heydream/v3/home_page/tools/ai_video_generator_video.mp4',
         poster: 'https://cdn.heydream.im/heydream/v3/home_page/tools/ai_video_generator.webp'
       },
-      models: [
-        // { name: 'Wan 2.5', icon: '/images/model-brand/wan.png' },
-        { name: 'Veo 3.1', icon: '/images/model-brand/veo.png' },
-        { name: 'Kling 2.5', icon: '/images/model-brand/kling.png' },
-        { name: 'Seedance Lite', icon: '/images/model-brand/seed.png' },
-      ],
       href: '/image-to-video'
     },
     {
@@ -62,34 +56,14 @@ export default async function Page() {
         type: 'image',
         src: 'https://cdn.heydream.im/heydream/v3/home_page/tools/ai_image_generator.webp'
       },
-      models: [
-        { name: 'Nano Banana', icon: '/images/model-brand/veo.png' },
-        { name: 'Seedream', icon: '/images/model-brand/seed.png' },
-      ],
       href: '/text-to-image'
     },
     {
-      type: tCarousel('image.type'),
-      media: {
-        type: 'image',
-        src: 'https://cdn.heydream.im/heydream/v3/home_page/tools/photo_to_anime.webp'
-      },
-      models: [
-        { name: 'Nano Banana', icon: '/images/model-brand/veo.png' },
-        { name: 'Seedream', icon: '/images/model-brand/seed.png' },
-      ],
-      href: '/image-to-image'
-    },
-    {
-      type: tCarousel('image.type'),
+      type: tCarousel('tryon.type'),
       media: {
         type: 'image',
         src: 'https://cdn.heydream.im/heydream/v3/virtual_try_on/feature/1_1.webp'
       },
-      models: [
-        { name: 'Nano Banana', icon: '/images/model-brand/veo.png' },
-        { name: 'Seedream', icon: '/images/model-brand/seed.png' },
-      ],
       href: '/virtual-try-on'
     }
   ];
