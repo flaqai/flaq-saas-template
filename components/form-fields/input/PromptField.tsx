@@ -1,9 +1,10 @@
 'use client';
 
 import { useCallback, useRef } from 'react';
-import { useFormContext } from 'react-hook-form';
-import { useTranslations } from 'next-intl';
 import { Trash2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
+import { useFormContext } from 'react-hook-form';
+
 import { FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
 import CopyBtn from '@/components/CopyBtn';
@@ -19,6 +20,7 @@ interface PromptFieldProps {
   placeholder?: string;
   maxLength?: number;
   translationNamespace?: 'components.video-form' | 'components.image-form';
+  fieldName?: string;
 }
 
 export default function PromptField({
@@ -27,6 +29,7 @@ export default function PromptField({
   placeholder,
   maxLength = MAX_PROMPT_LENGTH,
   translationNamespace = 'components.video-form',
+  fieldName = 'prompt',
 }: PromptFieldProps) {
   const { control } = useFormContext();
   const t = useTranslations(translationNamespace);
@@ -49,7 +52,7 @@ export default function PromptField({
       <SubHeading>{title || tCommon('prompt')}</SubHeading>
       <FormField
         control={control}
-        name='prompt'
+        name={fieldName}
         render={({ field }) => (
           <FormItem className='space-y-0'>
             <FormLabel htmlFor={field.name} className='p-0'>
@@ -62,14 +65,14 @@ export default function PromptField({
                   }}
                   maxLength={maxLength}
                   placeholder={placeholder || t('promptPlaceholder')}
-                  className='resize-none rounded-t-xl border-0 bg-transparent p-3 text-white/80 placeholder:text-white/40 focus:ring-0 focus-visible:ring-0 custom-scrollbar [field-sizing:initial]'
+                  className='custom-scrollbar [field-sizing:initial] resize-none rounded-t-xl border-0 bg-transparent p-3 text-white/80 placeholder:text-white/40 focus:ring-0 focus-visible:ring-0'
                   style={{
                     height: `${MIN_HEIGHT}px`,
                     maxHeight: `${MAX_HEIGHT}px`,
                     overflowY: 'auto',
                     whiteSpace: 'pre-wrap',
                     overflowWrap: 'break-word',
-                    wordBreak: 'break-word'
+                    wordBreak: 'break-word',
                   }}
                   onChange={(e) => {
                     field.onChange(e);
@@ -93,10 +96,10 @@ export default function PromptField({
                   </button>
                   <div className='flex items-center gap-2'>
                     <div className='flex items-center gap-2'>
-                      <CopyBtn content={field.value} className='text-white/40' />
+                      <CopyBtn content={field.value ?? ''} className='text-white/40' />
                     </div>
                     <span className='text-xs text-white/40'>
-                      {field.value.length}/{maxLength}
+                      {String(field.value ?? '').length}/{maxLength}
                     </span>
                   </div>
                 </div>

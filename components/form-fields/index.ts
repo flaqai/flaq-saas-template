@@ -38,6 +38,7 @@ export { default as TemplateSelector } from './display/TemplateSelector';
 // Video Components
 export { default as ModelSelect } from './video/ModelSelect';
 export { default as StartEndFrameField } from './video/StartEndFrameField';
+export { default as VideoModelParameterFields } from './video/VideoModelParameterFields';
 export { default as VideoImageUploadForm } from './video/VideoImageUploadForm';
 export type { VideoImageUploadFormRef } from './video/VideoImageUploadForm';
 export { default as FrameImageUpload } from './video/FrameImageUpload';

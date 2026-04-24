@@ -4,46 +4,44 @@
 /* eslint-disable no-confusing-arrow */
 /* eslint-disable react/jsx-wrap-multilines */
 import { useCallback, useContext, useMemo, useRef, useState } from 'react';
-import { ArrowLeftRight } from 'lucide-react';
 import { usePathname } from 'next/navigation';
+import type { VideoHistoryRequest } from '@/network/video/history';
+import { ArrowLeftRight } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useNavigationGuard } from 'next-navigation-guard';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { selectVideoModelByGenerationType, getVersionConfig } from '@/lib/constants/video/';
-import { cn } from '@/lib/utils';
-import { Form } from '@/components/ui/form';
-import SubHeading from '@/components/form/SubHeading';
 
+import { getVersionConfig, selectVideoModelByGenerationType } from '@/lib/constants/video/';
+import { cn } from '@/lib/utils';
+import * as VideoModelService from '@/lib/utils/videoModelService';
+import { Form } from '@/components/ui/form';
 // Generic form components
 import {
-  PromptField,
   AudioSupportField,
   AudioToggleField,
   AudioUploadField,
   BottomActionArea,
   ModelSelect,
   MultiImageUploadField,
+  PromptField,
   StartEndFrameField,
+  VideoModelParameterFields,
 } from '@/components/form-fields';
-import type { MultiImageUploadFieldRef, ImageUploadFieldRef, AudioUploadFieldRef } from '@/components/form-fields';
+import type { AudioUploadFieldRef, ImageUploadFieldRef, MultiImageUploadFieldRef } from '@/components/form-fields';
+import SubHeading from '@/components/form/SubHeading';
 
+import useFormSync from './hooks/useFormSync';
+import useModelToggle from './hooks/useModelToggle';
 // Local hooks and utils
 import { useVideoFormStores } from './hooks/useVideoFormStores';
 import useVideoFormSubmit from './hooks/useVideoFormSubmit';
-import useModelToggle from './hooks/useModelToggle';
-import useFormSync from './hooks/useFormSync';
 import { useVideoModelConfig } from './hooks/useVideoModelConfig';
-import * as VideoModelService from '@/lib/utils/videoModelService';
-
-import { videoAudioContext } from './VideoContenxtProvider';
-import VideoContenxtProvider from './VideoContenxtProvider';
-import VideoDisplay from './VideoDisplay';
-import VideoHistorySection from './VideoHistorySection';
-import type { VideoHistoryRequest } from '@/network/video/history';
-
 // Local types
 import type { VideoFormData } from './types';
+import VideoContenxtProvider, { videoAudioContext } from './VideoContenxtProvider';
+import VideoDisplay from './VideoDisplay';
+import VideoHistorySection from './VideoHistorySection';
 
 // ============================================
 // Configuration constants
@@ -114,9 +112,9 @@ export default function VideoFormBase({
   allowedProviders,
 }: VideoFormBaseProps) {
   const t = useTranslations('components.video-form');
-  const [currentModelVersionDisplayMode, setCurrentModelVersionDisplayMode] = useState<
-    'model' | 'label'
-  >(modelVersionDisplayMode === 'label' ? 'label' : 'model');
+  const [currentModelVersionDisplayMode, setCurrentModelVersionDisplayMode] = useState<'model' | 'label'>(
+    modelVersionDisplayMode === 'label' ? 'label' : 'model',
+  );
   const pathname = usePathname();
   const { audioDuration: _audioDuration } = useContext(videoAudioContext);
   void _audioDuration; // Reserved for future use
@@ -125,11 +123,7 @@ export default function VideoFormBase({
   // Unified state management (replaces original 17 hooks)
   // ============================================
   const stores = useVideoFormStores();
-  const {
-    setOpenPricingDialogStore,
-    resetDefault,
-    defaultPrompt,
-  } = stores;
+  const { setOpenPricingDialogStore, resetDefault, defaultPrompt } = stores;
 
   // ============================================
   // Refs
@@ -168,6 +162,11 @@ export default function VideoFormBase({
       modelVersion: initialModelVersion,
       enableEndFrame: false,
       enableAudio: false,
+      enableBgm: false,
+      keepOriginalSound: false,
+      guidanceScale: 0.5,
+      style: 'general',
+      negativePrompt: '',
       duration: initialDuration,
       resolution: initialResolution,
       ...defaultValues,
@@ -202,7 +201,11 @@ export default function VideoFormBase({
   // ============================================
   // Business logic: Use new useVideoModelConfig hook
   // ============================================
-  const { versionConfig: currentVersionConfig, uiConfig, selectModel } = useVideoModelConfig({
+  const {
+    versionConfig: currentVersionConfig,
+    uiConfig,
+    selectModel,
+  } = useVideoModelConfig({
     selectedModelVersion: modelVersion,
     hasImages,
   });
@@ -216,7 +219,7 @@ export default function VideoFormBase({
     supportsAudio,
     supportsAudioUrl,
     supportsOptionalAudio,
-    multiImageMaxImages
+    multiImageMaxImages,
   } = uiConfig;
 
   // Get current model (for displaying credit and other info)
@@ -280,7 +283,12 @@ export default function VideoFormBase({
     );
 
     // Use new selectModel function to auto-select model
-    const formSubmitVideoModel = selectModel(hasImagesAtSubmit, formData.duration, formData.resolution, formData.enableAudio);
+    const formSubmitVideoModel = selectModel(
+      hasImagesAtSubmit,
+      formData.duration,
+      formData.resolution,
+      formData.enableAudio,
+    );
 
     if (!formSubmitVideoModel) {
       toast.error('Model not found');
@@ -291,118 +299,114 @@ export default function VideoFormBase({
     await submitForm(formData, formSubmitVideoModel);
   };
 
-
   return (
     <VideoContenxtProvider videoType={videoType} showAllVideoHistory={showAllVideoHistory}>
-      <div id='video-form-container' className='relative flex h-auto w-full flex-col items-stretch gap-5 overflow-hidden rounded-[36px] bg-[#232528] lg:h-[calc(100vh-76px)] lg:flex-row lg:p-5'>
+      <div
+        id='video-form-container'
+        className='relative flex h-auto w-full flex-col items-stretch gap-5 overflow-hidden rounded-[36px] bg-[#232528] lg:h-[calc(100vh-76px)] lg:flex-row lg:p-5'
+      >
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
             id='VideoForm'
             className='no-scrollbar relative isolate z-40 flex h-[600px] w-full shrink-0 flex-col gap-2.5 overflow-y-auto rounded-3xl border border-[#303030] bg-[#1c1d20] p-3 lg:h-full lg:w-[351px]'
           >
-          {formTitle && (
-            <div className='line-clamp-1 shrink-0 border-b border-white/10 bg-[#1c1d20] pb-2.5 text-lg font-medium tracking-[0.36px] text-white'>
-              {formTitle}
-            </div>
-          )}
-          <div className='flex flex-1 flex-col gap-2.5 overflow-y-auto pb-20 lg:items-stretch custom-scrollbar'>
-
-            {/* Model version selection */}
-            {showVideoModelVersion && (
-              <>
-                <div className='flex items-center justify-between gap-3'>
-                  <SubHeading>{t('modelVersion')}</SubHeading>
-                  <button
-                    type='button'
-                    aria-label='Toggle model name display'
-                    title={currentModelVersionDisplayMode === 'model' ? 'Show labels' : 'Show model names'}
-                    onClick={() =>
-                      setCurrentModelVersionDisplayMode((current) =>
-                        current === 'model' ? 'label' : 'model',
-                      )
-                    }
-                    className='flex h-7 w-7 items-center justify-center rounded-lg bg-transparent text-white/70 transition-colors hover:bg-white/10 hover:text-white'
-                  >
-                    <ArrowLeftRight className='h-3.5 w-3.5' />
-                    <span className='sr-only'>
-                      {currentModelVersionDisplayMode === 'model' ? 'Show labels' : 'Show model names'}
-                    </span>
-                  </button>
-                </div>
-                <ModelSelect
-                  name='modelVersion'
-                  hasImages={hasImages}
-                  allowedProviders={allowedProviders}
-                  videoType={videoType}
-                  displayMode={currentModelVersionDisplayMode}
-                />
-              </>
+            {formTitle && (
+              <div className='line-clamp-1 shrink-0 border-b border-white/10 bg-[#1c1d20] pb-2.5 text-lg font-medium tracking-[0.36px] text-white'>
+                {formTitle}
+              </div>
             )}
+            <div className='custom-scrollbar flex flex-1 flex-col gap-2.5 overflow-y-auto pb-20 lg:items-stretch'>
+              {/* Model version selection */}
+              {showVideoModelVersion && (
+                <>
+                  <div className='flex items-center justify-between gap-3'>
+                    <SubHeading>{t('modelVersion')}</SubHeading>
+                    <button
+                      type='button'
+                      aria-label='Toggle model name display'
+                      title={currentModelVersionDisplayMode === 'model' ? 'Show labels' : 'Show model names'}
+                      onClick={() =>
+                        setCurrentModelVersionDisplayMode((current) => (current === 'model' ? 'label' : 'model'))
+                      }
+                      className='flex h-7 w-7 items-center justify-center rounded-lg bg-transparent text-white/70 transition-colors hover:bg-white/10 hover:text-white'
+                    >
+                      <ArrowLeftRight className='h-3.5 w-3.5' />
+                      <span className='sr-only'>
+                        {currentModelVersionDisplayMode === 'model' ? 'Show labels' : 'Show model names'}
+                      </span>
+                    </button>
+                  </div>
+                  <ModelSelect
+                    name='modelVersion'
+                    hasImages={hasImages}
+                    allowedProviders={allowedProviders}
+                    videoType={videoType}
+                    displayMode={currentModelVersionDisplayMode}
+                  />
+                </>
+              )}
 
-            {/* Audio support hint (display only, for models with uncontrollable audio like Veo) */}
-            <AudioSupportField show={showAudio && supportsAudio && !supportsOptionalAudio} />
+              {/* Audio support hint (display only, for models with uncontrollable audio like Veo) */}
+              <AudioSupportField show={showAudio && supportsAudio && !supportsOptionalAudio} />
 
-            {/* Audio option: whether to enable generated audio (for models with optional audio like Seedance 1.5, Kling) */}
-            <AudioToggleField show={showAudio && supportsOptionalAudio} />
+              {/* Audio option: whether to enable generated audio (for models with optional audio like Seedance 1.5, Kling) */}
+              <AudioToggleField show={showAudio && supportsOptionalAudio} />
 
-            {/* Audio upload field (display based on model's audioUrl config) */}
-            <AudioUploadField show={showAudioUpload && supportsAudioUrl} ref={audioUploadRef} />
+              {/* Audio upload field (display based on model's audioUrl config) */}
+              <AudioUploadField show={showAudioUpload && supportsAudioUrl} ref={audioUploadRef} />
 
-            {/* Multi-image upload area */}
-            {multiImageMaxImages > 0 && (
-              <MultiImageUploadField
-                name='multiImages'
-                maxImages={multiImageMaxImages}
-                ref={multiImageUploadRef}
+              {/* Multi-image upload area */}
+              {multiImageMaxImages > 0 && (
+                <MultiImageUploadField name='multiImages' maxImages={multiImageMaxImages} ref={multiImageUploadRef} />
+              )}
+
+              {/* Start/end frame merged area, right switch controls whether to enable end frame */}
+              <StartEndFrameField
+                currentModel={currentModel} // TODO: product page needs separate handling for start/end frame recognition and passing, use separate product upload component
+                showStartFrame={showStartFrame}
+                showEndFrame={showEndFrame}
+                onEndFrameToggle={handleEndFrameToggle}
+                ref={startFrameUploadRef}
+                uploadImageTitle={uploadImageTitle}
+                supportsImageInput={supportsImageInput}
+                supportsEndFrameFromConfig={supportsEndFrame}
               />
-            )}
 
-            {/* Start/end frame merged area, right switch controls whether to enable end frame */}
-            <StartEndFrameField
-              currentModel={currentModel} // TODO: product page needs separate handling for start/end frame recognition and passing, use separate product upload component
-              showStartFrame={showStartFrame}
-              showEndFrame={showEndFrame}
-              onEndFrameToggle={handleEndFrameToggle}
-              ref={startFrameUploadRef}
-              uploadImageTitle={uploadImageTitle}
-              supportsImageInput={supportsImageInput}
-              supportsEndFrameFromConfig={supportsEndFrame}
+              {/* Custom slot node */}
+              {slotNode}
+
+              {/* Prompt input */}
+              <PromptField show={showInput} />
+
+              <VideoModelParameterFields currentModel={currentModel} />
+            </div>
+
+            {/* Bottom action area */}
+            <BottomActionArea
+              durationOptions={durationOptions}
+              ratioOptions={ratioOptions}
+              resolutionOptions={resolutionOptions}
+              showDuration={showDuration}
+              showRatio={showRatio}
+              showResolution={showResolution}
+              isSubmitting={isSubmitting}
+              submitButtonText={t('generate')}
             />
+          </form>
+        </Form>
 
-            {/* Custom slot node */}
-            {slotNode}
-
-            {/* Prompt input */}
-            <PromptField show={showInput} />
-
+        {/* Right side content: Display + History */}
+        <div className='flex flex-1 flex-col items-start justify-start gap-3'>
+          <div className='h-[360px] w-full rounded-2xl border border-[#2a2b2f] bg-[#1c1d20] contain-strict lg:h-auto lg:flex-1'>
+            <VideoDisplay />
           </div>
 
-          {/* Bottom action area */}
-          <BottomActionArea
-            durationOptions={durationOptions}
-            ratioOptions={ratioOptions}
-            resolutionOptions={resolutionOptions}
-            showDuration={showDuration}
-            showRatio={showRatio}
-            showResolution={showResolution}
-            isSubmitting={isSubmitting}
-            submitButtonText={t('generate')}
-          />
-        </form>
-      </Form>
-
-      {/* Right side content: Display + History */}
-      <div className='flex flex-1 flex-col items-start justify-start gap-3'>
-        <div className='h-[360px] w-full rounded-2xl border border-[#2a2b2f] bg-[#1c1d20] contain-strict lg:h-auto lg:flex-1'>
-          <VideoDisplay />
-        </div>
-
-        <div className='flex w-full flex-col gap-3 contain-inline-size'>
-          <VideoHistorySection />
+          <div className='flex w-full flex-col gap-3 contain-inline-size'>
+            <VideoHistorySection />
+          </div>
         </div>
       </div>
-    </div>
-  </VideoContenxtProvider>
+    </VideoContenxtProvider>
   );
 }

@@ -21,6 +21,12 @@ export interface VideoFormData {
   multiImages?: File[] | null;
   enableEndFrame?: boolean;
   enableAudio?: boolean;
+  enableBgm?: boolean;
+  style?: string;
+  seed?: number;
+  negativePrompt?: string;
+  guidanceScale?: number;
+  keepOriginalSound?: boolean;
   audioFile?: File | null; // Audio file (for models that need audio like lipsync)
   audioTrimRange?: { startTime: number; endTime: number } | null; // Audio trim range
 }

@@ -19,19 +19,21 @@
  */
 
 import { useCallback, useState } from 'react';
-import { toast } from 'sonner';
-import { createVideoTask } from '@/network/video/client';
 import { getClientOpenApiConfig } from '@/network/clientFetch';
+import { startTaskPolling } from '@/network/task-polling';
+import { createVideoTask } from '@/network/video/client';
 import { addPendingVideoHistory } from '@/network/video/history';
 import useGenerationPollingStore from '@/store/useGenerationPollingStore';
-import { shouldCompressImageFileList, type FileType } from '@/lib/utils/fileUtils';
-import { showConfettiFireworks } from '@/lib/utils/uiUtils';
+import { toast } from 'sonner';
+
+import type { VideoModel } from '@/lib/constants/video/';
 import { sendGAEventBtnClicked } from '@/lib/utils/analyticsUtils';
 import trimAudioFile from '@/lib/utils/audioUtils';
-import { startTaskPolling } from '@/network/task-polling';
-import type { VideoModel } from '@/lib/constants/video/';
-import type { VideoFormStores } from './useVideoFormStores';
+import { shouldCompressImageFileList, type FileType } from '@/lib/utils/fileUtils';
+import { showConfettiFireworks } from '@/lib/utils/uiUtils';
+
 import type { VideoFormData } from '../types';
+import type { VideoFormStores } from './useVideoFormStores';
 
 /**
  * Parameters for useVideoFormSubmit
@@ -49,10 +51,7 @@ interface UseVideoFormSubmitOptions {
  */
 export default function useVideoFormSubmit(options: UseVideoFormSubmitOptions) {
   const { videoType, stores, pathname, t, submitBtnId } = options;
-  const {
-    setOpenPricingDialogStore,
-    uploadFilesToStorageThroughBackEnd,
-  } = stores;
+  const { setOpenPricingDialogStore, uploadFilesToStorageThroughBackEnd } = stores;
   void pathname;
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -62,7 +61,9 @@ export default function useVideoFormSubmit(options: UseVideoFormSubmitOptions) {
    * Handle file upload
    */
   const uploadFiles = useCallback(
-    async (formData: VideoFormData): Promise<{
+    async (
+      formData: VideoFormData,
+    ): Promise<{
       startFrameUrl: string;
       endFrameUrl: string;
       imageUrlList: string[];
@@ -167,7 +168,6 @@ export default function useVideoFormSubmit(options: UseVideoFormSubmitOptions) {
     [uploadFilesToStorageThroughBackEnd],
   );
 
-
   /**
    * Handle form submission
    */
@@ -224,6 +224,13 @@ export default function useVideoFormSubmit(options: UseVideoFormSubmitOptions) {
           image_end_url: imageUrls?.[1],
           images: imageUrls && imageUrls.length > 2 ? imageUrls : undefined,
           audio_url: audioUrl || undefined,
+          sound: currentModel.options.sound ? !!formData.enableAudio : undefined,
+          bgm: currentModel.options.bgm ? !!formData.enableBgm : undefined,
+          style: currentModel.options.style?.length ? formData.style || undefined : undefined,
+          seed: currentModel.options.seed && formData.seed !== undefined ? formData.seed : undefined,
+          negative_prompt: currentModel.options.negativePrompt ? formData.negativePrompt || undefined : undefined,
+          guidance_scale: currentModel.options.guidanceScale ? formData.guidanceScale : undefined,
+          keep_original_sound: currentModel.options.keepOriginalSound ? !!formData.keepOriginalSound : undefined,
         });
 
         // Flaq API returns business code 0 on success
@@ -258,7 +265,11 @@ export default function useVideoFormSubmit(options: UseVideoFormSubmitOptions) {
         showConfettiFireworks(3000);
         toast.success(res.message || 'Video task submitted.');
       } catch (error: any) {
-        if (String(error?.message || error).toLowerCase().includes('credit')) {
+        if (
+          String(error?.message || error)
+            .toLowerCase()
+            .includes('credit')
+        ) {
           setOpenPricingDialogStore(true, 'credits');
           return;
         }
@@ -267,14 +278,7 @@ export default function useVideoFormSubmit(options: UseVideoFormSubmitOptions) {
         setIsSubmitting(false);
       }
     },
-    [
-      submitBtnId,
-      videoType,
-      t,
-      uploadFiles,
-      setOpenPricingDialogStore,
-      addProcessingTask,
-    ],
+    [submitBtnId, videoType, t, uploadFiles, setOpenPricingDialogStore, addProcessingTask],
   );
 
   return {

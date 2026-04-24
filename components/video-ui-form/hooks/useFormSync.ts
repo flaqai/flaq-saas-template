@@ -27,8 +27,10 @@
 
 import { useEffect, useRef } from 'react';
 import { UseFormReturn } from 'react-hook-form';
-import { type VideoModel, type ModelVersionConfig } from '@/lib/constants/video/';
-import type { VideoFormData, FormOption } from '../types';
+
+import { type ModelVersionConfig, type VideoModel } from '@/lib/constants/video/';
+
+import type { FormOption, VideoFormData } from '../types';
 
 /**
  * Parameters for useFormSync
@@ -50,10 +52,7 @@ interface UseFormSyncOptions {
   };
 }
 
-function isSupportedValue(
-  value: string | undefined,
-  options: Array<{ value: string }>,
-): value is string {
+function isSupportedValue(value: string | undefined, options: Array<{ value: string }>): value is string {
   if (!value) return false;
   return options.some((opt) => opt.value === value);
 }
@@ -104,8 +103,7 @@ export default function useFormSync(options: UseFormSyncOptions) {
   const prevModelVersionRef = useRef<string | null>(null);
 
   // Detect if model has switched (calculate before all useEffect)
-  const isModelSwitch =
-    prevModelVersionRef.current !== null && prevModelVersionRef.current !== modelVersion;
+  const isModelSwitch = prevModelVersionRef.current !== null && prevModelVersionRef.current !== modelVersion;
 
   // useEffect 1: ratio
   useEffect(() => {
@@ -203,6 +201,42 @@ export default function useFormSync(options: UseFormSyncOptions) {
       form.setValue('enableEndFrame', false);
     }
   }, [modelVersion, currentModel, form, isModelSwitch]);
+
+  // useEffect 4: clear optional model parameters when the selected model does not support them
+  useEffect(() => {
+    if (!currentModel) return;
+
+    const modelOptions = currentModel.options;
+
+    if (!modelOptions.bgm && form.getValues('enableBgm')) {
+      form.setValue('enableBgm', false);
+    }
+
+    const style = form.getValues('style');
+    if (!modelOptions.style?.length && style) {
+      form.setValue('style', '');
+    }
+
+    if (modelOptions.style?.length && !modelOptions.style.includes(style || '')) {
+      form.setValue('style', modelOptions.style[0]);
+    }
+
+    if (!modelOptions.seed && form.getValues('seed')) {
+      form.setValue('seed', undefined);
+    }
+
+    if (!modelOptions.negativePrompt && form.getValues('negativePrompt')) {
+      form.setValue('negativePrompt', '');
+    }
+
+    if (!modelOptions.guidanceScale && form.getValues('guidanceScale')) {
+      form.setValue('guidanceScale', undefined);
+    }
+
+    if (!modelOptions.keepOriginalSound && form.getValues('keepOriginalSound')) {
+      form.setValue('keepOriginalSound', false);
+    }
+  }, [currentModel, form, modelVersion, hasImages]);
 
   // Update ref uniformly (after all effects have executed)
   useEffect(() => {
