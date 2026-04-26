@@ -3,8 +3,9 @@ import { Link } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 
 import { IMAGE_CHILDREN_LIST, VIDEO_CHILDREN_LIST } from '@/lib/constants';
-import BusinessButton from './BusinessButton';
+
 import Github from '../svg/footer/Github';
+import BusinessButton from './BusinessButton';
 
 function InfoList({
   title,
@@ -120,24 +121,18 @@ export default function Footer() {
             decoding='async'
           />
           <div className='flex flex-col items-center lg:flex-row'>
-            © 2026 Flaq AI - <span className='text-wrap'>6677 Tech Limited</span>
+            © 2026 Flaq AI - <span className='text-wrap'>https://flaq.ai/</span>
           </div>
         </div>
         <div className='flex items-center gap-4'>
           <a
-            href='https://flaq.ai'
+            href='https://flaq.ai/'
             target='_blank'
-            rel='noopener noreferrer'
+            rel='noopener noreferrer nofollow'
             className='flex items-center gap-2 text-white/70 transition-colors hover:text-white'
             title='Flaq AI'
           >
-            <img
-              src='/images/flaq-logo.svg'
-              alt='Flaq AI'
-              className='size-8'
-              loading='lazy'
-              decoding='async'
-            />
+            <img src='/images/flaq-logo.svg' alt='Flaq AI' className='size-8' loading='lazy' decoding='async' />
           </a>
           <a
             href='https://github.com/flaqai/flaq-saas-template'
