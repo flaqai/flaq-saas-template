@@ -57,6 +57,26 @@ export default function useVideoFormSubmit(options: UseVideoFormSubmitOptions) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const addProcessingTask = useGenerationPollingStore((state) => state.add);
 
+  const getAudioDuration = useCallback(
+    async (audioFile: File): Promise<number> =>
+      new Promise((resolve, reject) => {
+        const audioUrl = URL.createObjectURL(audioFile);
+        const audio = new Audio(audioUrl);
+
+        audio.addEventListener('loadedmetadata', () => {
+          const duration = audio.duration;
+          URL.revokeObjectURL(audioUrl);
+          resolve(duration);
+        });
+
+        audio.addEventListener('error', () => {
+          URL.revokeObjectURL(audioUrl);
+          reject(new Error('Failed to load audio metadata'));
+        });
+      }),
+    [],
+  );
+
   /**
    * Handle file upload
    */
@@ -99,14 +119,26 @@ export default function useVideoFormSubmit(options: UseVideoFormSubmitOptions) {
 
       // Handle audio file (trim first if needed)
       let processedAudioFile = formData.audioFile;
-      if (formData.audioFile && formData.audioFile instanceof File && formData.audioTrimRange) {
-        const { startTime, endTime } = formData.audioTrimRange;
-        if (startTime > 0 || endTime < Infinity) {
-          try {
-            processedAudioFile = await trimAudioFile(formData.audioFile, startTime, endTime);
-          } catch (error) {
-            console.error('Failed to trim audio:', error);
-            toast.error('音频裁剪失败，将使用完整音频');
+      if (formData.audioFile && formData.audioFile instanceof File) {
+        const audioDuration = await getAudioDuration(formData.audioFile).catch((error) => {
+          console.error('Failed to load audio metadata:', error);
+          return 0;
+        });
+
+        if (formData.audioTrimRange) {
+          const { startTime, endTime } = formData.audioTrimRange;
+          const needsTrim =
+            endTime > startTime &&
+            endTime > 0 &&
+            (startTime > 0.01 || (audioDuration > 0 && endTime < audioDuration - 0.01));
+
+          if (needsTrim) {
+            try {
+              processedAudioFile = await trimAudioFile(formData.audioFile, startTime, endTime);
+            } catch (error) {
+              console.error('Failed to trim audio:', error);
+              toast.error('音频裁剪失败，将使用完整音频');
+            }
           }
         }
       }
@@ -165,7 +197,7 @@ export default function useVideoFormSubmit(options: UseVideoFormSubmitOptions) {
 
       return { startFrameUrl, endFrameUrl, imageUrlList, clothesChangerImageUrl, audioUrl };
     },
-    [uploadFilesToStorageThroughBackEnd],
+    [getAudioDuration, uploadFilesToStorageThroughBackEnd],
   );
 
   /**

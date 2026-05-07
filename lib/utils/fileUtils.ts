@@ -102,12 +102,19 @@ export type FileType = {
 export async function shouldCompressImageFileList(fileList: FileType[], xMB: number = maxSizeMB): Promise<FileType[]> {
   const maxSizeInBytes = xMB * 1024 * 1024;
 
-  if (fileList.every((file) => file.data?.size && file.data.size <= maxSizeInBytes)) {
+  if (
+    fileList.every(
+      (file) =>
+        !file.data ||
+        !file.data.type.startsWith('image/') ||
+        (file.data.size !== undefined && file.data.size <= maxSizeInBytes),
+    )
+  ) {
     return fileList;
   }
 
   const compressedFilesPromises = fileList.map((file) => {
-    if (file.data && file.data.size > maxSizeInBytes) {
+    if (file.data && file.data.type.startsWith('image/') && file.data.size > maxSizeInBytes) {
       return imageCompression(file.data, { maxSizeMB: xMB, useWebWorker: true }).then(
         (compressedData) =>
           ({
