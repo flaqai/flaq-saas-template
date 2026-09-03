@@ -1,8 +1,9 @@
-import { defaultLocale, languages } from '@/i18n/languages';
+import { generateLanguagePaths, languages } from '@/i18n/languages';
 import { Link } from '@/i18n/navigation';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 
 import { IMAGE_CHILDREN_LIST, VIDEO_CHILDREN_LIST } from '@/lib/constants';
+import { BASE_URL } from '@/lib/env';
 
 import Github from '../svg/footer/Github';
 import BusinessButton from './BusinessButton';
@@ -23,20 +24,20 @@ function InfoList({
   prefetch?: boolean;
 }) {
   return (
-    <div className='flex flex-col items-center gap-3 lg:items-start'>
-      <p className='text-white/40'>{title}</p>
-      <ul className='flex flex-col items-center gap-3 lg:items-start'>
+    <div className='min-w-0'>
+      <p className='mb-4 text-xs font-semibold tracking-[0.18em] text-white/55 uppercase'>{title}</p>
+      <ul className='flex flex-col items-start gap-1.5'>
         {dataList.map((el, index) => (
           <li key={el.href || index}>
             {el.isBusinessButton ? (
-              <BusinessButton className='flex items-center gap-1 text-xs text-nowrap hover:underline lg:text-sm'>
+              <BusinessButton className='inline-flex min-h-8 items-center text-start text-sm text-white/65 transition-colors hover:text-white focus-visible:text-white focus-visible:outline-none'>
                 {el.title}
               </BusinessButton>
             ) : (
               <Link
                 href={el.href!}
                 title={el.title}
-                className='flex items-center gap-1 text-xs text-nowrap hover:underline lg:text-sm'
+                className='inline-flex min-h-8 items-center text-sm text-white/65 transition-colors hover:text-white focus-visible:text-white focus-visible:outline-none'
                 target={el.target}
                 type={el.type}
                 prefetch={prefetch}
@@ -53,6 +54,10 @@ function InfoList({
 
 export default function Footer() {
   const t = useTranslations('Footer');
+  const locale = useLocale();
+  const currentYear = new Date().getFullYear();
+  const languagePaths = generateLanguagePaths(BASE_URL, '');
+  const contactEmail = process.env.NEXT_PUBLIC_CONTACT_US_EMAIL;
 
   const FEATURE_LINK = [
     { code: 'ai-create', href: '/ai-media-creator' },
@@ -91,76 +96,108 @@ export default function Footer() {
     },
   ];
 
+  const supportLinks = contactEmail
+    ? [
+        ...INFO_LIST,
+        {
+          title: t('contactUs'),
+          href: `mailto:${contactEmail}`,
+          type: 'email',
+        },
+      ]
+    : INFO_LIST;
+
   return (
-    <footer className='w-full bg-black'>
-      <div className='max-w-pc mx-auto flex min-h-[252px] flex-col items-center justify-between p-10 pb-5 lg:flex-row lg:px-0 lg:pb-10'>
-        <div className='flex flex-col items-center space-y-3 lg:items-stretch'>
-          <p className='text-xl font-bold text-white lg:h-8 lg:text-[32px]'>{t('title')}</p>
-          <p className='text-xs'>{t('subTitle')}</p>
-        </div>
-        <div className='mt-5 flex flex-col items-center gap-y-5 lg:mt-0 lg:flex-row lg:items-stretch lg:gap-x-10'>
-          <InfoList title={t('feature-link')} dataList={FEATURE_LINK} />
-          <InfoList
-            title={t('support')}
-            dataList={[
-              ...INFO_LIST,
-              {
-                title: t('contactUs'),
-                href: `mailto:${process.env.NEXT_PUBLIC_CONTACT_US_EMAIL}`,
-                type: 'email',
-              },
-            ]}
-          />
-        </div>
-      </div>
-      <div className='h-px w-full bg-white/20' />
-      <div className='max-w-pc mx-auto flex w-full flex-col items-center justify-between gap-5 py-10 lg:h-16 lg:flex-row lg:py-0'>
-        <div className='flex flex-col items-center gap-3 lg:flex-row'>
-          <img
-            src='/images/logo.png'
-            alt='logo'
-            className='size-10'
-            fetchPriority='low'
-            loading='lazy'
-            decoding='async'
-          />
-          <div className='flex flex-col items-center lg:flex-row'>
-            © 2026 Flaq AI - <span className='text-wrap'>https://flaq.ai/</span>
+    <footer className='relative isolate w-full overflow-hidden border-t border-white/10 bg-[#070708] text-white/70'>
+      <div
+        aria-hidden='true'
+        className='pointer-events-none absolute inset-x-0 top-0 -z-10 h-64 bg-[radial-gradient(ellipse_at_top_left,rgba(76,82,254,0.13),transparent_58%)]'
+      />
+
+      <div className='max-w-pc mx-auto px-5 sm:px-8 xl:px-0'>
+        <div className='grid gap-10 py-12 lg:grid-cols-[minmax(0,1.6fr)_minmax(160px,0.7fr)_minmax(160px,0.7fr)] lg:gap-14 lg:py-16'>
+          <div className='max-w-2xl'>
+            <Link href='/' className='mb-6 inline-flex items-center gap-3' aria-label='Flaq SaaS Template'>
+              <span className='flex size-11 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.06] shadow-[0_12px_36px_rgba(0,0,0,0.25)]'>
+                <img
+                  src='/images/logo.png'
+                  alt=''
+                  className='size-7'
+                  fetchPriority='low'
+                  loading='lazy'
+                  decoding='async'
+                />
+              </span>
+              <span className='text-sm font-semibold tracking-[0.12em] text-white/80 uppercase'>
+                Flaq SaaS Template
+              </span>
+            </Link>
+            <p className='max-w-xl text-2xl leading-tight font-semibold text-balance text-white sm:text-3xl'>
+              {t('title')}
+            </p>
+            <p className='mt-4 max-w-xl text-sm leading-6 text-white/50'>{t('subTitle')}</p>
+          </div>
+
+          <div className='grid grid-cols-2 gap-x-8 gap-y-10 sm:gap-x-14 lg:contents'>
+            <InfoList title={t('feature-link')} dataList={FEATURE_LINK} />
+            <InfoList title={t('support')} dataList={supportLinks} />
           </div>
         </div>
-        <div className='flex items-center gap-4'>
-          <a
-            href='https://flaq.ai/'
-            target='_blank'
-            rel='noopener noreferrer nofollow'
-            className='flex items-center gap-2 text-white/70 transition-colors hover:text-white'
-            title='Flaq AI'
-          >
-            <img src='/images/flaq-logo.svg' alt='Flaq AI' className='size-8' loading='lazy' decoding='async' />
-          </a>
-          <a
-            href='https://github.com/flaqai/flaq-saas-template'
-            target='_blank'
-            rel='noopener noreferrer'
-            className='text-white/70 transition-colors hover:text-white'
-            title='GitHub Repository'
-          >
-            <Github className='size-8' />
-          </a>
+
+        <nav aria-label='Languages' className='border-t border-white/10 py-6'>
+          <div className='flex flex-wrap gap-2'>
+            {languages.map((language) => {
+              const isActive = language.lang === locale;
+
+              return (
+                <a
+                  href={languagePaths[language.code]}
+                  key={language.code}
+                  hrefLang={language.code}
+                  lang={language.code}
+                  aria-current={isActive ? 'page' : undefined}
+                  className={`rounded-full border px-3 py-1.5 text-xs transition-colors focus-visible:outline-none ${
+                    isActive
+                      ? 'border-white/25 bg-white/10 text-white'
+                      : 'border-white/10 bg-white/[0.025] text-white/50 hover:border-white/20 hover:bg-white/[0.06] hover:text-white'
+                  }`}
+                >
+                  {language.label}
+                </a>
+              );
+            })}
+          </div>
+        </nav>
+
+        <div className='flex flex-col-reverse items-center justify-between gap-5 border-t border-white/10 py-6 sm:flex-row'>
+          <div className='flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-center text-xs text-white/50 sm:justify-start sm:text-start'>
+            <span>© {currentYear} Flaq AI.</span>
+            <span>Flaq SaaS Template.</span>
+          </div>
+
+          <div className='flex items-center gap-2'>
+            <a
+              href='https://flaq.ai/'
+              target='_blank'
+              rel='noopener noreferrer nofollow'
+              className='flex size-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.035] transition-colors hover:border-white/20 hover:bg-white/[0.08] focus-visible:outline-none'
+              title='Flaq AI'
+              aria-label='Flaq AI'
+            >
+              <img src='/images/flaq-logo.svg' alt='' className='size-6' loading='lazy' decoding='async' />
+            </a>
+            <a
+              href='https://github.com/flaqai/flaq-saas-template'
+              target='_blank'
+              rel='noopener noreferrer'
+              className='flex size-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.035] transition-colors hover:border-white/20 hover:bg-white/[0.08] focus-visible:outline-none'
+              title='GitHub Repository'
+              aria-label='GitHub Repository'
+            >
+              <Github className='size-5' />
+            </a>
+          </div>
         </div>
-      </div>
-      <div className='h-px w-full bg-white/20' />
-      <div className='max-w-pc mx-auto grid w-full grid-cols-3 items-center justify-center gap-5 p-5 lg:flex lg:h-16 lg:p-0'>
-        {languages.map((language) => (
-          <Link
-            href={`${process.env.NEXT_PUBLIC_SITE_URL}/${language.lang === defaultLocale ? '' : `${language.lang}/`}`}
-            key={language.code}
-            className='hover:underline'
-            prefetch={false}
-          >
-            {language.label}
-          </Link>
-        ))}
       </div>
     </footer>
   );
