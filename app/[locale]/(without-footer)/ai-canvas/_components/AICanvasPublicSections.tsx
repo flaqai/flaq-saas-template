@@ -18,8 +18,8 @@ export default async function AICanvasPublicSections() {
       <CanvasExampleSection
         title={t('example.title')}
         description={t('example.description')}
-        videoSrc='https://cdn.heydream.im/heydream/v3/hey_dream_canvas/example/1.mp4'
-        posterSrc='https://cdn.heydream.im/heydream/v3/hey_dream_canvas/example/1.webp'
+        videoSrc='/videos/ai-canvas/workflow.mp4'
+        posterSrc='/videos/ai-canvas/workflow.webp'
       />
       <ResourceEntrySections />
       <CoreFeaturesCards
