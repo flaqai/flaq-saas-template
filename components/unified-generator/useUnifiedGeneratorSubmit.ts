@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 
@@ -56,6 +56,7 @@ export type PreparedUnifiedSubmission =
 export interface UnifiedSubmitOptions {
   validateInput?: (input: UnifiedSubmitInput) => void;
   onPreparedSubmit?: (submission: PreparedUnifiedSubmission) => Promise<void>;
+  keepSubmittingOnSuccess?: boolean;
 }
 
 function getImageDimensions(ratio?: string, resolution?: string) {
@@ -92,6 +93,7 @@ export default function useUnifiedGeneratorSubmit(options?: UnifiedSubmitOptions
   const t = useTranslations('UnifiedGenerator');
   const uploadFiles = useUploadFiles();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const submittingRef = useRef(false);
 
   const upload = async (files: File[]) => {
     if (!files.length) return [];
@@ -158,13 +160,15 @@ export default function useUnifiedGeneratorSubmit(options?: UnifiedSubmitOptions
   };
 
   const submit = async (input: UnifiedSubmitInput) => {
-    if (isSubmitting) return false;
+    if (submittingRef.current) return false;
     if (!input.prompt.trim()) {
       toast.error(t('errors.prompt'));
       return false;
     }
 
+    submittingRef.current = true;
     setIsSubmitting(true);
+    let keepSubmitting = false;
     try {
       options?.validateInput?.(input);
       if (input.mediaType === 'image') {
@@ -188,6 +192,7 @@ export default function useUnifiedGeneratorSubmit(options?: UnifiedSubmitOptions
         };
         if (options?.onPreparedSubmit) {
           await options.onPreparedSubmit({ mediaType: 'image', input, request });
+          keepSubmitting = options.keepSubmittingOnSuccess === true;
           return true;
         }
         const response = await createImageTask(await getClientOpenApiConfigAsync(), request);
@@ -302,6 +307,7 @@ export default function useUnifiedGeneratorSubmit(options?: UnifiedSubmitOptions
       };
       if (options?.onPreparedSubmit) {
         await options.onPreparedSubmit({ mediaType: 'video', input, request });
+        keepSubmitting = options.keepSubmittingOnSuccess === true;
         return true;
       }
       const response = await createVideoTask(await getClientOpenApiConfigAsync(), request);
@@ -336,7 +342,10 @@ export default function useUnifiedGeneratorSubmit(options?: UnifiedSubmitOptions
         : t('errors.media-metadata'));
       return false;
     } finally {
-      setIsSubmitting(false);
+      if (!keepSubmitting) {
+        submittingRef.current = false;
+        setIsSubmitting(false);
+      }
     }
   };
 

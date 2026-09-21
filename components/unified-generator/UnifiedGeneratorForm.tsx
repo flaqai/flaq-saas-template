@@ -45,10 +45,11 @@ export default function UnifiedGeneratorForm({
   submitLabel,
   validateInput,
   onPreparedSubmit,
+  keepSubmittingOnSuccess,
 }: UnifiedGeneratorFormProps) {
   const t = useTranslations('UnifiedGenerator');
   const store = useUnifiedGeneratorStore();
-  const { submit, isSubmitting } = useUnifiedGeneratorSubmit({ validateInput, onPreparedSubmit });
+  const { submit, isSubmitting } = useUnifiedGeneratorSubmit({ validateInput, onPreparedSubmit, keepSubmittingOnSuccess });
   const [openPopover, setOpenPopover] = useState<'parameters' | 'panel' | null>(null);
   const mentionInsertRequestKeyRef = useRef(0);
   const pendingSubmitHandledRef = useRef(false);

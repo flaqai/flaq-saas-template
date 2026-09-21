@@ -24,5 +24,5 @@ export function CanvasEntryWorkspace({ integrations }: { integrations: InfiniteC
     integrations.navigateToEditor(project.id);
   }, [integrations, storage, t]);
 
-  return <UnifiedGeneratorForm submitLabel={t('form.submit')} validateInput={validateInput} onPreparedSubmit={createProject} />;
+  return <UnifiedGeneratorForm submitLabel={t('form.submit')} validateInput={validateInput} onPreparedSubmit={createProject} keepSubmittingOnSuccess />;
 }

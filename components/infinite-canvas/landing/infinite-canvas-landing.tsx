@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowRight, Infinity as InfinityIcon, Loader2, Plus } from 'lucide-react';
 
 import { createCanvasProjectStorage } from '@/components/infinite-canvas/runtime/persistence/local-projects';
@@ -31,7 +31,7 @@ export function InfiniteCanvasLanding({
   const [projects, setProjects] = useState<readonly CanvasProjectSummary[]>([]);
   const [total, setTotal] = useState(0);
   const [loadState, setLoadState] = useState<RecentProjectsLoadState>('idle');
-  const [isCreating, startCreating] = useTransition();
+  const [isCreating, setIsCreating] = useState(false);
   const creatingRef = useRef(false);
   const requestSequence = useRef(0);
 
@@ -64,20 +64,19 @@ export function InfiniteCanvasLanding({
     void loadRecentProjects();
   }, [loadRecentProjects]);
 
-  const createProject = () => {
+  const createProject = async () => {
     if (creatingRef.current) return;
     creatingRef.current = true;
-    startCreating(async () => {
-      try {
-        const project = await storage.createProject(i18n.untitled);
-        integrations.onAnalytics?.('infinite_canvas_project_created', { source: 'landing' });
-        integrations.navigateToEditor(project.id);
-      } catch (error) {
-        handleError(error, 'create-project');
-      } finally {
-        creatingRef.current = false;
-      }
-    });
+    setIsCreating(true);
+    try {
+      const project = await storage.createProject(i18n.untitled);
+      integrations.onAnalytics?.('infinite_canvas_project_created', { source: 'landing' });
+      integrations.navigateToEditor(project.id);
+    } catch (error) {
+      creatingRef.current = false;
+      setIsCreating(false);
+      handleError(error, 'create-project');
+    }
   };
 
   const openDashboard = () => {

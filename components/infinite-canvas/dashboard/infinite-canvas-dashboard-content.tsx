@@ -65,7 +65,7 @@ export function InfiniteCanvasDashboardContent({
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingTitle, setEditingTitle] = useState('');
   const [isMutating, startTransition] = useTransition();
-  const [isCreating, startCreating] = useTransition();
+  const [isCreating, setIsCreating] = useState(false);
   const isPending = isMutating || isCreating;
 
   const handleError = useCallback(
@@ -110,20 +110,19 @@ export function InfiniteCanvasDashboardContent({
     if (data !== undefined && page > totalPages) onPageChange(totalPages);
   }, [data, onPageChange, page, totalPages]);
 
-  const createProject = () => {
+  const createProject = async () => {
     if (isPending || creatingRef.current) return;
     creatingRef.current = true;
-    startCreating(async () => {
-      try {
-        const project = await storage.createProject(i18n.dashboard.untitled);
-        integrations.onAnalytics?.('infinite_canvas_project_created');
-        integrations.navigateToEditor(project.id);
-      } catch (error) {
-        handleError(error, 'create-project');
-      } finally {
-        creatingRef.current = false;
-      }
-    });
+    setIsCreating(true);
+    try {
+      const project = await storage.createProject(i18n.dashboard.untitled);
+      integrations.onAnalytics?.('infinite_canvas_project_created');
+      integrations.navigateToEditor(project.id);
+    } catch (error) {
+      creatingRef.current = false;
+      setIsCreating(false);
+      handleError(error, 'create-project');
+    }
   };
 
   const closeRenameDialog = () => {
