@@ -42,6 +42,7 @@ export const ALL_FEATURE_ROUTES: RouteItem[] = [
   ...VIDEO_CHILDREN_LIST,
   ...IMAGE_CHILDREN_LIST,
   { code: 'ai-create', href: '/ai-media-creator' },
+  { code: 'ai-canvas', href: '/ai-canvas' },
 ].filter((r) => !r.hideInSitemap);
 
 export const NAV_LINKS: NavLink[] = [
@@ -49,6 +50,7 @@ export const NAV_LINKS: NavLink[] = [
   { code: 'video-ai', href: '', children: VIDEO_CHILDREN_LIST.filter((r) => !r.hideInNav) },
   { code: 'image-ai', href: '', children: IMAGE_CHILDREN_LIST.filter((r) => !r.hideInNav) },
   { code: 'ai-api', href: '', children: API_CHILDREN_LIST },
+  { code: 'ai-canvas', href: '/ai-canvas' },
 ];
 
 export const UTM_SOURCE = 'flaq-saas-template';
