@@ -141,6 +141,16 @@ function CanvasEditorRuntime({
 }) {
   const canvasStore = useCanvasStoreApi();
   const [isLeaving, setIsLeaving] = useState(false);
+
+  useEffect(() => {
+    const restorePage = (event: PageTransitionEvent) => {
+      // Browser back can restore the editor with its pre-navigation loading state.
+      if (event.persisted) setIsLeaving(false);
+    };
+    window.addEventListener('pageshow', restorePage);
+    return () => window.removeEventListener('pageshow', restorePage);
+  }, []);
+
   const saveRuntime = useMemo(
     () =>
       createProjectSaveRuntime({
