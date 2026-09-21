@@ -31,20 +31,24 @@ import ReferencePromptEditor, {
 import SwitchPopover from './SwitchPopover';
 import TypeTabs from './TypeTabs';
 import UploadSlots from './UploadSlots';
-import useUnifiedGeneratorSubmit from './useUnifiedGeneratorSubmit';
+import useUnifiedGeneratorSubmit, { type UnifiedSubmitOptions } from './useUnifiedGeneratorSubmit';
 
 type SupportedVideoType = Exclude<VideoGenerationType, 'video-edit'>;
 
-interface UnifiedGeneratorFormProps {
+interface UnifiedGeneratorFormProps extends UnifiedSubmitOptions {
+  submitLabel?: string;
   submitMode?: 'generate' | 'transfer';
 }
 
 export default function UnifiedGeneratorForm({
   submitMode = 'generate',
+  submitLabel,
+  validateInput,
+  onPreparedSubmit,
 }: UnifiedGeneratorFormProps) {
   const t = useTranslations('UnifiedGenerator');
   const store = useUnifiedGeneratorStore();
-  const { submit, isSubmitting } = useUnifiedGeneratorSubmit();
+  const { submit, isSubmitting } = useUnifiedGeneratorSubmit({ validateInput, onPreparedSubmit });
   const [openPopover, setOpenPopover] = useState<'parameters' | 'panel' | null>(null);
   const mentionInsertRequestKeyRef = useRef(0);
   const pendingSubmitHandledRef = useRef(false);
@@ -195,11 +199,11 @@ export default function UnifiedGeneratorForm({
   };
 
   useEffect(() => {
-    if (submitMode !== 'generate' || !store.pendingCreatorSubmit || pendingSubmitHandledRef.current) return;
+    if (onPreparedSubmit || submitMode !== 'generate' || !store.pendingCreatorSubmit || pendingSubmitHandledRef.current) return;
     pendingSubmitHandledRef.current = true;
     store.clearPendingCreatorSubmit();
     void handleSubmit();
-  }, [store.pendingCreatorSubmit, submitMode]);
+  }, [store.pendingCreatorSubmit, submitMode, onPreparedSubmit]);
 
   const handleReset = () => {
     if (isReferenceVideo) {
@@ -598,7 +602,7 @@ export default function UnifiedGeneratorForm({
                 onClick={store.requestCreatorSubmit}
                 className='bg-color-main inline-flex h-9 w-full min-w-[120px] shrink-0 items-center justify-center gap-2 rounded-md px-4 py-0 text-base leading-none font-medium whitespace-nowrap text-white transition-opacity hover:text-white hover:opacity-90 sm:w-auto'
               >
-                {t('generate')}
+                {submitLabel ?? t('generate')}
               </Link>
             ) : (
               <button
@@ -607,7 +611,7 @@ export default function UnifiedGeneratorForm({
                 disabled={isSubmitting || (mediaType === 'video' && !selectedVideoModel)}
                 className='bg-color-main inline-flex h-9 w-full min-w-[120px] shrink-0 items-center justify-center gap-2 rounded-md px-4 py-0 text-base leading-none font-medium whitespace-nowrap text-white transition-opacity hover:text-white hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto'
               >
-                {t('generate')}
+                {submitLabel ?? t('generate')}
                 {isSubmitting ? <Loader2 className='size-4 animate-spin' /> : null}
               </button>
             )}

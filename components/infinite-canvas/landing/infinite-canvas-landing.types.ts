@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 
 export interface InfiniteCanvasLandingI18n {
   readonly locale: string;
@@ -34,6 +35,7 @@ export interface InfiniteCanvasLandingIntegrations {
 }
 
 export interface InfiniteCanvasLandingProps {
+  readonly entryForm?: ReactNode;
   readonly i18n: InfiniteCanvasLandingI18n;
   readonly integrations: InfiniteCanvasLandingIntegrations;
   /** Optional consumer-owned image shown in every recent-project card at a 16:9 aspect ratio. */

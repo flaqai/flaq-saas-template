@@ -22,6 +22,7 @@ const RECENT_PROJECT_SKELETON_KEYS = [
 type RecentProjectsLoadState = 'idle' | 'loading' | 'ready' | 'empty' | 'error';
 
 export function InfiniteCanvasLanding({
+  entryForm,
   i18n,
   integrations,
   projectImageUrl,
@@ -88,60 +89,12 @@ export function InfiniteCanvasLanding({
   };
 
   return (
-    <div className='bg-background-color text-text-color'>
-      <section className='mx-auto w-full max-w-[1280px] px-4 pb-8 pt-16 text-center sm:px-5 md:pt-24'>
-        <div className='mx-auto flex w-full flex-col items-center pb-2'>
-          <div className='inline-flex max-w-full items-center gap-2 rounded-full border border-main-color/40 bg-main-color/15 px-4 py-2 text-xs font-medium text-text-color sm:text-sm'>
-            <InfinityIcon className='size-5 shrink-0' aria-hidden='true'>
-              <path d='M3 5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2M21 19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2' />
-            </InfinityIcon>
-            <span>{i18n.eyebrow}</span>
-          </div>
-          <h1 className='mt-6 text-[32px] font-semibold leading-[1.3] text-main-color sm:mt-8 sm:text-balance sm:text-4xl sm:leading-[1.2] lg:text-[56px]'>
-            <span className='block'>{i18n.title}</span>
-            <span className='block'>{i18n.titleHighlight}</span>
-          </h1>
-          <p className='mt-6 max-w-[760px] whitespace-pre-line text-pretty px-4 text-base leading-6 text-text-color/80 sm:mt-8 sm:px-0 sm:text-lg sm:leading-7'>
-            {i18n.description}
-          </p>
-          <div className='mt-6 grid w-full max-w-[368px] grid-cols-2 gap-3 sm:mt-8'>
-            <Button
-              type='button'
-              onClick={createProject}
-              disabled={isCreating}
-              aria-busy={isCreating}
-              className='col-span-2 h-[52px] min-w-0 gap-3 rounded-lg bg-gradient-main px-4 text-gradient-main-foreground hover:opacity-90'
-            >
-              {isCreating ? (
-                <Loader2 className='size-5 animate-spin' aria-hidden='true' />
-              ) : (
-                <ArrowRight className='size-5' aria-hidden='true' />
-              )}{' '}
-              {i18n.createCta}
-            </Button>
-            <Button
-              type='button'
-              variant='outline'
-              onClick={integrations.navigateToDocs}
-              className='h-12 min-w-0 whitespace-normal rounded-lg border-light-gray-2 bg-light-gray-1 px-3 text-text-color hover:bg-light-gray-2 hover:text-text-color sm:px-6'
-            >
-              {i18n.docsCta}
-            </Button>
-            <Button
-              type='button'
-              variant='outline'
-              onClick={openDashboard}
-              className='h-12 min-w-0 whitespace-normal rounded-lg border-light-gray-2 bg-light-gray-1 px-3 text-text-color hover:bg-light-gray-2 hover:text-text-color sm:px-6'
-            >
-              {i18n.dashboardCta}
-            </Button>
-          </div>
-          <p className='mt-4 text-sm leading-5 text-gray-color sm:mt-6'>{i18n.capabilities}</p>
-        </div>
-      </section>
+    <div className='container-centered space-y-10 pt-3 pb-10 lg:py-10'>
+      {entryForm}
+
 
         <section
-          className='mx-auto w-full min-w-0 max-w-7xl border-t border-light-gray-2 px-4 py-10 sm:px-8'
+          className='w-full min-w-0'
           aria-labelledby='infinite-canvas-recent-projects'
           aria-busy={loadState === 'loading'}
         >
@@ -242,6 +195,7 @@ export function InfiniteCanvasLanding({
               : null}
           </ul>
         </section>
+
     </div>
   );
 }

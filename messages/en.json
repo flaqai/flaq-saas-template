@@ -385,7 +385,10 @@
     "ai-create": "AI Create",
     "reference-to-video": "Reference to Video",
     "reference-to-video-content": "Create video from image, video, audio, document, or link references",
-    "ai-canvas": "AI Canvas"
+    "ai-canvas": "AI Canvas",
+    "creative-suite": "Creative Suite",
+    "ai-create-content": "Create AI images and videos",
+    "ai-canvas-content": "Create and edit on an infinite AI canvas"
   },
   "Footer": {
     "title": "AI Image & Video — Free & Open Source · No Signup Required",
@@ -2486,7 +2489,7 @@
         },
         "4": {
           "title": "Projects You Can Return To",
-          "description": "Signed-in users can save, reopen, rename, and manage Canvas projects from the library, then continue an active visual workflow later."
+          "description": "Save, reopen, rename, and manage Canvas projects in this browser, then return to continue your visual workflow."
         },
         "title": "Core Features of Flaq.ai AI Canvas",
         "description": "Bring prompts, compatible inputs, model choices, and generation results into a connected Canvas project instead of losing context between separate steps.",
@@ -2537,7 +2540,7 @@
         },
         "2": {
           "question": "Which workflows can I start with?",
-          "answer": "The initial release supports text-to-image, image-to-image, text-to-video, and image-to-video workflows with representative supported models."
+          "answer": "Start with text-to-image, image-to-image, text-to-video, image-to-video, or reference-to-video. Available inputs and settings depend on the selected model."
         },
         "3": {
           "question": "Does creating a Canvas project generate media immediately?",
@@ -2545,7 +2548,7 @@
         },
         "4": {
           "question": "Can I save a Canvas project and return to it?",
-          "answer": "Yes. Signed-in users can save, reopen, rename, and manage Canvas projects from the Canvas library."
+          "answer": "Yes. Projects are saved locally in this browser. Reopen, rename, and manage them from the Canvas library. Export projects to keep a backup or move them to another browser."
         },
         "5": {
           "question": "Can I reuse generated results in another step?",
@@ -2553,13 +2556,17 @@
         },
         "6": {
           "question": "Which AI models are available in Flaq.ai AI Canvas?",
-          "answer": "The initial Canvas supports representative GPT Image 2 image workflows and Seedance 2.0 video workflows. The available model depends on the image or video workflow selected at the entry form."
+          "answer": "Choose from the image and video models listed in the form. Model availability depends on the selected workflow. Generating media requires your Flaq Client Key and sufficient API credit."
         },
         "7": {
           "question": "Will more models be added to Flaq.ai AI Canvas?",
-          "answer": "Yes. The initial model set covers the main image and video workflow types, and additional compatible models can be added through the shared model adapter."
+          "answer": "The available selection may change over time. Check the model picker for the image and video models currently supported by your chosen workflow."
         },
         "title": "Flaq.ai AI Canvas FAQ"
+      },
+      "example": {
+        "title": "See an AI Canvas Workflow in Action",
+        "description": "Follow an idea from its first prompt to images and video. Keep references, generated assets, connected steps, and new creative directions visible in one flexible workspace."
       }
     },
     "docs": {

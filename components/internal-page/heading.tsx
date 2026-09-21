@@ -10,7 +10,7 @@ export default function Heading({
   align?: 'left' | 'center';
 }) {
   return (
-    <div className={`mx-auto flex max-w-5xl flex-col gap-2 ${align === 'left' ? 'items-start text-left' : 'items-center text-center'}`}>
+    <div className={`flex flex-col gap-2 ${align === 'left' ? 'w-full items-start text-left' : 'mx-auto max-w-5xl items-center text-center'}`}>
       <div className='flex items-center gap-3'>
         <h1 className='text-balance text-color-main text-4xl font-semibold lg:text-5xl'>{title}</h1>
         {showComingSoon && (
@@ -19,7 +19,7 @@ export default function Heading({
           </span>
         )}
       </div>
-      <p className='text-balance max-w-5xl text-sm lg:text-lg'>{description}</p>
+      <p className={`text-balance text-sm lg:text-lg ${align === 'left' ? 'w-full' : 'max-w-5xl'}`}>{description}</p>
     </div>
   );
 }
