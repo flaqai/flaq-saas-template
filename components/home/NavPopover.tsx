@@ -2,9 +2,7 @@
 
 import { useState } from 'react';
 import { Link } from '@/i18n/navigation';
-import * as PopoverPrimitive from '@radix-ui/react-popover';
 import { ChevronDown } from 'lucide-react';
-import { useTranslations } from 'next-intl';
 
 import { cn } from '@/lib/utils';
 
@@ -15,7 +13,6 @@ export default function NavPopover({
   isHighLight = false,
   navDataList,
   className,
-  renderIcon = true,
   columnNumber = 2,
   align = 'start',
 }: {
@@ -31,11 +28,9 @@ export default function NavPopover({
     isHot?: boolean;
   }[];
   className?: string;
-  renderIcon?: boolean;
   columnNumber?: number;
   align?: React.ComponentProps<typeof PopoverContent>['align'];
 }) {
-  const t = useTranslations('Navigation');
   const [openToolsNav, setOpenToolsNav] = useState(false);
 
   return (
@@ -44,18 +39,15 @@ export default function NavPopover({
         <button
           type='button'
           className={cn(
-            'flex h-10 min-h-10 items-center gap-1 rounded-lg px-1 hover:bg-white/15',
-            isHighLight ? 'bg-white/15' : 'text-white/70',
+            'flex h-10 min-h-10 items-center gap-1 rounded-lg px-1 text-sm font-semibold text-white/70 hover:bg-color-c2 xl:px-2 2xl:px-3 2xl:text-base',
+            isHighLight ? 'bg-color-c2 text-color-main' : 'text-white/70',
             className,
           )}
         >
-          <span className='text-base font-semibold'>
-            {isHighLight && '🔥 '}
-            {label}
-          </span>
+          <span className='font-semibold'>{label}</span>
           <ChevronDown
             className={cn(
-              'size-5 rotate-0 text-white/40 transition-transform duration-150',
+              'size-4 rotate-0 text-white/40 transition-transform duration-150 2xl:size-5',
               openToolsNav && '-rotate-180',
             )}
           />
@@ -63,17 +55,17 @@ export default function NavPopover({
       </PopoverTrigger>
       <PopoverContent
         align={align}
+        sideOffset={10}
         className={cn(
-          'z-50 flex flex-col gap-3 rounded-lg border-none bg-[#202020] p-5 text-center text-base leading-4 font-normal shadow-lg backdrop-blur-lg text-white',
-          columnNumber === 2 && 'w-[750px]',
-          columnNumber === 3 && 'w-[1123px]',
-          columnNumber === 4 && 'w-[1234px]',
+          'custom-scrollbar z-[120] flex max-h-[calc(100dvh-100px)] max-w-[calc(100vw-24px)] flex-col gap-4 overflow-y-auto rounded-lg border border-color-b1 bg-color-c1 p-4 text-center text-base leading-4 font-normal text-white shadow-[0_24px_80px_rgba(0,0,0,0.55)] backdrop-blur-lg',
+          columnNumber === 2 && 'w-[580px]',
+          columnNumber === 3 && 'w-[920px]',
+          columnNumber === 4 && 'w-[960px]',
         )}
       >
-        <PopoverPrimitive.Arrow className='fill-black/70' />
         <ul
           className={cn(
-            'custom-scrollbar grid max-h-[calc(100dvh-120px)] gap-5 overflow-y-auto',
+            'grid gap-x-7 gap-y-2.5',
             columnNumber === 2 && 'grid-cols-2',
             columnNumber === 3 && 'grid-cols-3',
             columnNumber === 4 && 'grid-cols-4',
@@ -87,31 +79,13 @@ export default function NavPopover({
                 target={child?.target}
                 onClick={() => setOpenToolsNav(false)}
                 className={cn(
-                  'relative flex h-[60px] w-full items-center gap-3 rounded-lg p-2 hover:bg-white/15',
-                  columnNumber === 3 && 'h-[82px]',
-                  columnNumber === 4 && 'h-[92px]',
+                  'group relative flex h-[64px] w-full items-start rounded-lg border border-transparent px-2 py-2.5 transition-colors duration-150 after:absolute after:right-0 after:bottom-0 after:left-0 after:h-px after:bg-color-b1 after:content-[""] hover:border-color-main/35 hover:bg-color-c2/90 hover:shadow-[0_10px_26px_rgba(0,0,0,0.22)] hover:after:bg-transparent',
+                  columnNumber === 4 && 'h-[68px]',
                 )}
               >
-                {renderIcon && (
-                  <div className='relative shrink-0'>
-                    {/* <span>{renderHeaderIcon(child.code)}</span> */}
-                    {child.isNew && (
-                      <div className='bg-color-main text-xxs absolute -top-1/2 left-1/2 -translate-x-1/2 rounded-full px-1.5 py-px font-bold text-white uppercase'>
-                        {t('new')}
-                        <div className='absolute -bottom-1 left-1/2 h-0 w-0 -translate-x-1/2 border-t-4 border-r-4 border-l-4 border-t-color-main border-r-transparent border-l-transparent' />
-                      </div>
-                    )}
-                    {child.isHot && (
-                      <div className='bg-color-main text-xxs absolute -top-1/2 left-1/2 -translate-x-1/2 rounded-full px-1.5 py-px font-bold text-white uppercase'>
-                        🔥
-                        <div className='absolute -bottom-1 left-1/2 h-0 w-0 -translate-x-1/2 border-t-4 border-r-4 border-l-4 border-t-color-main border-r-transparent border-l-transparent' />
-                      </div>
-                    )}
-                  </div>
-                )}
-                <div className='flex-grow'>
-                  <div className='line-clamp-1 text-left leading-tight font-semibold text-white'>{child.label}</div>
-                  <p className='line-clamp-2 text-left text-sm text-white/60'>{child.description}</p>
+                <div className='min-w-0 flex-grow'>
+                  <div className='truncate text-left text-base leading-6 font-semibold text-white transition-colors group-hover:text-color-main'>{child.label}</div>
+                  <p className='truncate text-left text-xs leading-5 text-white/70 transition-colors group-hover:text-white'>{child.description}</p>
                 </div>
               </Link>
             </li>
