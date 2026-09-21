@@ -6,7 +6,7 @@ import {
   BookOpen,
   Download,
   Home,
-  Images,
+  Workflow,
   Menu,
   PanelLeftClose,
   PanelLeftOpen,
@@ -125,7 +125,7 @@ export function CanvasTopBar({
                 },
                 {
                   key: 'projects',
-                  icon: <Images className='size-4' />,
+                  icon: <Workflow className='size-4' />,
                   label: t('canvas.projects'),
                   onClick: onProjects,
                 },

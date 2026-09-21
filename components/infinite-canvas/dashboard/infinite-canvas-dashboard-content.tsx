@@ -226,7 +226,7 @@ export function InfiniteCanvasDashboardContent({
   return (
     <>
       <section
-        className={`mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-[1362px] flex-col bg-background-color px-5 pt-3 text-text-color sm:py-14 ${selected.size > 0 ? 'pb-[calc(10rem+env(safe-area-inset-bottom))]' : 'pb-10'}`}
+        className={`mx-auto flex min-h-[calc(100vh-4rem)] w-full max-w-[1362px] flex-col px-5 pt-3 text-text-color sm:py-14 ${selected.size > 0 ? 'pb-[calc(10rem+env(safe-area-inset-bottom))]' : 'pb-10'}`}
         aria-busy={isLoading}
       >
         <nav

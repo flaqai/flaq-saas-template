@@ -18,7 +18,7 @@ export function useCanvasIntegrations(openSettings: () => void): InfiniteCanvasI
   uploadRef.current = uploadFiles;
 
   return useMemo(() => ({
-    navigateToHome: () => router.push('/'),
+    navigateToHome: () => router.push('/ai-canvas'),
     navigateToLanding: () => router.push('/ai-canvas'),
     navigateToDashboard: () => router.push('/ai-canvas/projects'),
     navigateToEditor: (projectId) => router.push(`/ai-canvas/${encodeURIComponent(projectId)}`),

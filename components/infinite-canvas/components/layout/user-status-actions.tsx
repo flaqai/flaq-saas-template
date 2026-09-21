@@ -2,7 +2,7 @@
 // Pinned OSS source; application routing and locale switching are compatibility substitutions.
 // @ts-nocheck -- pinned OSS source; compatibility is isolated outside this closure.
 import type { CSSProperties } from 'react';
-import { BookOpen, Globe2, Keyboard, Puzzle, Settings2 } from 'lucide-react';
+import { BookOpen, Globe2, Keyboard, Puzzle, Settings2, Workflow } from 'lucide-react';
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { canvasThemes } from '../../lib/canvas-theme';
@@ -80,7 +80,7 @@ export function UserStatusActions({
           aria-label={i18n.navigation.dashboard}
           title={i18n.navigation.dashboard}
         >
-          <CanvasDashboardIcon theme={theme} />
+          <Workflow aria-hidden='true' />
         </button>
       ) : null}
       <button
@@ -164,29 +164,6 @@ function CanvasHomeIcon({ theme }: { theme: 'light' | 'dark' }) {
     >
       <path d='M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8' />
       <path d='M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z' />
-    </svg>
-  );
-}
-
-function CanvasDashboardIcon({ theme }: { theme: 'light' | 'dark' }) {
-  return (
-    <svg
-      xmlns='http://www.w3.org/2000/svg'
-      width='16'
-      height='16'
-      viewBox='0 0 24 24'
-      fill='none'
-      stroke={theme === 'dark' ? '#E8E8EA' : '#202124'}
-      strokeWidth='2'
-      strokeLinecap='round'
-      strokeLinejoin='round'
-      aria-hidden='true'
-      focusable='false'
-    >
-      <rect width='7' height='9' x='3' y='3' rx='1' />
-      <rect width='7' height='5' x='14' y='3' rx='1' />
-      <rect width='7' height='9' x='14' y='12' rx='1' />
-      <rect width='7' height='5' x='3' y='16' rx='1' />
     </svg>
   );
 }
