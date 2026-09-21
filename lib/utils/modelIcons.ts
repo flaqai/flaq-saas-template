@@ -45,7 +45,7 @@ export const getModelIconConfig = (modelValue: string): ModelIconConfig => {
     return { src: '/images/model-icon/veo.svg', background: 'dark' };
   }
 
-  if (lowerValue.startsWith('gpt')) {
+  if (lowerValue.startsWith('gpt') || lowerValue.startsWith('chatgpt')) {
     return { src: '/images/model-icon/openai.svg', background: 'dark' };
   }
 

@@ -73,7 +73,7 @@ export default function NavPopover({
         <PopoverPrimitive.Arrow className='fill-black/70' />
         <ul
           className={cn(
-            'grid gap-5',
+            'custom-scrollbar grid max-h-[calc(100dvh-120px)] gap-5 overflow-y-auto',
             columnNumber === 2 && 'grid-cols-2',
             columnNumber === 3 && 'grid-cols-3',
             columnNumber === 4 && 'grid-cols-4',

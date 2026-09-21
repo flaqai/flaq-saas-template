@@ -24,12 +24,20 @@ export const IMAGE_CHILDREN_LIST: RouteItem[] = [
 export const API_CHILDREN_LIST: RouteItem[] = [
   { code: 'nano-banana-2', href: 'https://flaq.ai/models/google/nano-banana-2/' },
   { code: 'nano-banana-pro', href: 'https://flaq.ai/models/google/nano-banana-pro/' },
-  { code: 'seedream-4-5', href: 'https://flaq.ai/models/bytedance/seedream-4-5/' },
-  { code: 'seedream-5-0', href: 'https://flaq.ai/models/bytedance/seedream-5-0/' },
+  { code: 'chatgpt-images-2-5', href: 'https://flaq.ai/models/openai/chatgpt-images-2-5/' },
+  { code: 'chatgpt-images-2-5-flare', href: 'https://flaq.ai/models/openai/chatgpt-images-2-5-flare/' },
+  { code: 'chatgpt-images-2-5-sunburst', href: 'https://flaq.ai/models/openai/chatgpt-images-2-5-sunburst/' },
+  { code: 'qwen-image-3-0', href: 'https://flaq.ai/models/alibaba/qwen-image-3-0/' },
+  { code: 'qwen-image-3-0-pro', href: 'https://flaq.ai/models/alibaba/qwen-image-3-0-pro/' },
+  { code: 'seedream-5-0-pro', href: 'https://flaq.ai/models/bytedance/seedream-5-0-pro/' },
   { code: 'veo-3-1', href: 'https://flaq.ai/models/google/veo3-1-text-to-video/' },
-  { code: 'kling-3-0', href: 'https://flaq.ai/models/kuaishou/kling-3-0-std-text-to-video/' },
+  { code: 'kling-4-0', href: 'https://flaq.ai/models/kuaishou/kling-4-0-text-to-video/' },
   { code: 'vidu-q3', href: 'https://flaq.ai/models/vidu/vidu-q3-turbo-text-to-video/' },
-  { code: 'wan-2-7', href: 'https://flaq.ai/models/alibaba/wan-2-7-text-to-video/' },
+  { code: 'wan-3-0', href: 'https://flaq.ai/models/alibaba/wan-3-0-text-to-video/' },
+  { code: 'seedance-2-5', href: 'https://flaq.ai/models/bytedance/seedance-2-5-text-to-video/' },
+  { code: 'flux-3', href: 'https://flaq.ai/models/black-forest-labs/flux-3-text-to-video/' },
+  { code: 'minimax-h3', href: 'https://flaq.ai/models/minimax/minimax-h3-text-to-video/' },
+  { code: 'happyhorse-1-1', href: 'https://flaq.ai/models/alibaba/happyhorse-1-1-text-to-video/' },
 ];
 
 export const SUPPORT_LINKS: RouteItem[] = [
