@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 export default function Page() {
   return (
     <div className='relative w-full flex-1'>
-      <div className='container-centered pt-3 pb-10 lg:py-10'>
+      <div className='p-3'>
         <ReferenceToVideoForm />
       </div>
       <ReferenceToVideoPublicSections />

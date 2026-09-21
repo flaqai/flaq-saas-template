@@ -85,9 +85,9 @@ export default function VideoDisplay() {
 
   return (
     <>
-      <div id='ImageDisplay' className={cn('flex h-full flex-1 flex-col gap-px px-3 pt-3 contain-strict lg:px-0')}>
+      <div id='ImageDisplay' className={cn('flex h-[360px] w-full flex-col overflow-hidden rounded-2xl bg-color-c1 contain-strict lg:h-full lg:flex-1')}>
         <div
-          className='relative flex h-auto max-h-[calc(100%-48px)] flex-1 items-center justify-center overflow-hidden rounded-lg bg-gradient-to-t from-[#111111] to-[#1f2022] p-3 lg:p-5'
+          className='relative flex flex-1 items-center justify-center overflow-hidden p-3 lg:p-5'
         >
           {mode && (
             <button
@@ -130,7 +130,7 @@ export default function VideoDisplay() {
           )}
         </div>
         {!btnDisabled && (
-          <div className='relative flex flex-none items-center justify-end gap-1 rounded-b-xl bg-[#1c1d20] p-2'>
+          <div className='relative flex flex-none items-center justify-end gap-1 border-t border-color-b1 bg-color-c1 p-2'>
 
             {/* Prompt */}
             {videoObj?.prompt && (

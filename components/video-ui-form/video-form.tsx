@@ -303,16 +303,16 @@ export default function VideoFormBase({
     <VideoContenxtProvider videoType={videoType} showAllVideoHistory={showAllVideoHistory}>
       <div
         id='video-form-container'
-        className='relative flex h-auto w-full flex-col items-stretch gap-5 overflow-hidden rounded-[36px] bg-[#232528] lg:h-[calc(100vh-76px)] lg:flex-row lg:p-5'
+        className='relative flex h-auto w-full flex-col items-stretch gap-3 overflow-hidden rounded-lg lg:h-[calc(100vh-76px)] lg:flex-row lg:p-0'
       >
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
             id='VideoForm'
-            className='no-scrollbar relative isolate z-40 flex h-[600px] w-full shrink-0 flex-col gap-2.5 overflow-y-auto rounded-3xl border border-[#303030] bg-[#1c1d20] p-3 lg:h-full lg:w-[351px]'
+            className='no-scrollbar relative isolate z-40 flex h-[600px] w-full shrink-0 flex-col gap-2.5 overflow-y-auto rounded-xl bg-color-c1 p-3 lg:h-full lg:w-[351px]'
           >
             {formTitle && (
-              <div className='line-clamp-1 shrink-0 border-b border-white/10 bg-[#1c1d20] pb-2.5 text-lg font-medium tracking-[0.36px] text-white'>
+              <div className='line-clamp-1 shrink-0 border-b border-white/10 pb-2.5 text-lg font-medium tracking-[0.36px] text-white'>
                 {formTitle}
               </div>
             )}
@@ -398,9 +398,7 @@ export default function VideoFormBase({
 
         {/* Right side content: Display + History */}
         <div className='flex flex-1 flex-col items-start justify-start gap-3'>
-          <div className='h-[360px] w-full rounded-2xl border border-[#2a2b2f] bg-[#1c1d20] contain-strict lg:h-auto lg:flex-1'>
-            <VideoDisplay />
-          </div>
+          <VideoDisplay />
 
           <div className='flex w-full flex-col gap-3 contain-inline-size'>
             <VideoHistorySection />

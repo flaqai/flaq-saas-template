@@ -89,12 +89,12 @@ export function InfiniteCanvasLanding({
   };
 
   return (
-    <div className='container-centered space-y-10 pt-3 pb-10 lg:py-10'>
-      {entryForm}
+    <div className='w-full'>
+      <div className='p-3'>{entryForm}</div>
 
 
         <section
-          className='w-full min-w-0'
+          className='container-centered min-w-0 py-10 lg:py-14'
           aria-labelledby='infinite-canvas-recent-projects'
           aria-busy={loadState === 'loading'}
         >

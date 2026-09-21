@@ -118,12 +118,12 @@ export default function ImageDisplay() {
   return (
     <div
       id='ImageDisplay'
-      className='flex h-[440px] w-full flex-col overflow-hidden rounded-2xl contain-strict lg:flex-1'
+      className='flex h-[360px] w-full flex-col overflow-hidden rounded-2xl bg-color-c1 contain-strict lg:h-full lg:flex-1'
     >
-      <div className='relative flex size-full flex-col rounded-2xl bg-[#1c1d20]'>
+      <div className='relative flex size-full flex-col'>
 
         {/* Image display area - uses flex-1 to automatically occupy remaining space */}
-        <div className='relative flex flex-1 items-center justify-center overflow-hidden p-2'>
+        <div className='relative flex flex-1 items-center justify-center overflow-hidden p-3 lg:p-5'>
           {previewImgSrc && (
             <>
               <img
@@ -162,7 +162,7 @@ export default function ImageDisplay() {
 
         {/* Toolbar area */}
         {!btnDisabled && (
-          <div className='relative flex flex-none flex-wrap items-start justify-between gap-2 rounded-b-xl bg-[#1c1d20] p-2 lg:items-center lg:gap-3'>
+          <div className='relative flex flex-none flex-wrap items-start justify-between gap-2 border-t border-color-b1 bg-color-c1 p-2 lg:items-center lg:gap-3'>
 
             {/* Left info: time, resolution, model */}
             <div className="flex flex-col gap-1 text-xs text-white/60">
