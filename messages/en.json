@@ -1375,7 +1375,10 @@
     "no-preview": "No preview",
     "empty": "No generation history yet.",
     "loading-more": "Loading more...",
-    "end": "No more results"
+    "end": "No more results",
+    "decrease-columns": "Fewer columns",
+    "increase-columns": "More columns",
+    "column-count": "{count} columns"
   },
   "reference-to-video": {
     "heading": {
