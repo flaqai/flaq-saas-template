@@ -34,26 +34,6 @@ import {
 const FLAQ_REGISTER_URL = 'https://flaq.ai/';
 const R2_PUBLIC_DOMAIN_STORAGE_KEY = 'FLAQ-SAAS-TEMPLATE-r2-public-domain';
 
-function isAuthError(status: number, message: string) {
-  const normalizedMessage = message.toLowerCase();
-  return (
-    status === 401
-    || status === 403
-    || normalizedMessage.includes('unauthorized')
-    || normalizedMessage.includes('authentication')
-    || normalizedMessage.includes('authenticate')
-    || normalizedMessage.includes('invalid client key')
-    || normalizedMessage.includes('invalid api key')
-    || normalizedMessage.includes('invalid key')
-    || normalizedMessage.includes('forbidden')
-    || normalizedMessage.includes('未认证')
-    || normalizedMessage.includes('鉴权')
-    || normalizedMessage.includes('认证')
-    || normalizedMessage.includes('无效的client key')
-    || normalizedMessage.includes('client key无效')
-  );
-}
-
 type OpenApiSettingsDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -142,29 +122,25 @@ export default function OpenApiSettingsDialog({
 
     try {
       const response = await fetch(
-        buildOpenApiUrl(normalizedBaseUrl, '/api/v1/image/00000000-0000-0000-0000-000000000000'),
+        buildOpenApiUrl(normalizedBaseUrl, '/api/v1/key/status'),
         {
-          method: 'GET',
+          method: 'POST',
           headers: createOpenApiHeaders(normalizedClientKey),
+          body: JSON.stringify({ client_key: normalizedClientKey }),
         },
       );
 
       const payload = await response.json().catch(() => null) as
-        | { error?: { message?: string }; message?: string; msg?: string }
+        | { code?: number; data?: { status?: number }; error?: { message?: string }; message?: string; msg?: string }
         | null;
-      const message = payload?.error?.message || payload?.message || payload?.msg || response.statusText;
 
-      if (response.ok) {
+      if (response.ok && payload?.code === 200 && payload?.data?.status === 1) {
         toast.success(t('test-success'));
         return;
       }
 
-      if (isAuthError(response.status, message)) {
-        toast.error(`${t('test-failed')} ${message}`);
-        return;
-      }
-
-      toast.success(t('test-success-validation'));
+      const message = payload?.error?.message || payload?.message || payload?.msg || (!response.ok ? response.statusText : '');
+      toast.error(message ? `${t('test-failed')} ${message}` : t('test-failed'));
     } catch (error) {
       const message = error instanceof Error ? error.message : t('test-failed');
       toast.error(`${t('test-failed')} ${message}`);
