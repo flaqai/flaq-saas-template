@@ -122,17 +122,17 @@ export function InfiniteCanvasLanding({
                 onClick={createProject}
                 disabled={isCreating}
                 aria-busy={isCreating}
-                className='flex h-full min-h-48 w-full flex-col items-center justify-center rounded-xl border border-main-color/50 bg-main-color/5 px-5 py-7 text-center transition hover:border-main-color hover:bg-main-color/10 disabled:opacity-50'
+                className='flex h-[180px] w-full flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-color-b1 bg-color-c1 px-5 text-center transition-colors hover:border-color-main disabled:opacity-50'
               >
-                <span className='grid size-12 place-items-center rounded-full border border-main-color/60 bg-main-color/15 text-main-color'>
+                <span className='grid size-7 place-items-center text-color-t2'>
                   {isCreating ? (
                     <Loader2 className='size-5 animate-spin' aria-hidden='true' />
                   ) : (
-                    <Plus className='size-5' aria-hidden='true' />
+                    <Plus className='size-7' aria-hidden='true' />
                   )}
                 </span>
-                <span className='mt-4 font-medium text-text-color'>{i18n.newProject}</span>
-                <span className='mt-1 text-xs leading-5 text-gray-color'>{i18n.newProjectDescription}</span>
+                <span className='text-sm font-medium text-color-t1'>{i18n.newProject}</span>
+                <span className='text-xs leading-5 text-color-t2'>{i18n.newProjectDescription}</span>
               </button>
             </li>
 

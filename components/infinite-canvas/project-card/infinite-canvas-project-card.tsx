@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import type { InfiniteCanvasProjectCardProps } from './infinite-canvas-project-card.types';
 import { formatInfiniteCanvasProjectTime } from './infinite-canvas-project-time';
+import CanvasProjectPlaceholder from './canvas-project-placeholder';
 
 export function InfiniteCanvasProjectCard({
   actions,
@@ -21,11 +22,12 @@ export function InfiniteCanvasProjectCard({
   variant,
 }: InfiniteCanvasProjectCardProps) {
   const selectable = onSelectedChange !== undefined;
+  const defaultPreview = preview == null && !imageUrl?.trim();
 
   return (
     <article
-      className={`group h-full overflow-hidden rounded-2xl border bg-light-gray transition hover:-translate-y-0.5 hover:border-main-color hover:shadow-xl hover:shadow-main-color/5 ${
-        selected ? 'border-main-color shadow-md shadow-main-color/10' : 'border-light-gray-2'
+      className={`group relative overflow-hidden rounded-xl border bg-color-c1 transition-colors hover:border-color-main ${defaultPreview ? 'h-[180px]' : 'h-full'} ${
+        selected ? 'border-color-main shadow-md shadow-color-main/10' : 'border-color-b1'
       }`}
     >
       <div className='relative'>
@@ -91,9 +93,10 @@ export function InfiniteCanvasProjectCard({
           </div>
         ) : null}
       </div>
-      <div className={`p-4 ${mobileActions ? 'h-20 sm:h-[98px]' : 'h-[98px]'}`}>
-        <h3 className='truncate mb-2 text-base font-medium text-text-color'>{project.title}</h3>
-        <p className='truncate text-xs text-gray-color'>
+      <div className={defaultPreview ? 'pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-color-bg0 via-color-bg0/85 to-transparent px-3 pb-3 pt-10' : `p-4 ${mobileActions ? 'h-20 sm:h-[98px]' : 'h-[98px]'}`}>
+        {defaultPreview ? <div aria-hidden='true' className='mb-2 border-t border-color-b1' /> : null}
+        <h3 className='mb-1 truncate text-sm font-medium text-color-t1'>{project.title}</h3>
+        <p className='truncate text-xs text-color-t2'>
           {project.nodeCount} {labels.nodeCount} · {project.connectionCount} {labels.connectionCount} · {labels.updated}{' '}
           {formatInfiniteCanvasProjectTime(project.updatedAt, locale)}
         </p>
@@ -105,7 +108,6 @@ export function InfiniteCanvasProjectCard({
 export function ProjectPreview({
   alt = '',
   imageUrl,
-  variant,
 }: {
   readonly alt?: string;
   readonly imageUrl?: string;
@@ -120,27 +122,9 @@ export function ProjectPreview({
     );
   }
 
-  const alignRight = variant % 2 === 0;
   return (
-    <div className='relative aspect-[16/9] overflow-hidden border-b border-light-gray-2 bg-background-color'>
-      <div className='absolute inset-0 bg-main-color/15' />
-      <div
-        className={`absolute -top-[45%] aspect-square w-3/5 rounded-full bg-main-color/60 ${alignRight ? '-left-1/20' : '-right-1/20'}`}
-      />
-      <div
-        className={`absolute -bottom-1/5 aspect-square w-2/5 rounded-full bg-hot-color/35 ${alignRight ? '-right-1/10' : '-left-1/10'}`}
-      />
-      <div
-        className={`absolute top-[22%] flex h-[35%] w-2/5 flex-col justify-center gap-2 rounded-lg border border-light-gray-2 bg-background-color px-[5%] ${alignRight ? 'right-[6%]' : 'left-[6%]'}`}
-      >
-        <div className='h-1.5 w-3/4 rounded-full bg-text-color/60' />
-        <div className='h-1 w-1/2 rounded-full bg-text-color/30' />
-      </div>
-      <div
-        className={`absolute bottom-[15%] h-[32%] w-[45%] rounded-lg border border-main-color/35 bg-light-gray/60 p-[5%] ${alignRight ? 'left-[4%]' : 'right-[4%]'}`}
-      >
-        <div className='size-2 rounded-full bg-main-color' />
-      </div>
+    <div className='relative h-[124px] overflow-hidden bg-color-c1'>
+      <CanvasProjectPlaceholder />
     </div>
   );
 }
