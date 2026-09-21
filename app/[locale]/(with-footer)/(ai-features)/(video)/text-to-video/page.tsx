@@ -40,7 +40,7 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
           <Form />
         </div>
         <div className='container-centered container-py'>
-          <Heading title={t('heading.title')} description={t('heading.description')} />
+          <Heading title={t('heading.title')} description={t('heading.description')} align='left' />
         </div>
       </div>
       <VideoCarousel

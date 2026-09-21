@@ -94,7 +94,7 @@ export default async function Page() {
           />
         </div>
         <div className='container-centered container-py'>
-          <Heading title={t('heading.title')} description={t('heading.description')} />
+          <Heading title={t('heading.title')} description={t('heading.description')} align='left' />
         </div>
       </div>
       <ExampleShowcaseSection
