@@ -40,21 +40,6 @@
   --shadow-audio-playhead: var(--ui-shadow-audio-playhead, 0 0 8px rgba(255, 255, 255, 0.65));
 }
 
-.canvas-workspace, body:has(.canvas-workspace) {
-  --ui-main-color: var(--color-main);
-  --ui-main-color-foreground: var(--color-t1);
-  --ui-background-color: var(--color-bg0);
-  --ui-text-color: var(--color-t1);
-  --ui-gray-color: var(--color-t2);
-  --ui-light-gray: var(--color-bg1);
-  --ui-light-gray-1: var(--color-c1);
-  --ui-light-gray-2: var(--color-b1);
-  --ui-dark-color: var(--color-bg0);
-  --ui-green-color: var(--color-green);
-  --ui-yellow-color: #eab308;
-  --ui-blue-color: var(--color-main);
-  --ui-gradient-main: linear-gradient(var(--color-main), var(--color-main));
-}
 
 @utility bg-gradient-main {
   background-image: var(--ui-gradient-main);

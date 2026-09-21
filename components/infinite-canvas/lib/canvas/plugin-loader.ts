@@ -27,7 +27,7 @@ async function evaluatePluginSource(source: string): Promise<CanvasPlugin> {
   const blob = new Blob([source], { type: 'text/javascript' });
   const url = URL.createObjectURL(blob);
   try {
-    const mod = (await import(/* @vite-ignore */ url)) as { default?: unknown; plugin?: unknown };
+    const mod = (await import(/* webpackIgnore: true */ url)) as { default?: unknown; plugin?: unknown };
     const exported = mod.default ?? mod.plugin;
     const plugin =
       typeof exported === 'function' ? (exported as (runtime: unknown) => unknown)(getPluginRuntime()) : exported;
