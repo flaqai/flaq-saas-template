@@ -5,6 +5,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations } from 'next-intl/server';
 
 import { Toaster } from '@/components/ui/sonner';
+import Footer from '@/components/home/Footer';
 
 import './globals.css';
 
@@ -108,6 +109,7 @@ export default async function RootLayout(props: { children: React.ReactNode; par
             />
             <LazyGlobalUI />
             {children}
+            <Footer />
           </NextIntlClientProvider>
         </NavigationGuardProvider>
       </body>

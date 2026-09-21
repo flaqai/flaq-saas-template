@@ -33,7 +33,7 @@ export default function LocaleSwitcher() {
 
   return (
     <Select value={localeVal} defaultValue={currentLocale} onValueChange={onValueChange}>
-      <SelectTrigger className='flex h-8 w-[80px] items-center gap-1 rounded-lg border-none bg-transparent! px-2 text-white/40 lg:h-11'>
+      <SelectTrigger className='bg-color-5! flex w-[80px] items-center gap-1 rounded-lg border-none px-2 text-white/70 shadow-none transition-colors hover:bg-white/10! hover:text-white data-[size=default]:h-8 lg:data-[size=default]:h-11'>
         <Icon src='/icons/global.svg' />
         <SelectValue placeholder='locale'>{localeVal.toUpperCase()}</SelectValue>
       </SelectTrigger>

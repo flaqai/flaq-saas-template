@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
 import { useTranslations } from 'next-intl';
 
 import CopyBtn from '@/components/CopyBtn';
+import { ExampleIcon } from '@/components/svg/section/common';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import SubHeading from '../../internal-page/sub-heading';
 
@@ -20,23 +21,23 @@ function Showcase({ title, dataList }: { title: string; dataList: ShowcaseItem[]
   const imgCount = dataList.length;
 
   return (
-    <div className='flex w-full flex-col gap-5 rounded-xl border border-[#2f2f2f] bg-[#141516] p-5 lg:p-8'>
-      <h3 className='text-2xl font-semibold text-white/70'>{title}</h3>
+    <div className='flex w-full flex-col gap-3 rounded-xl border border-[#2f2f2f] bg-[#141516] p-3 md:p-4'>
+      <h3 className='text-base font-semibold leading-6 text-white/70 md:text-lg'>{title}</h3>
       <div
         className={cn(
-          'grid grid-cols-1 gap-5',
+          'grid grid-cols-1 gap-3',
           imgCount === 1 && 'lg:grid-cols-1',
           imgCount === 2 && 'lg:grid-cols-2',
           imgCount === 3 && 'lg:grid-cols-3',
         )}
       >
         {dataList.map((el) => (
-          <div key={el.id} className='flex flex-col gap-5'>
+          <div key={el.id} className='flex flex-col gap-2'>
             <div className='overflow-hidden rounded-lg'>
               <img src={el.imgSrc} alt={el.imgAlt} className='h-auto w-full' />
             </div>
             {el.isPrompt ? (
-              <div className='flex flex-col gap-2'>
+              <div className='flex flex-col gap-1.5'>
                 <div className='flex items-center gap-2'>
                   <span className='text-sm font-medium text-white/70'>
                     {el.promptContent ? (el.imgAlt ? `${el.imgAlt} (${t('prompt')})` : t('prompt')) : t('prompt')}
@@ -47,7 +48,7 @@ function Showcase({ title, dataList }: { title: string; dataList: ShowcaseItem[]
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <p className='line-clamp-5 cursor-help whitespace-pre-line text-base font-normal leading-6 text-white/70'>
+                        <p className='line-clamp-5 cursor-help whitespace-pre-line text-sm font-normal leading-5 text-white/70'>
                           {el.promptContent || el.imgAlt}
                         </p>
                       </TooltipTrigger>
@@ -59,7 +60,7 @@ function Showcase({ title, dataList }: { title: string; dataList: ShowcaseItem[]
                 )}
               </div>
             ) : (
-              <p className='line-clamp-5 text-base font-normal leading-6 text-white/70'>{el.imgAlt}</p>
+              <p className='line-clamp-5 text-sm font-normal leading-5 text-white/70'>{el.imgAlt}</p>
             )}
           </div>
         ))}
@@ -79,8 +80,8 @@ interface ImageShowcaseSectionProps {
 
 export default function ImageShowcaseSection({ title, description, dataList }: ImageShowcaseSectionProps) {
   return (
-    <div className='container-py container-centered container-gap'>
-      <SubHeading title={title} description={description} />
+    <div className='container-py container-centered space-y-3'>
+      <SubHeading className='mb-5' icon={<ExampleIcon className='hidden lg:block' />} title={title} description={description} />
       {dataList.map((el) => (
         <Showcase key={el.title} title={el.title} dataList={el.imgList} />
       ))}

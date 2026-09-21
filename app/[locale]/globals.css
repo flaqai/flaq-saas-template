@@ -1,9 +1,49 @@
 @import 'tailwindcss';
 @import "tw-animate-css";
+@import '../../components/infinite-canvas/integration/canvas.css';
 @plugin "@tailwindcss/typography";
 
 
 @custom-variant dark (&:is(.dark *));
+
+.canvas-workspace, body:has(.canvas-workspace) {
+  --ui-canvas-accent: #111111;
+  --ui-canvas-accent-foreground: #ffffff;
+  --ui-canvas-muted-accent: #3f3f46;
+  --ui-canvas-background: #f4f4f5;
+  --ui-canvas-panel: #ffffff;
+  --ui-canvas-surface: #f4f4f5;
+  --ui-canvas-surface-hover: #e4e4e7;
+  --ui-canvas-border: #d4d4d8;
+  --ui-canvas-text: #111111;
+  --ui-canvas-muted: #52525b;
+  --ui-main-color: var(--color-main);
+  --ui-main-color-foreground: var(--color-t1);
+  --ui-background-color: var(--color-bg0);
+  --ui-text-color: var(--color-t1);
+  --ui-gray-color: var(--color-t2);
+  --ui-light-gray: var(--color-bg1);
+  --ui-light-gray-1: var(--color-c1);
+  --ui-light-gray-2: var(--color-b1);
+  --ui-dark-color: var(--color-bg0);
+  --ui-green-color: var(--color-green);
+  --ui-yellow-color: #eab308;
+  --ui-blue-color: var(--color-main);
+  --ui-gradient-main: linear-gradient(var(--color-main), var(--color-main));
+}
+
+:root.dark .canvas-workspace, :root.dark body:has(.canvas-workspace) {
+  --ui-canvas-accent: #ffffff;
+  --ui-canvas-accent-foreground: #111111;
+  --ui-canvas-muted-accent: #d4d4d8;
+  --ui-canvas-background: #0b0b0c;
+  --ui-canvas-panel: #151516;
+  --ui-canvas-surface: #1f1f1f;
+  --ui-canvas-surface-hover: #303033;
+  --ui-canvas-border: #303033;
+  --ui-canvas-text: #f4f4f5;
+  --ui-canvas-muted: #a1a1aa;
+}
 
 @utility container {
   margin-inline: auto;

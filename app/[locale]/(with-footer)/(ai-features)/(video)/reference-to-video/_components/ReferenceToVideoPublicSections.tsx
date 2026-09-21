@@ -12,7 +12,7 @@ export default async function ReferenceToVideoPublicSections() {
   return (
     <>
       <div className='container-centered container-py'>
-        <Heading title={t('heading.title')} description={t('heading.description')} />
+        <Heading title={t('heading.title')} description={t('heading.description')} align='left' />
       </div>
       <ResourceEntrySections />
       <CoreFeaturesCards

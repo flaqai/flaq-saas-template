@@ -75,26 +75,31 @@ export default function Navigation() {
           isScrolled && 'backdrop-blur-md',
         )}
       >
-        <nav className='relative flex w-full flex-1 items-center justify-center gap-3'>
-          <div className='absolute left-0'>
+        <nav className='grid w-full min-w-0 flex-1 grid-cols-[auto_minmax(0,1fr)] items-center gap-2 lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:gap-3'>
+          <div className='z-10'>
             <Link className='shrink-0 hover:opacity-80' href='/' title={t('title')}>
               <img src='/images/logo.png' alt={t('title')} title={t('title')} className='size-12 md:size-16' />
             </Link>
           </div>
           {/* PC */}
-          <div className='hidden h-10 items-center gap-3 lg:flex'>
+          <div className='hidden h-10 min-w-0 items-center justify-center gap-0.5 lg:flex xl:gap-1 2xl:gap-3'>
             {NavLinks.map((item) => (
-              <div key={item.code}>
+              <div key={item.code} className='min-w-0 shrink-0'>
                 {item.children ? (
                   // Only render Radix Popover after client mount to avoid hydration id mismatch
                   mounted ? (
-                    <NavPopover label={item.label} isHighLight={false} navDataList={item.children} />
+                    <NavPopover
+                      label={item.label}
+                      isHighLight={false}
+                      navDataList={item.children}
+                      columnNumber={item.children.length > 4 ? 3 : 2}
+                    />
                   ) : (
                     <button
                       type='button'
-                      className='flex h-10 min-h-10 items-center gap-1 rounded-lg px-1 text-white/70 hover:bg-white/15'
+                      className='flex h-10 min-h-10 items-center gap-1 rounded-lg px-1 text-sm text-white/70 hover:bg-color-c2 xl:px-2 2xl:px-3 2xl:text-base'
                     >
-                      <span className='text-base font-semibold'>{item.label}</span>
+                      <span className='font-semibold'>{item.label}</span>
                     </button>
                   )
                 ) : (
@@ -102,7 +107,7 @@ export default function Navigation() {
                     key={item.code}
                     href={item.href as string}
                     className={cn(
-                      'flex h-10 items-center justify-center rounded-lg px-1.5 font-semibold text-white/70 hover:bg-white/15',
+                      'flex h-10 items-center justify-center rounded-lg px-1 text-sm font-semibold text-white/70 hover:bg-color-c2 2xl:px-1.5 2xl:text-base',
                       pathname === item.href && 'text-color-main',
                       pathname.startsWith(item.href as string) && item.href !== '/' && 'text-color-main',
                       pathname.startsWith(`/${locale}${item.href}`) && item.href !== '/' && 'text-color-main',
@@ -117,30 +122,30 @@ export default function Navigation() {
               href='https://flaq.ai/docs'
               target='_blank'
               rel='noopener noreferrer'
-              className='flex h-10 items-center justify-center rounded-lg px-1.5 font-semibold text-white/70 hover:bg-white/15'
+              className='flex h-10 shrink-0 items-center justify-center rounded-lg px-1 text-sm font-semibold text-white/70 hover:bg-color-c2 2xl:px-1.5 2xl:text-base'
             >
               {t('docs')}
             </a>
             <button
               type='button'
               onClick={() => setBusinessDialogOpen(true)}
-              className='flex h-10 items-center justify-center rounded-lg px-1.5 font-semibold text-white/70 hover:bg-white/15'
+              className='flex h-10 shrink-0 items-center justify-center rounded-lg px-1 text-sm font-semibold text-white/70 hover:bg-color-c2 2xl:px-1.5 2xl:text-base'
             >
               {t('business')}
             </button>
           </div>
-          <div className='absolute right-0 flex items-center gap-2'>
-            <div className='bg-color-5 rounded'>
+          <div className='z-10 flex items-center justify-self-end gap-2'>
+            <div className='flex shrink-0'>
               {mounted ? (
                 <LocaleSwitcher />
               ) : (
-                <div className='flex h-8 w-[80px] items-center gap-1 rounded-lg px-2 text-white/40 lg:h-11' />
+                <div className='bg-color-5 flex h-8 w-[80px] items-center gap-1 rounded-lg px-2 text-white/70 lg:h-11' />
               )}
             </div>
             <button
               type='button'
               onClick={() => setSettingsOpen(true)}
-              className='bg-color-5 flex h-8 w-8 items-center justify-center rounded-lg text-white/70 transition-colors hover:bg-white/10 hover:text-white lg:h-11 lg:w-11'
+              className='bg-color-5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-white/70 transition-colors hover:bg-white/10 hover:text-white lg:h-11 lg:w-11'
               aria-label='Open API settings'
               title='Open API settings'
             >

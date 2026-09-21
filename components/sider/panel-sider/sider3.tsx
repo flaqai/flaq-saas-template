@@ -1,6 +1,6 @@
 'use client';
 
-import { Image, Sparkles, Video } from 'lucide-react';
+import { Image, Sparkles, Video, Workflow } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 import { NAV_LINKS } from '@/lib/constants/navigation';
@@ -43,6 +43,12 @@ export default function PanelSider() {
             icon: <Sparkles className='size-4' />,
             title: t('ai-create'),
             href: '/ai-media-creator',
+          },
+          {
+            id: 'ai-canvas',
+            icon: <Workflow className='size-4' />,
+            title: t('ai-canvas'),
+            href: '/ai-canvas',
           },
         ]}
       />

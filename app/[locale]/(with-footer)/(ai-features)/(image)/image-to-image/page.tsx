@@ -48,8 +48,8 @@ export default async function Page() {
 
   return (
     <div className='flex-1'>
-      <div className='container-centered container-gap'>
-        <div className='flex w-full flex-col gap-5'>
+      <div className='w-full'>
+        <div className='flex w-full flex-col gap-3 p-3'>
           <ImageForm
             imageFormType='image-to-image'
             formTitle={t('form.title')}
@@ -58,7 +58,9 @@ export default async function Page() {
             defaultValues={DEFAULT_VALUES}
           />
         </div>
-        <Heading title={t('heading.title')} description={t('heading.description')} />
+        <div className='container-centered container-py'>
+          <Heading title={t('heading.title')} description={t('heading.description')} align='left' />
+        </div>
       </div>
       <ImageShowcaseSection
         title={t('examples.title')}

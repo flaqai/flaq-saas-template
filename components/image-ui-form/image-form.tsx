@@ -297,8 +297,8 @@ export default function ImageForm({
     <ImageContenxtProvider imageFormType={imageFormType}>
       <div
         className={cn(
-          'flex h-auto w-full flex-col gap-5 rounded-xl bg-[#232528] px-2 py-5',
-          'lg:flex-row lg:h-[calc(100vh-76px)] lg:rounded-[36px] lg:p-5',
+          'flex h-auto w-full flex-col gap-3 rounded-xl p-0',
+          'lg:flex-row lg:h-[calc(100vh-76px)] lg:rounded-xl lg:p-0',
           className
         )}
       >
@@ -308,10 +308,10 @@ export default function ImageForm({
               e.stopPropagation(); // Prevent React Portal event bubbling to parent form
               form.handleSubmit(onSubmit)(e);
             }}
-            className='no-scrollbar relative isolate z-40 flex h-auto w-full shrink-0 flex-col gap-3 rounded-3xl bg-[#1c1d20] p-3.5 lg:h-full lg:w-[351px]'
+            className='no-scrollbar relative isolate z-40 flex h-auto w-full shrink-0 flex-col gap-3 rounded-xl bg-color-c1 p-3.5 lg:h-full lg:w-[351px]'
           >
             {formTitle && (
-              <div className='line-clamp-1 shrink-0 border-b border-[#303030] bg-[#1c1d20] pb-2.5 text-lg font-medium tracking-[0.36px] text-white'>
+              <div className='line-clamp-1 shrink-0 border-b border-[#303030] pb-2.5 text-lg font-medium tracking-[0.36px] text-white'>
                 {formTitle}
               </div>
             )}
@@ -466,9 +466,11 @@ export default function ImageForm({
 
         {/* Right side content */}
         {customRightContent || (
-          <div className='flex h-full flex-1 flex-col gap-3 overflow-hidden'>
+          <div className='flex flex-1 flex-col items-start justify-start gap-3'>
             <ImageDisplay />
-            <ImageHistorySection />
+            <div className='flex w-full flex-col gap-3 contain-inline-size'>
+              <ImageHistorySection />
+            </div>
           </div>
         )}
       </div>

@@ -25,8 +25,10 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 export default function Page() {
   return (
     <main className='relative w-full flex-1'>
-      <div className='container-centered space-y-10 pt-3 pb-10 lg:py-10'>
+      <div className='p-3'>
         <UnifiedGeneratorForm />
+      </div>
+      <div className='container-centered py-10 lg:py-14'>
         <CreatorHistory />
       </div>
       <AIMediaCreatorPublicSections />

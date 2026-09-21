@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { ChevronDown, ChevronRight } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Check, ChevronDown, ChevronRight, Loader2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 
@@ -34,26 +34,6 @@ import {
 const FLAQ_REGISTER_URL = 'https://flaq.ai/';
 const R2_PUBLIC_DOMAIN_STORAGE_KEY = 'FLAQ-SAAS-TEMPLATE-r2-public-domain';
 
-function isAuthError(status: number, message: string) {
-  const normalizedMessage = message.toLowerCase();
-  return (
-    status === 401
-    || status === 403
-    || normalizedMessage.includes('unauthorized')
-    || normalizedMessage.includes('authentication')
-    || normalizedMessage.includes('authenticate')
-    || normalizedMessage.includes('invalid client key')
-    || normalizedMessage.includes('invalid api key')
-    || normalizedMessage.includes('invalid key')
-    || normalizedMessage.includes('forbidden')
-    || normalizedMessage.includes('未认证')
-    || normalizedMessage.includes('鉴权')
-    || normalizedMessage.includes('认证')
-    || normalizedMessage.includes('无效的client key')
-    || normalizedMessage.includes('client key无效')
-  );
-}
-
 type OpenApiSettingsDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -70,9 +50,22 @@ export default function OpenApiSettingsDialog({
   const [clientKey, setClientKey] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [isTesting, setIsTesting] = useState(false);
+  const [testSucceeded, setTestSucceeded] = useState(false);
+  const [testError, setTestError] = useState('');
+  const testRequestId = useRef(0);
   const [hostingExpanded, setHostingExpanded] = useState(false);
   const [r2PublicDomain, setR2PublicDomain] = useState('');
   const [isTestingR2, setIsTestingR2] = useState(false);
+
+  useEffect(() => {
+    setIsTesting(false);
+    setTestSucceeded(false);
+    setTestError('');
+
+    return () => {
+      testRequestId.current += 1;
+    };
+  }, [baseUrl, clientKey, open]);
 
   useEffect(() => {
     if (!open || typeof window === 'undefined') return;
@@ -132,9 +125,13 @@ export default function OpenApiSettingsDialog({
   const handleTestConnection = async () => {
     const normalizedBaseUrl = baseUrl.trim() || DEFAULT_OPEN_API_BASE_URL;
     const normalizedClientKey = clientKey.trim();
+    const requestId = ++testRequestId.current;
+
+    setTestSucceeded(false);
+    setTestError('');
 
     if (!normalizedClientKey) {
-      toast.error(t('required'));
+      setTestError(t('required'));
       return;
     }
 
@@ -142,34 +139,33 @@ export default function OpenApiSettingsDialog({
 
     try {
       const response = await fetch(
-        buildOpenApiUrl(normalizedBaseUrl, '/api/v1/image/00000000-0000-0000-0000-000000000000'),
+        buildOpenApiUrl(normalizedBaseUrl, '/api/v1/key/status'),
         {
-          method: 'GET',
+          method: 'POST',
           headers: createOpenApiHeaders(normalizedClientKey),
+          body: JSON.stringify({ client_key: normalizedClientKey }),
         },
       );
 
       const payload = await response.json().catch(() => null) as
-        | { error?: { message?: string }; message?: string; msg?: string }
+        | { code?: number; data?: { status?: number }; error?: { message?: string }; message?: string; msg?: string }
         | null;
-      const message = payload?.error?.message || payload?.message || payload?.msg || response.statusText;
 
-      if (response.ok) {
-        toast.success(t('test-success'));
+      if (requestId !== testRequestId.current) return;
+
+      if (response.ok && payload?.code === 200 && payload?.data?.status === 1) {
+        setTestSucceeded(true);
         return;
       }
 
-      if (isAuthError(response.status, message)) {
-        toast.error(`${t('test-failed')} ${message}`);
-        return;
-      }
-
-      toast.success(t('test-success-validation'));
+      const message = payload?.error?.message || payload?.message || payload?.msg || (!response.ok ? response.statusText : '');
+      setTestError(message ? `${t('test-failed')} ${message}` : t('test-failed'));
     } catch (error) {
+      if (requestId !== testRequestId.current) return;
       const message = error instanceof Error ? error.message : t('test-failed');
-      toast.error(`${t('test-failed')} ${message}`);
+      setTestError(`${t('test-failed')} ${message}`);
     } finally {
-      setIsTesting(false);
+      if (requestId === testRequestId.current) setIsTesting(false);
     }
   };
 
@@ -197,7 +193,7 @@ export default function OpenApiSettingsDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         hiddenTitle={t('title')}
-        className='max-h-[90vh] overflow-y-auto border-white/10 bg-[#111214] text-white sm:max-w-[520px]'
+        className='custom-scrollbar max-h-[90vh] overflow-y-auto border-white/10 bg-[#111214] text-white sm:max-w-[520px]'
       >
         <DialogHeader className='space-y-2 text-left'>
           <DialogTitle className='text-xl font-semibold text-white'>
@@ -336,9 +332,15 @@ export default function OpenApiSettingsDialog({
               variant='outline'
               onClick={handleTestConnection}
               disabled={isTesting}
-              className='border-white/10 bg-transparent text-white hover:bg-white/8 hover:text-white'
+              aria-live='polite'
+              aria-busy={isTesting}
+              className={testSucceeded
+                ? 'border-green-500/30 bg-green-500/10 text-green-400 hover:bg-green-500/15 hover:text-green-300'
+                : 'border-white/10 bg-transparent text-white hover:bg-white/8 hover:text-white'}
             >
-              {isTesting ? t('testing') : t('test')}
+              {isTesting && <Loader2 className='h-4 w-4 animate-spin' aria-hidden='true' />}
+              {testSucceeded && <Check className='h-4 w-4' aria-hidden='true' />}
+              {isTesting ? t('testing') : testSucceeded ? t('test-success') : t('test')}
             </Button>
             <Button
               type='button'
@@ -357,6 +359,11 @@ export default function OpenApiSettingsDialog({
             </Button>
           </div>
         </DialogFooter>
+        {testError && (
+          <p role='alert' className='rounded-md border border-red-500/20 bg-red-500/10 px-3 py-2 text-sm break-words text-red-400'>
+            {testError}
+          </p>
+        )}
       </DialogContent>
     </Dialog>
   );

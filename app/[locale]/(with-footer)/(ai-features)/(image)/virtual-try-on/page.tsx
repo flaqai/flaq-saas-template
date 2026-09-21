@@ -98,11 +98,13 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
 
   return (
     <div className='flex-1'>
-      <div className='container-centered container-gap'>
-        <div className='flex w-full flex-col gap-5'>
+      <div className='w-full'>
+        <div className='flex w-full flex-col gap-3 p-3'>
           <Form hintsPresets={HINTS_PRESETS} />
         </div>
-        <Heading title={t('heading.title')} description={t('heading.description')} />
+        <div className='container-centered container-py'>
+          <Heading title={t('heading.title')} description={t('heading.description')} align='left' />
+        </div>
       </div>
       <ImageShowcaseSection
         title={t('examples.title')}

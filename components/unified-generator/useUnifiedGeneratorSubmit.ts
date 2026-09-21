@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { useTranslations } from 'next-intl';
 
@@ -16,15 +16,15 @@ import {
   validateReferencePromptReferences,
 } from '@/lib/utils/reference-video-prompt';
 import { trimVideoFile } from '@/lib/utils/videoUtils';
-import { createImageTask } from '@/network/image/client';
+import { createImageTask, type CreateImageTaskRequest } from '@/network/image/client';
 import { addPendingImageHistory } from '@/network/image/history';
 import { getClientOpenApiConfigAsync } from '@/network/clientFetch';
 import { startTaskPolling } from '@/network/task-polling';
-import { createVideoTask } from '@/network/video/client';
+import { createVideoTask, type CreateVideoTaskRequest } from '@/network/video/client';
 import { addPendingVideoHistory } from '@/network/video/history';
 import useUploadFiles from '@/hooks/use-upload-files';
 
-interface UnifiedSubmitInput {
+export interface UnifiedSubmitInput {
   mediaType: 'image' | 'video';
   videoType: Exclude<VideoGenerationType, 'video-edit'>;
   imageModel?: ImageModel;
@@ -47,6 +47,16 @@ interface UnifiedSubmitInput {
   seed?: number;
   negativePrompt?: string;
   guidanceScale?: number;
+}
+
+export type PreparedUnifiedSubmission =
+  | { mediaType: 'image'; input: UnifiedSubmitInput; request: CreateImageTaskRequest }
+  | { mediaType: 'video'; input: UnifiedSubmitInput; request: CreateVideoTaskRequest };
+
+export interface UnifiedSubmitOptions {
+  validateInput?: (input: UnifiedSubmitInput) => void;
+  onPreparedSubmit?: (submission: PreparedUnifiedSubmission) => Promise<void>;
+  keepSubmittingOnSuccess?: boolean;
 }
 
 function getImageDimensions(ratio?: string, resolution?: string) {
@@ -79,10 +89,11 @@ async function getMediaDuration(source: File | string) {
   });
 }
 
-export default function useUnifiedGeneratorSubmit() {
+export default function useUnifiedGeneratorSubmit(options?: UnifiedSubmitOptions) {
   const t = useTranslations('UnifiedGenerator');
   const uploadFiles = useUploadFiles();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const submittingRef = useRef(false);
 
   const upload = async (files: File[]) => {
     if (!files.length) return [];
@@ -149,14 +160,17 @@ export default function useUnifiedGeneratorSubmit() {
   };
 
   const submit = async (input: UnifiedSubmitInput) => {
-    if (isSubmitting) return false;
+    if (submittingRef.current) return false;
     if (!input.prompt.trim()) {
       toast.error(t('errors.prompt'));
       return false;
     }
 
+    submittingRef.current = true;
     setIsSubmitting(true);
+    let keepSubmitting = false;
     try {
+      options?.validateInput?.(input);
       if (input.mediaType === 'image') {
         if (!input.imageModel) throw new Error(t('errors.model'));
         const imageOptions = input.imageModel.options.imageInput;
@@ -165,7 +179,7 @@ export default function useUnifiedGeneratorSubmit() {
 
         const imageUrls = await uploadAssets(input.images, 'image');
         const dimensions = getImageDimensions(input.ratio, input.resolution);
-        const response = await createImageTask(await getClientOpenApiConfigAsync(), {
+        const request: CreateImageTaskRequest = {
           model_name: input.imageModel.model,
           prompt: input.prompt.trim(),
           width: dimensions.width,
@@ -175,7 +189,13 @@ export default function useUnifiedGeneratorSubmit() {
           image_url_list: imageUrls.length ? imageUrls : undefined,
           seed: input.seed,
           negative_prompt: input.negativePrompt || undefined,
-        });
+        };
+        if (options?.onPreparedSubmit) {
+          await options.onPreparedSubmit({ mediaType: 'image', input, request });
+          keepSubmitting = options.keepSubmittingOnSuccess === true;
+          return true;
+        }
+        const response = await createImageTask(await getClientOpenApiConfigAsync(), request);
         if (response.code !== 0 || !response.data?.task_id) throw new Error(response.message);
 
         addPendingImageHistory({
@@ -266,7 +286,7 @@ export default function useUnifiedGeneratorSubmit() {
         uploadAssets(standardAudio, 'audio'),
         upload(referenceFiles),
       ]);
-      const response = await createVideoTask(await getClientOpenApiConfigAsync(), {
+      const request: CreateVideoTaskRequest = {
         model_name: model.model,
         prompt: serializedPrompt,
         aspect_ratio: input.ratio,
@@ -284,7 +304,13 @@ export default function useUnifiedGeneratorSubmit() {
         seed: input.seed,
         negative_prompt: input.negativePrompt || undefined,
         guidance_scale: input.guidanceScale,
-      });
+      };
+      if (options?.onPreparedSubmit) {
+        await options.onPreparedSubmit({ mediaType: 'video', input, request });
+        keepSubmitting = options.keepSubmittingOnSuccess === true;
+        return true;
+      }
+      const response = await createVideoTask(await getClientOpenApiConfigAsync(), request);
       if (response.code !== 0 || !response.data?.task_id) throw new Error(response.message);
 
       addPendingVideoHistory({
@@ -316,7 +342,10 @@ export default function useUnifiedGeneratorSubmit() {
         : t('errors.media-metadata'));
       return false;
     } finally {
-      setIsSubmitting(false);
+      if (!keepSubmitting) {
+        submittingRef.current = false;
+        setIsSubmitting(false);
+      }
     }
   };
 
