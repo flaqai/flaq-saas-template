@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 
-import Navigation from '@/components/home/Navigation';
+import WithFooterLayoutShell from '@/components/home/WithFooterLayoutShell';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('Metadata.home');
@@ -13,10 +13,5 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  return (
-    <>
-      <Navigation />
-      <main className='mx-auto flex w-full flex-1'>{children}</main>
-    </>
-  );
+  return <WithFooterLayoutShell>{children}</WithFooterLayoutShell>;
 }

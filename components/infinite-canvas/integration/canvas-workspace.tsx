@@ -6,7 +6,6 @@ import OpenApiSettingsDialog from '@/components/dialog/OpenApiSettingsDialog';
 import { STORE_PREFIX } from '@/lib/constants/config';
 import { InfiniteCanvasDashboard } from '../infinite-canvas-dashboard';
 import { InfiniteCanvasLanding } from '../landing/infinite-canvas-landing';
-import PanelSider from '@/components/sider/panel-sider/sider3';
 import { CanvasEntryWorkspace } from './canvas-entry-workspace';
 import { useCanvasI18n } from './use-canvas-i18n';
 import { useCanvasIntegrations } from './use-canvas-integrations';
@@ -35,11 +34,10 @@ export function CanvasWorkspace({ mode, projectId, children }: { readonly childr
         <InfiniteCanvasDashboard i18n={i18n} integrations={integrations} page={page} onPageChange={setPage} />
       ) : (
         <div className='flex items-start'>
-          <PanelSider />
-          <main className='relative min-w-0 flex-1 overflow-hidden'>
+          <div className='relative min-w-0 flex-1 overflow-hidden'>
             <InfiniteCanvasLanding i18n={landingI18n} integrations={integrations} entryForm={<CanvasEntryWorkspace integrations={integrations} />} />
             {children}
-          </main>
+          </div>
         </div>
       )}
       <OpenApiSettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />

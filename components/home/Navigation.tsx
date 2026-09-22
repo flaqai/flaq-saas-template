@@ -13,15 +13,17 @@ import { cn } from '@/lib/utils';
 import OpenApiSettingsDialog from '../dialog/OpenApiSettingsDialog';
 import BusinessDialog from '../dialog/BusinessDialog';
 import useBusinessDialogStore from '@/store/useBusinessDialogStore';
+import useSidebarStore from '@/store/useSidebarStore';
 import LocaleSwitcher from '../LocaleSwitcher';
 import MenuBtn from './MenuBtn';
 import NavigationDrawer from './NavigationDrawer';
 import NavPopover from './NavPopover';
 
-export default function Navigation() {
+export default function Navigation({ hasSidebar = false }: { hasSidebar?: boolean }) {
   const t = useTranslations('Navigation');
   const pathname = usePathname();
   const locale = useLocale();
+  const isCollapsed = useSidebarStore((state) => state.isCollapsed);
 
   const [open, setOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -72,17 +74,24 @@ export default function Navigation() {
       <header
         className={cn(
           'sticky top-0 left-0 z-50 flex h-[64px] w-full bg-transparent px-3 lg:px-10',
+          hasSidebar && 'lg:px-6',
           isScrolled && 'backdrop-blur-md',
         )}
       >
-        <nav className='grid w-full min-w-0 flex-1 grid-cols-[auto_minmax(0,1fr)] items-center gap-2 lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:gap-3'>
-          <div className='z-10'>
+        <nav className={cn(
+          'grid w-full min-w-0 flex-1 grid-cols-[auto_minmax(0,1fr)] items-center gap-2 lg:gap-3',
+          hasSidebar ? 'xl:grid-cols-[auto_minmax(0,1fr)_auto]' : 'lg:grid-cols-[auto_minmax(0,1fr)_auto]',
+        )}>
+          <div className={cn('z-10', hasSidebar && !isCollapsed && 'md:w-0 md:overflow-hidden md:opacity-0')}>
             <Link className='shrink-0 hover:opacity-80' href='/' title={t('title')}>
-              <img src='/images/logo.png' alt={t('title')} title={t('title')} className='size-12 md:size-16' />
+              <img src='/images/logo.png' alt={t('title')} title={t('title')} className={cn('size-12 md:size-16', hasSidebar && 'md:size-10')} />
             </Link>
           </div>
           {/* PC */}
-          <div className='hidden h-10 min-w-0 items-center justify-center gap-0.5 lg:flex xl:gap-1 2xl:gap-3'>
+          <div className={cn(
+            'hidden h-10 min-w-0 items-center justify-center gap-0.5 xl:gap-1 2xl:gap-3',
+            hasSidebar ? 'overflow-hidden xl:flex' : 'lg:flex',
+          )}>
             {NavLinks.map((item) => (
               <div key={item.code} className='min-w-0 shrink-0'>
                 {item.children ? (
@@ -152,7 +161,7 @@ export default function Navigation() {
               <Settings2 className='h-4 w-4 lg:h-[18px] lg:w-[18px]' />
             </button>
             {/* Mobile */}
-            <div className='mx-2 flex items-center gap-x-4 lg:hidden'>
+            <div className={cn('mx-2 flex items-center gap-x-4', hasSidebar ? 'xl:hidden' : 'lg:hidden')}>
               <MenuBtn open={open} onClick={() => setOpen(!open)} />
             </div>
           </div>
