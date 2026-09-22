@@ -1,10 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { Link } from '@/i18n/navigation';
+import { Link, usePathname } from '@/i18n/navigation';
 import { ChevronDown } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
+import NavigationIcon from '@/components/common/NavigationIcon';
 
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 
@@ -32,6 +33,7 @@ export default function NavPopover({
   align?: React.ComponentProps<typeof PopoverContent>['align'];
 }) {
   const [openToolsNav, setOpenToolsNav] = useState(false);
+  const pathname = usePathname();
 
   return (
     <Popover open={openToolsNav} onOpenChange={setOpenToolsNav}>
@@ -79,10 +81,11 @@ export default function NavPopover({
                 target={child?.target}
                 onClick={() => setOpenToolsNav(false)}
                 className={cn(
-                  'group relative flex h-[64px] w-full items-start rounded-lg border border-transparent px-2 py-2.5 transition-colors duration-150 after:absolute after:right-0 after:bottom-0 after:left-0 after:h-px after:bg-color-b1 after:content-[""] hover:border-color-main/35 hover:bg-color-c2/90 hover:shadow-[0_10px_26px_rgba(0,0,0,0.22)] hover:after:bg-transparent',
+                  'group relative flex h-[64px] w-full items-start gap-3 rounded-lg border border-transparent px-2 py-2.5 transition-colors duration-150 after:absolute after:right-0 after:bottom-0 after:left-0 after:h-px after:bg-color-b1 after:content-[""] hover:border-color-main/35 hover:bg-color-c2/90 hover:shadow-[0_10px_26px_rgba(0,0,0,0.22)] hover:after:bg-transparent',
                   columnNumber === 4 && 'h-[68px]',
                 )}
               >
+                <NavigationIcon code={child.code} href={child.href} isActive={pathname === child.href || pathname.startsWith(`${child.href}/`)} />
                 <div className='min-w-0 flex-grow'>
                   <div className='truncate text-left text-base leading-6 font-semibold text-white transition-colors group-hover:text-color-main'>{child.label}</div>
                   <p className='truncate text-left text-xs leading-5 text-white/70 transition-colors group-hover:text-white'>{child.description}</p>
