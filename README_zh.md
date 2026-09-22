@@ -106,9 +106,11 @@ NEXT_PUBLIC_CONTACT_US_EMAIL="contact@flaq.ai"
 
 ### 文件上传
 
-文件上传复用 **Open API Settings** 中配置的 API 地址和 Client Key，无需单独配置存储凭证或公共域名。
+文件上传默认使用 **Open API Settings** 中配置的 API 地址和 Client Key。如需使用自有 Cloudflare R2，在服务端设置 `R2_ACCOUNT_ID`、`R2_ACCESS_KEY_ID`、`R2_SECRET_ACCESS_KEY` 和 `R2_BUCKET_NAME`，再在设置弹窗的「图床配置 (R2)」中填写公共域名并保存。R2 凭证仅保存在服务端，可使用「测试 R2 连接」检查存储配置。
 
-应用通过 `POST /api/v1/files/presignedUrl` 获取上传地址，再通过 `PUT` 直接上传文件。每次申请最多 10 个文件，超过时分批处理，例如 14 个文件分为 10 个和 4 个两批。签名地址有效期为 60 秒，每批获取地址后立即上传。上传完成后，使用接口返回的公开地址提交生成请求。
+配置公共域名后，上传优先使用自有 R2；清空域名并保存后恢复使用 Flaq 上传。自有图床报错时直接提示错误，不自动切换到 Flaq。
+
+使用 Flaq 上传时，应用通过 `POST /api/v1/files/presignedUrl` 获取上传地址，再通过 `PUT` 直接上传文件。每次申请最多 10 个文件，超过时分批处理，例如 14 个文件分为 10 个和 4 个两批。签名地址有效期为 60 秒，每批获取地址后立即上传。上传完成后，使用接口返回的公开地址提交生成请求。
 
 ### Flaq.ai API Key 配置
 

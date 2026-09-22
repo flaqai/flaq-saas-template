@@ -112,9 +112,11 @@ NEXT_PUBLIC_CONTACT_US_EMAIL="contact@flaq.ai"
 
 ### File Uploads
 
-File uploads use the same API URL and Client Key configured in **Open API Settings**. No separate storage credentials or public domain are required.
+By default, file uploads use the API URL and Client Key configured in **Open API Settings**. To use your own Cloudflare R2 storage, set `R2_ACCOUNT_ID`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY`, and `R2_BUCKET_NAME` on the server, then enter your public domain under **Image Hosting (R2)** in the settings dialog and save. Keep R2 credentials on the server only. Use **Test R2 Connection** to verify the storage configuration.
 
-The app requests upload URLs from `POST /api/v1/files/presignedUrl`, then uploads each file directly using `PUT`. Each request supports up to 10 files; larger selections are uploaded in successive batches (for example, 14 files use batches of 10 and 4). Each batch is uploaded immediately after obtaining its URLs, which expire after 60 seconds. The returned public URLs are used for generation requests.
+When a public domain is configured, uploads use your R2 storage first. Clear the public domain and save to return to Flaq uploads. Custom storage errors are reported without switching to Flaq uploads.
+
+For Flaq uploads, the app requests upload URLs from `POST /api/v1/files/presignedUrl`, then uploads each file directly using `PUT`. Each request supports up to 10 files; larger selections are uploaded in successive batches (for example, 14 files use batches of 10 and 4). Each batch is uploaded immediately after obtaining its URLs, which expire after 60 seconds. The returned public URLs are used for generation requests.
 
 ### Flaq.ai API Key Setup
 

@@ -3,6 +3,7 @@ import {
   createOpenApiHeaders,
   getClientOpenApiConfigAsync,
 } from '@/network/clientFetch';
+import { getSecureItem } from '@/lib/utils/secureStorage';
 
 export const MAX_UPLOAD_BATCH_SIZE = 10;
 
@@ -25,7 +26,7 @@ export interface CreateSignedUrlResponse {
 }
 
 /**
- * Upload adapter for Flaq Open API presigned URLs.
+ * Upload adapter for custom R2 storage or Flaq Open API presigned URLs.
  */
 export interface UploadAdapter {
   createSignedUrl(input: CreateSignedUrlRequest): Promise<SignedUrlItem[]>;
@@ -39,6 +40,27 @@ export async function createSignedUrl(
 
   if (typeof window === 'undefined') {
     throw new Error('createSignedUrl can only be called from the browser.');
+  }
+
+  const publicDomain = (await getSecureItem('FLAQ-SAAS-TEMPLATE-r2-public-domain'))?.trim();
+  if (publicDomain) {
+    const response = await fetch('/api/upload/presigned-url', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mimeTypes: mineType, publicDomain }),
+    });
+    const payload = await response.json().catch(() => null) as
+      | (CreateSignedUrlResponse & { error?: string })
+      | null;
+
+    if (!response.ok) {
+      throw new Error(payload?.error || 'Failed to create signed URL');
+    }
+    if (!Array.isArray(payload?.rows) || payload.rows.length !== mineType.length ||
+      payload.rows.some((item) => !item?.signedUrl || !item?.url)) {
+      throw new Error('Failed to create signed URL');
+    }
+    return { rows: payload.rows };
   }
 
   const config = await getClientOpenApiConfigAsync();
