@@ -5,6 +5,7 @@ import { BASE_URL } from '@/lib/env';
 const pageLinks = [
   ['Home', '/', 'Overview of the free, open-source Flaq SaaS Template.'],
   ['AI Media Creator', '/ai-media-creator/', 'Unified workspace for supported AI image and video workflows.'],
+  ['AI Canvas', '/ai-canvas/', 'Infinite AI canvas with connected media and generation nodes, local projects, and ZIP import and export.'],
   ['Text to Image', '/text-to-image/', 'Create images from text prompts with supported Flaq API models.'],
   ['Image to Image', '/image-to-image/', 'Transform or edit images with reference-guided AI models.'],
   ['Text to Video', '/text-to-video/', 'Generate videos from text prompts, including models with audio support.'],
@@ -12,7 +13,7 @@ const pageLinks = [
   [
     'Reference to Video',
     '/reference-to-video/',
-    'Guide video generation with images, video, audio, documents, or links when supported.',
+    'Prepare supported image, video, audio, document, or link references and continue generation in AI Media Creator.',
   ],
   ['Virtual Try-On', '/virtual-try-on/', 'Preview garments on a person using AI image editing.'],
 ] as const;
@@ -30,7 +31,7 @@ export function getLlmsTxt() {
 
 > A free and open-source Next.js template for building AI image and video generation products with the Flaq API. No signup is required to use, modify, or self-host the source template under the MIT License; a Flaq Client Key and API credit are required for model generation.
 
-Flaq SaaS Template provides production-oriented UI, internationalized routes, generation forms, local history, Cloudflare R2 uploads, SEO metadata, and integration points for one Flaq Client Key. Visitors can open and explore the app without creating an account in the template. The canonical source repository is https://github.com/flaqai/flaq-saas-template.
+Flaq SaaS Template provides a unified image and video creator, an infinite AI canvas, internationalized routes, generation forms, browser-local history and projects, Flaq uploads or optional Cloudflare R2 storage, SEO metadata, and integration points for one Flaq Client Key. Visitors can open and explore the app without creating an account in the template. The canonical source repository is https://github.com/flaqai/flaq-saas-template.
 
 ## Product Pages
 
@@ -72,17 +73,26 @@ Flaq SaaS Template is an MIT-licensed, free and open-source starter for develope
 
 ### Core capabilities
 
-- Text to Image: turns natural-language prompts into images with configured models such as Nano Banana, Seedream, GPT Image, Qwen Image, and Grok Imagine.
+- Text to Image: turns natural-language prompts into images with configured models such as Nano Banana Pro, Nano Banana 2, GPT Image 2, ChatGPT Images 2.5, Qwen Image 3.0, and Seedream 5.0.
 - Image to Image: edits or transforms source images while using prompts and references to guide the result.
 - Text to Video: creates video from written prompts with model-dependent duration, ratio, resolution, and audio controls.
 - Image to Video: animates a source image with model-dependent motion and output settings.
 - Reference to Video: accepts supported image, video, audio, document, or URL references and lets prompts mention those assets.
 - Virtual Try-On: combines person and garment images to preview clothing with an AI image-editing workflow.
 - AI Media Creator: combines supported image and video workflows in one adaptive workspace.
+- AI Canvas: arranges and connects media and generation nodes on an infinite canvas, with local project management and ZIP import and export.
+
+Model definitions are grouped by provider and media type in lib/constants/template-models/. Video model examples include Kling 3.0, Veo 3.1, Wan 2.7, Seedance 2.0, and Vidu Q3. Inputs and parameters depend on the selected model. Virtual Try-On uses GPT Image 2 Edit, Nano Banana Pro Edit, Nano Banana 2 Edit, Seedream 5.0 Edit, and Seedream 4.5 Edit.
 
 ### Application behavior
 
-Generation forms expose only the inputs and settings supported by the selected model. Tasks are submitted through the Flaq API, polled for status, and displayed in local image or video history. Local uploads can be stored in Cloudflare R2 when server-side R2 credentials and a public asset domain are configured. The Flaq Client Key can be stored in encrypted browser storage when the user enables persistence.
+Generation forms expose only the inputs and settings supported by the selected model. Tasks are submitted through the Flaq API, polled for status, and displayed in image or video history stored in the current browser's local storage. The reference-to-video page prepares inputs in the shared form and continues generation in AI Media Creator. The Flaq Client Key can be stored in encrypted browser storage when the user enables Remember Me.
+
+Uploads use the API URL and Client Key configured in Open API Settings by default. For custom Cloudflare R2 storage, set R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, and R2_BUCKET_NAME on the server, then save a public domain under Image Hosting (R2) in the app. R2 credentials remain server-side. Test R2 Connection verifies the configuration. A configured public domain selects R2 uploads; clearing it restores Flaq uploads. Custom storage errors are reported without automatically switching to Flaq uploads.
+
+### AI Canvas projects
+
+The AI Canvas entry page at /ai-canvas/ prepares a project from generation settings and inputs. Saved projects are managed at /ai-canvas/projects/ and edited at /ai-canvas/{projectId}/. Projects are stored locally in IndexedDB, with no account-based synchronization. Users can rename, delete, import, and export projects, including ZIP archives containing project media. Export a portable copy before clearing browser data or moving to another browser, device, or site origin. Local project URLs are not shared cloud documents and are not listed in the sitemap.
 
 ### Free and open-source scope
 
@@ -98,20 +108,26 @@ The application supports 15 locales: English (en), Japanese (ja), Indonesian (id
 - Language: TypeScript.
 - Styling: Tailwind CSS 4 and Radix UI components.
 - Internationalization: next-intl.
-- State and fetching: Zustand and SWR.
+- State and fetching: Zustand, SWR, and TanStack Query.
 - Forms and validation: React Hook Form and Zod.
-- Storage: optional Cloudflare R2 integration.
-- Package manager: pnpm.
+- Storage: browser local storage for generation history, IndexedDB for canvas projects, and Flaq uploads or optional Cloudflare R2 for media.
+- Runtime and package manager: Node.js 22 and pnpm 10.5.2, as specified in .nvmrc and package.json.
+
+Shared generation forms and creator history live in components/unified-generator/. The canvas editor, dashboard, integrations, and local persistence live in components/infinite-canvas/. API clients and status polling live in network/; model definitions live in lib/constants/template-models/.
 
 ### Local setup
 
-1. Clone https://github.com/flaqai/flaq-saas-template.
+1. Use Node.js 22 and pnpm 10.5.2, then clone https://github.com/flaqai/flaq-saas-template and enter the repository directory.
 2. Run pnpm install.
 3. Copy .env.example to .env.local.
 4. Set NEXT_PUBLIC_SITE_URL to the public origin, or http://localhost:3000 for local development.
-5. Add Cloudflare R2 credentials if local uploads should be stored remotely.
+5. Set NEXT_PUBLIC_CONTACT_US_EMAIL and, if using custom storage, the four server-side R2 variables from .env.example.
 6. Run pnpm dev and open http://localhost:3000.
-7. Open API Settings in the app and add a Flaq Client Key before generating media.
+7. Open API Settings in the app, add a Flaq Client Key, test the connection, and save before generating media. For custom R2 uploads, also configure its public domain and test the R2 connection.
+
+### Deployment
+
+Set NEXT_PUBLIC_SITE_URL to the production origin and configure the contact email and any optional server-side R2 credentials on the host. Upload and image proxy API routes require a Next.js server runtime. For a self-hosted Node.js deployment, run pnpm build followed by pnpm start. Run pnpm ts-check separately before deployment because the current Next.js configuration skips TypeScript errors during builds.
 
 ### Public route catalog
 
