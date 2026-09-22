@@ -102,14 +102,14 @@ export default function VideoDetailModal({ open, onOpenChange, onDelete, video }
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogPortal>
         <DialogContent
-          className='h-[calc(100vh-24px)] max-h-[700px] w-[calc(100vw-16px)] max-w-[1453px] border-none bg-transparent p-0 shadow-none sm:max-w-[1453px]'
+          className='h-[calc(100vh-24px)] max-h-[700px] w-[calc(100vw-16px)] max-w-[1452px] border-none bg-transparent p-0 shadow-none sm:max-w-[1452px]'
           showCloseButton={false}
           overlayClassName='bg-black/80'
           hiddenTitle={t('title')}
         >
-          <div className='flex h-full w-full flex-col overflow-hidden rounded-lg shadow-lg lg:flex-row'>
+          <div className='border-color-b1 flex h-full w-full flex-col overflow-hidden rounded-lg border shadow-lg lg:flex-row'>
             {/* Left: Video Section */}
-            <div className='flex h-full w-full flex-1 items-center justify-center bg-[#111214] p-3 lg:h-[700px] lg:p-6'>
+            <div className='flex h-full w-full flex-1 items-center justify-center bg-[#000] p-3 lg:h-full lg:p-6'>
               {video.videoUrl ? (
                 <video
                   src={video.videoUrl}
@@ -130,7 +130,7 @@ export default function VideoDetailModal({ open, onOpenChange, onDelete, video }
             </div>
 
             {/* Right: Info Panel */}
-            <div className='flex h-full w-full flex-col bg-[#16171b] lg:h-[700px] lg:w-[450px] lg:shrink-0'>
+            <div className='border-color-b1 flex h-full w-full flex-col border-t bg-[#16171b] lg:h-full lg:border-t-0 lg:border-l lg:w-[450px] lg:shrink-0'>
               {/* Header - Fixed */}
               <div className='flex shrink-0 items-center justify-between border-b border-[#34353b] p-3'>
                 <h2 className='text-2xl font-medium capitalize leading-8 text-white'>{t('title')}</h2>

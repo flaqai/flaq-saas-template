@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Check, Copy, Download, Trash2 } from 'lucide-react';
+import { Check, CircleAlert, Copy, Download, Trash2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
 import useCopyToClipboard from '@/hooks/useCopyToClipboard';
@@ -37,14 +37,18 @@ export interface MetadataItem {
 
 // Metadata row component
 export function MetadataRow({ items }: { items: MetadataItem[] }) {
+  if (!items.length) return null;
+
   return (
-    <div className='flex flex-wrap items-center gap-2 text-sm leading-[22px]'>
-      {items.map((item, index) => (
-        <span key={index}>
-          <span className='text-[#777]'>{item.label}：</span>
-          <span className='text-[#cfcfcf]'>{item.value}</span>
-        </span>
-      ))}
+    <div className='flex flex-col gap-2 rounded-lg bg-[#1c1d23] p-3'>
+      <div className='flex flex-col gap-1.5 text-sm text-gray-300'>
+        {items.map((item, index) => (
+          <div key={index}>
+            <span className='text-gray-400'>{item.label}: </span>
+            <span>{item.value}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -92,7 +96,12 @@ export function PromptSection({ prompt, translationKey = 'Profile.image-history.
 // Copyright text component
 export function CopyrightText({ translationKey = 'Profile.image-history.detail' }: { translationKey?: string }) {
   const t = useTranslations('Common.copy-right');
-  return <p className='text-sm leading-[22px] text-[#777]'><span className='font-medium'>{t('title')}</span> {t('content')}</p>;
+  return (
+    <div role='note' className='flex items-start gap-2 text-sm leading-[22px] text-gray-400'>
+      <CircleAlert className='mt-[3px] size-4 shrink-0' aria-hidden='true' />
+      <p><span className='font-medium text-gray-300'>{t('title')}</span> {t('content')}</p>
+    </div>
+  );
 }
 
 // Bottom action button container

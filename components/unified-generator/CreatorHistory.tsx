@@ -1,11 +1,12 @@
 'use client';
 
 import { type CSSProperties, useEffect, useRef, useState } from 'react';
+import dynamic from 'next/dynamic';
 import { Loader2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 
-import useImageHistory from '@/network/image/history';
-import useVideoHistory from '@/network/video/history';
+import useImageHistory, { type ImageHistoryItem } from '@/network/image/history';
+import useVideoHistory, { type VideoHistoryItem } from '@/network/video/history';
 
 import CreatorVideoPreview from './CreatorVideoPreview';
 import CreatorHistoryColumnControl from './CreatorHistoryColumnControl';
@@ -13,6 +14,8 @@ import CreatorHistoryColumnControl from './CreatorHistoryColumnControl';
 type HistoryType = 'image' | 'video';
 
 const PAGE_SIZE = 12;
+const ImageDetailModal = dynamic(() => import('@/components/dialog/ImageDetailModal'), { ssr: false });
+const VideoDetailModal = dynamic(() => import('@/components/dialog/VideoDetailModal'), { ssr: false });
 
 export default function CreatorHistory() {
   const t = useTranslations('CreatorHistory');
@@ -20,6 +23,8 @@ export default function CreatorHistory() {
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [desktopColumns, setDesktopColumns] = useState(4);
   const [mobileColumns, setMobileColumns] = useState(2);
+  const [selectedImage, setSelectedImage] = useState<ImageHistoryItem | null>(null);
+  const [selectedVideo, setSelectedVideo] = useState<VideoHistoryItem | null>(null);
   const historyScrollRef = useRef<HTMLDivElement>(null);
   const loadMoreRef = useRef<HTMLDivElement>(null);
   const imageHistory = useImageHistory(1, visibleCount);
@@ -97,8 +102,8 @@ export default function CreatorHistory() {
                     </div>
                   </div>
                 );
-                return item.url ? (
-                  <a key={item.id} className='mb-3 block break-inside-avoid' href={item.url} target='_blank' rel='noopener noreferrer'>{card}</a>
+                return item.url && item.status !== 'processing' && item.status !== 'fail' ? (
+                  <button key={item.id} type='button' className='mb-3 block w-full break-inside-avoid cursor-pointer text-left' onClick={() => setSelectedImage(item)}>{card}</button>
                 ) : <div key={item.id} className='mb-3 break-inside-avoid'>{card}</div>;
               })
               : videoHistory.data.map((item) => {
@@ -115,8 +120,8 @@ export default function CreatorHistory() {
                     </div>
                   </div>
                 );
-                return item.videoUrl ? (
-                  <a key={item.id} className='mb-3 block break-inside-avoid' href={item.videoUrl} target='_blank' rel='noopener noreferrer'>{card}</a>
+                return item.videoUrl && item.status === 'completed' ? (
+                  <button key={item.id} type='button' className='mb-3 block w-full break-inside-avoid cursor-pointer text-left' onClick={() => setSelectedVideo(item)}>{card}</button>
                 ) : <div key={item.id} className='mb-3 break-inside-avoid'>{card}</div>;
               })}
           </div>
@@ -130,6 +135,26 @@ export default function CreatorHistory() {
           {hasMore ? t('loading-more') : history.data.length ? t('end') : null}
         </div>
       </div>
+      {selectedImage && (
+        <ImageDetailModal
+          open
+          onOpenChange={(open) => {
+            if (!open) setSelectedImage(null);
+          }}
+          onDelete={() => setSelectedImage(null)}
+          image={{ ...selectedImage, modelName: selectedImage.modelInfo || selectedImage.modelName }}
+        />
+      )}
+      {selectedVideo && (
+        <VideoDetailModal
+          open
+          onOpenChange={(open) => {
+            if (!open) setSelectedVideo(null);
+          }}
+          onDelete={() => setSelectedVideo(null)}
+          video={selectedVideo}
+        />
+      )}
     </section>
   );
 }
