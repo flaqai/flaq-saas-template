@@ -116,7 +116,7 @@
     "image-hosting": {
       "title": "Image Hosting (R2)",
       "public-domain": "Public Domain",
-      "public-domain-hint": "The CDN domain for accessing uploaded files. Recommended to use https:// protocol.",
+      "public-domain-hint": "When configured, your storage takes priority. Leave blank to use the built-in upload service.",
       "public-domain-placeholder": "https://assets.example.com",
       "not-configured": "R2 credentials should be set in .env (server-side only). Click \"Test R2\" to verify.",
       "saved": "Image hosting settings saved.",

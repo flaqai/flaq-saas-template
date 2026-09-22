@@ -116,7 +116,7 @@
     "image-hosting": {
       "title": "图床配置 (R2)",
       "public-domain": "公开域名",
-      "public-domain-hint": "上传文件的 CDN 访问域名，推荐使用 https:// 协议。",
+      "public-domain-hint": "配置后优先使用您的图床；留空则使用内置上传服务。",
       "public-domain-placeholder": "https://assets.example.com",
       "not-configured": "R2 凭证需在 .env 中配置（仅服务端）。可点击「测试 R2」验证是否生效。",
       "saved": "图床配置已保存。",
