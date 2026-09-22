@@ -21,7 +21,7 @@ Free and open-source SaaS template for building AI-powered image and video gener
     - [Prerequisites](#prerequisites)
     - [Installation](#installation)
     - [Environment Variables](#environment-variables)
-    - [Cloudflare R2 Storage Setup](#cloudflare-r2-storage-setup)
+    - [File Uploads](#file-uploads)
     - [Flaq.ai API Key Setup](#flaqai-api-key-setup)
   - [Usage](#usage)
     - [Development](#development)
@@ -46,7 +46,7 @@ Free and open-source SaaS template for building AI-powered image and video gener
 - 🚀 **No Signup Required** — Explore, modify, and self-host the template without creating an app account
 - 🤝 **Affiliate Promotion** — Responsive Flaq.ai affiliate callout with localized copy and destination links
 - 🔒 **Secure API Key Management** — Encrypted client-side storage for your Flaq.ai credentials
-- ☁️ **Cloudflare R2 Storage** — Built-in image hosting with Cloudflare's global CDN
+- ☁️ **File Uploads** — Upload images, audio, and video using your Flaq API key
 - 📱 **Responsive Design** — Fully responsive UI built with Tailwind CSS and Radix UI
 - 🌓 **Dark Mode** — Beautiful dark-themed UI out of the box
 - ⚡ **Fast Performance** — Powered by Next.js 16 with Turbopack support
@@ -79,7 +79,6 @@ Free and open-source SaaS template for building AI-powered image and video gener
 - **Node.js** >= 18.x (check `.nvmrc` for the recommended version)
 - **pnpm** >= 10.x (the project uses `packageManager` field in `package.json`)
 - A [Flaq.ai](https://flaq.ai/) account with an active API key
-- A [Cloudflare](https://cloudflare.com) account (for R2 image storage)
 
 ### Installation
 
@@ -109,34 +108,13 @@ NEXT_PUBLIC_SITE_URL="http://localhost:3000"
 # Contact email displayed in the footer
 NEXT_PUBLIC_CONTACT_US_EMAIL="contact@flaq.ai"
 
-# Cloudflare R2 Storage Configuration (server-side only)
-# Get these from Cloudflare Dashboard > R2 > Manage R2 API Tokens
-R2_ACCOUNT_ID=your_cloudflare_account_id
-R2_ACCESS_KEY_ID=your_r2_access_key_id
-R2_SECRET_ACCESS_KEY=your_r2_secret_access_key
-R2_BUCKET_NAME=your_r2_bucket_name
 ```
 
-> **⚠️ Important**: Never expose `R2_SECRET_ACCESS_KEY` to the client. The R2 credentials are server-side only.
+### File Uploads
 
-### Cloudflare R2 Storage Setup
+File uploads use the same API URL and Client Key configured in **Open API Settings**. No separate storage credentials or public domain are required.
 
-This template uses Cloudflare R2 for storing user-uploaded images and generated assets. Follow these steps:
-
-1. **Log in** to your [Cloudflare Dashboard](https://dash.cloudflare.com/)
-2. **Navigate** to **R2** in the sidebar
-3. **Create a bucket** (e.g., `flaq-ai-saas`)
-4. **Generate API Tokens**:
-   - Go to **Manage R2 API Tokens**
-   - Create a new API token with **Object Read & Write** permissions
-   - Save the **Access Key ID** and **Secret Access Key** securely
-5. **Configure Public Access**:
-   - In your R2 bucket settings, enable **Public Access** via a custom domain or `r2.dev` subdomain
-   - Note down the **Public Domain** URL (e.g., `https://your-bucket.your-account.r2.cloudflarestorage.com`)
-6. **Set environment variables** in `.env.local` (see above)
-7. **Configure the public domain** in the app's **Open API Settings** dialog (gear icon in the header)
-
-After setup, use the **Test R2 Connection** button in the settings dialog to verify your configuration.
+The app requests upload URLs from `POST /api/v1/files/presignedUrl`, then uploads each file directly using `PUT`. Each request supports up to 10 files; larger selections are uploaded in successive batches (for example, 14 files use batches of 10 and 4). Each batch is uploaded immediately after obtaining its URLs, which expire after 60 seconds. The returned public URLs are used for generation requests.
 
 ### Flaq.ai API Key Setup
 
@@ -294,7 +272,7 @@ the correct domain.
 │   ├── clientFetch.ts      # Flaq.ai API client with auth
 │   ├── image/              # Image generation API calls
 │   ├── video/              # Video generation API calls
-│   └── upload/             # R2 upload client
+│   └── upload/             # Flaq file upload client
 ├── public/                 # Static assets (images, icons, fonts)
 ├── store/                  # Zustand state stores
 ├── next.config.mjs         # Next.js configuration
@@ -311,7 +289,7 @@ The easiest way to deploy this template is via [Vercel](https://vercel.com):
 
 1. Push the repository to GitHub
 2. Import the project in Vercel
-3. Add all environment variables (`R2_*`, `NEXT_PUBLIC_*`) in Vercel's project settings
+3. Add all environment variables (`NEXT_PUBLIC_*`) in Vercel's project settings
 4. Deploy!
 
 > The template also works on any platform that supports Next.js (Netlify, Cloudflare Pages, Docker, etc.).

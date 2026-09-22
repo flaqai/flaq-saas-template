@@ -18,7 +18,7 @@
   - [环境要求](#环境要求)
   - [安装步骤](#安装步骤)
   - [环境变量配置](#环境变量配置)
-  - [Cloudflare R2 存储配置](#cloudflare-r2-存储配置)
+  - [文件上传](#文件上传)
   - [Flaq.ai API Key 配置](#flaqai-api-key-配置)
 - [使用方法](#使用方法)
 - [AIGC 能力](#aigc-能力)
@@ -40,7 +40,7 @@
 - 🚀 **无需注册** — 无需创建应用账号即可浏览、修改和自行部署模板
 - 🤝 **联盟推广** — 内置响应式 Flaq.ai 联盟推荐区块，文案与跳转均随当前语言切换
 - 🔒 **安全密钥管理** — 加密的客户端存储保护您的 Flaq.ai 凭证
-- ☁️ **Cloudflare R2 存储** — 内置图片托管，享受 Cloudflare 全球 CDN 加速
+- ☁️ **文件上传** — 使用 Flaq API Key 上传图片、音频和视频
 - 📱 **响应式设计** — 基于 Tailwind CSS 和 Radix UI 的全响应式界面
 - 🌓 **深色模式** — 精美的深色主题 UI
 - ⚡ **极速性能** — 基于 Next.js 16，支持 Turbopack
@@ -73,7 +73,6 @@
 - **Node.js** >= 18.x（根据 `.nvmrc` 推荐版本）
 - **pnpm** >= 10.x（项目在 `package.json` 中已声明 `packageManager`）
 - 一个 [Flaq.ai](https://flaq.ai/) 账户及有效的 API 密钥
-- 一个 [Cloudflare](https://cloudflare.com) 账户（用于 R2 图片存储）
 
 ### 安装步骤
 
@@ -103,34 +102,13 @@ NEXT_PUBLIC_SITE_URL="http://localhost:3000"
 # 页脚显示的联系邮箱
 NEXT_PUBLIC_CONTACT_US_EMAIL="contact@flaq.ai"
 
-# Cloudflare R2 存储配置（仅服务端）
-# 从 Cloudflare 控制台 > R2 > 管理 R2 API 令牌 获取
-R2_ACCOUNT_ID=你的_cloudflare_账户_id
-R2_ACCESS_KEY_ID=你的_r2_访问密钥_id
-R2_SECRET_ACCESS_KEY=你的_r2_秘密访问密钥
-R2_BUCKET_NAME=你的_r2_存储桶名称
 ```
 
-> **⚠️ 重要提示**：切勿将 `R2_SECRET_ACCESS_KEY` 暴露给客户端。R2 凭证仅在服务端使用。
+### 文件上传
 
-### Cloudflare R2 存储配置
+文件上传复用 **Open API Settings** 中配置的 API 地址和 Client Key，无需单独配置存储凭证或公共域名。
 
-本模板使用 Cloudflare R2 存储用户上传的图片和生成的资源。请按以下步骤操作：
-
-1. **登录** [Cloudflare 控制台](https://dash.cloudflare.com/)
-2. **进入**侧边栏的 **R2** 页面
-3. **创建存储桶**（如 `flaq-ai-saas`）
-4. **生成 API 令牌**：
-   - 点击 **管理 R2 API 令牌**
-   - 创建新的 API 令牌，权限选择 **对象读取与写入**
-   - 安全保存 **访问密钥 ID** 和 **秘密访问密钥**
-5. **配置公共访问**：
-   - 在 R2 存储桶设置中，通过自定义域名或 `r2.dev` 子域名启用 **公共访问**
-   - 记录 **公共域名** URL（如 `https://your-bucket.your-account.r2.cloudflarestorage.com`）
-6. **在 `.env.local` 中设置环境变量**（见上文）
-7. **配置公共域名**：在应用顶部导航栏点击齿轮图标 ⚙️，展开「图片托管」部分，填入公共域名
-
-配置完成后，可在设置对话框中使用 **测试 R2 连接** 按钮验证配置是否成功。
+应用通过 `POST /api/v1/files/presignedUrl` 获取上传地址，再通过 `PUT` 直接上传文件。每次申请最多 10 个文件，超过时分批处理，例如 14 个文件分为 10 个和 4 个两批。签名地址有效期为 60 秒，每批获取地址后立即上传。上传完成后，使用接口返回的公开地址提交生成请求。
 
 ### Flaq.ai API Key 配置
 
@@ -270,7 +248,7 @@ Card 以及 index/follow 指令。生成的 `/sitemap.xml` 会列出所有公开
 │   ├── clientFetch.ts      # Flaq.ai API 客户端（含认证）
 │   ├── image/              # 图片生成 API 调用
 │   ├── video/              # 视频生成 API 调用
-│   └── upload/             # R2 上传客户端
+│   └── upload/             # Flaq 文件上传客户端
 ├── public/                 # 静态资源（图片、图标、字体）
 ├── store/                  # Zustand 状态管理
 ├── next.config.mjs         # Next.js 配置
@@ -286,7 +264,7 @@ Card 以及 index/follow 指令。生成的 `/sitemap.xml` 会列出所有公开
 
 1. 将仓库推送到 GitHub
 2. 在 Vercel 中导入项目
-3. 在 Vercel 项目设置中添加所有环境变量（`R2_*`、`NEXT_PUBLIC_*`）
+3. 在 Vercel 项目设置中添加所有环境变量（`NEXT_PUBLIC_*`）
 4. 部署！
 
 > 本模板也支持任何兼容 Next.js 的平台（Netlify、Cloudflare Pages、Docker 等）。

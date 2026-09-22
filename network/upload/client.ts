@@ -1,4 +1,10 @@
-import { getSecureItem } from '@/lib/utils/secureStorage';
+import {
+  buildOpenApiUrl,
+  createOpenApiHeaders,
+  getClientOpenApiConfigAsync,
+} from '@/network/clientFetch';
+
+export const MAX_UPLOAD_BATCH_SIZE = 10;
 
 export interface CreateSignedUrlRequest {
   mineType: string[];
@@ -6,10 +12,10 @@ export interface CreateSignedUrlRequest {
 }
 
 export interface SignedUrlItem {
-  signedUrl?: string;
+  signedUrl: string;
   uploadUrl?: string;
   fileUrl?: string;
-  url?: string;
+  url: string;
   fileName?: string;
   mimeType?: string;
 }
@@ -19,8 +25,7 @@ export interface CreateSignedUrlResponse {
 }
 
 /**
- * Generic upload interface placeholder:
- * Currently using createSignedUrl naming, will switch to image hosting or backend proxy later.
+ * Upload adapter for Flaq Open API presigned URLs.
  */
 export interface UploadAdapter {
   createSignedUrl(input: CreateSignedUrlRequest): Promise<SignedUrlItem[]>;
@@ -36,21 +41,30 @@ export async function createSignedUrl(
     throw new Error('createSignedUrl can only be called from the browser.');
   }
 
-  const publicDomain = await getSecureItem('FLAQ-SAAS-TEMPLATE-r2-public-domain');
-  if (!publicDomain) {
-    throw new Error('R2 public domain is not configured. Please set it in Open API Settings.');
-  }
-
-  const response = await fetch('/api/upload/presigned-url', {
+  const config = await getClientOpenApiConfigAsync();
+  const response = await fetch(buildOpenApiUrl(config.baseUrl, '/api/v1/files/presignedUrl'), {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ mimeTypes: mineType, publicDomain }),
+    headers: createOpenApiHeaders(config.clientKey),
+    body: JSON.stringify({ files: mineType.map((mime_type) => ({ mime_type })) }),
   });
 
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({ error: 'Upload failed' }));
-    throw new Error(error.error || 'Failed to create signed URL');
+  const payload = await response.json().catch(() => null) as {
+    code?: number;
+    message?: string;
+    error?: { message?: string };
+    data?: { signed_url: string; url: string }[] | null;
+  } | null;
+
+  if (!response.ok || payload?.code !== 0) {
+    throw new Error(payload?.error?.message || payload?.message || 'Failed to create signed URL');
   }
 
-  return response.json();
+  if (!Array.isArray(payload.data) || payload.data.length !== mineType.length ||
+    payload.data.some((item) => !item?.signed_url || !item?.url)) {
+    throw new Error('Failed to create signed URL');
+  }
+
+  return {
+    rows: payload.data.map((item) => ({ signedUrl: item.signed_url, url: item.url })),
+  };
 }

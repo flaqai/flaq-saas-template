@@ -1,4 +1,4 @@
-import { createSignedUrl } from '@/network/upload/client';
+import { createSignedUrl, MAX_UPLOAD_BATCH_SIZE } from '@/network/upload/client';
 
 import { FileType } from '@/lib/utils/fileUtils';
 import { fetchWithRetry } from '@/lib/utils/promiseUtils';
@@ -12,30 +12,34 @@ const useUploadFiles = () => {
       return [];
     }
 
-    // Get signed URLs
-    const signedUrlResult = await createSignedUrl(files.map((file) => file.type), options?.isForever);
+    const urls: string[] = [];
 
-    // Upload files
-    // const storeResults = await Promise.all(
-    await Promise.all(
-      signedUrlResult.rows.map((obj, index) => {
-        const file = files[index];
-        return fetchWithRetry(obj.signedUrl, {
-          method: 'PUT',
-          body: file.data,
-          headers: {
-            'Content-Type': file.type,
-          },
-        });
-      }),
-    );
+    for (let offset = 0; offset < files.length; offset += MAX_UPLOAD_BATCH_SIZE) {
+      const batch = files.slice(offset, offset + MAX_UPLOAD_BATCH_SIZE);
 
-    // Generate final URLs
-    return signedUrlResult.rows.map((el) => el.url);
-    // return storeResults.map(
-    //   (item) =>
-    //     `https://${process.env.NEXT_PUBLIC_R2_IMAGE_DOMAIN}${item.url.split('r2.cloudflarestorage.com')[1].split('?')[0]}`,
-    // );
+      // Get signed URLs
+      // Request each batch immediately before uploading: signatures expire after 60 seconds.
+      const signedUrlResult = await createSignedUrl(batch.map((file) => file.type), options?.isForever);
+
+      // Upload files
+      await Promise.all(
+        signedUrlResult.rows.map((obj, index) => {
+          const file = batch[index];
+          return fetchWithRetry(obj.signedUrl, {
+            method: 'PUT',
+            body: file.data,
+            headers: {
+              'Content-Type': file.type,
+            },
+          });
+        }),
+      );
+
+      // Generate final URLs
+      urls.push(...signedUrlResult.rows.map((el) => el.url));
+    }
+
+    return urls;
   };
 
   return uploadFilesToStorageThroughBackEnd;
