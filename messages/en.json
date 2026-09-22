@@ -403,8 +403,6 @@
     "qwen-image-3-0-pro-content": "Generate image with Qwen Image 3.0 Pro API",
     "seedream-5-0-pro": "Seedream 5.0 Pro API",
     "seedream-5-0-pro-content": "Generate image with Seedream 5.0 Pro API",
-    "kling-4-0": "Kling 4.0 API",
-    "kling-4-0-content": "Generate video with Kling 4.0 API",
     "wan-3-0": "Wan 3.0 API",
     "wan-3-0-content": "Generate video with Wan 3.0 API",
     "seedance-2-5": "Seedance 2.5 API",

@@ -37,7 +37,6 @@ const IMAGE_API_CHILDREN_LIST: RouteItem[] = [
 
 const VIDEO_API_CHILDREN_LIST: RouteItem[] = [
   { code: 'veo-3-1', href: 'https://flaq.ai/models/google/veo3-1-text-to-video/' },
-  { code: 'kling-4-0', href: 'https://flaq.ai/models/kuaishou/kling-4-0-text-to-video/' },
   { code: 'vidu-q3', href: 'https://flaq.ai/models/vidu/vidu-q3-turbo-text-to-video/' },
   { code: 'wan-3-0', href: 'https://flaq.ai/models/alibaba/wan-3-0-text-to-video/' },
   { code: 'seedance-2-5', href: 'https://flaq.ai/models/bytedance/seedance-2-5-text-to-video/' },
