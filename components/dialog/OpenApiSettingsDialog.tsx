@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { Check, Loader2 } from 'lucide-react';
+import { Check, Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 
@@ -45,6 +45,7 @@ export default function OpenApiSettingsDialog({
   const tCommon = useTranslations('Common');
   const [baseUrl, setBaseUrl] = useState(DEFAULT_OPEN_API_BASE_URL);
   const [clientKey, setClientKey] = useState('');
+  const [showClientKey, setShowClientKey] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [isTesting, setIsTesting] = useState(false);
   const [testSucceeded, setTestSucceeded] = useState(false);
@@ -62,6 +63,7 @@ export default function OpenApiSettingsDialog({
   }, [baseUrl, clientKey, open]);
 
   useEffect(() => {
+    setShowClientKey(false);
     if (!open || typeof window === 'undefined') return;
 
     const loadSettings = async () => {
@@ -189,13 +191,26 @@ export default function OpenApiSettingsDialog({
             <label htmlFor='open-api-client-key' className='text-sm font-medium text-white/80'>
               {t('client-key')}
             </label>
-            <Input
-              id='open-api-client-key'
-              type='password'
-              value={clientKey}
-              onChange={(event) => setClientKey(event.target.value)}
-              className='h-11 border-white/10 bg-white/5 text-white placeholder:text-white/30'
-            />
+            <div className='relative'>
+              <Input
+                id='open-api-client-key'
+                type={showClientKey ? 'text' : 'password'}
+                value={clientKey}
+                onChange={(event) => setClientKey(event.target.value)}
+                className='h-11 border-white/10 bg-white/5 pr-12 text-white placeholder:text-white/30'
+              />
+              <Button
+                type='button'
+                variant='ghost'
+                size='icon'
+                onClick={() => setShowClientKey((visible) => !visible)}
+                aria-label={t(showClientKey ? 'hide-client-key' : 'show-client-key')}
+                aria-controls='open-api-client-key'
+                className='absolute right-1 top-1 text-white/60 hover:bg-white/8 hover:text-white'
+              >
+                {showClientKey ? <EyeOff aria-hidden='true' /> : <Eye aria-hidden='true' />}
+              </Button>
+            </div>
 
             <div className='flex items-center space-x-2 pt-2'>
               <Checkbox

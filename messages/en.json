@@ -109,7 +109,9 @@
       "saved": "Open API settings saved.",
       "test-success": "Connection succeeded.",
       "test-success-validation": "Connection succeeded. Authentication passed and the task endpoint responded.",
-      "test-failed": "Connection failed."
+      "test-failed": "Connection failed.",
+      "show-client-key": "Show client key",
+      "hide-client-key": "Hide client key"
     },
     "image-hosting": {
       "title": "Image Hosting (R2)",

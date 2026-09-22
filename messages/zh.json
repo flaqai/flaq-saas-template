@@ -109,7 +109,9 @@
       "saved": "Open API 设置已保存。",
       "test-success": "联通成功。",
       "test-success-validation": "联通成功，鉴权已通过，task 接口已返回响应。",
-      "test-failed": "联通失败。"
+      "test-failed": "联通失败。",
+      "show-client-key": "显示密钥",
+      "hide-client-key": "隐藏密钥"
     },
     "image-hosting": {
       "title": "图床配置 (R2)",
