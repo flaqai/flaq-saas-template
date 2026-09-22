@@ -65,7 +65,7 @@ export function InfiniteCanvasProjectCard({
               variant='ghost'
               size='icon'
               aria-label={actions.renameLabel}
-              className='size-8 bg-gradient-main text-main-color-foreground hover:opacity-80 rounded-lg'
+              className='size-8 bg-color-main text-white hover:bg-color-main/80 hover:text-white rounded-lg'
               onClick={actions.onRename}
             >
               <Pencil className='size-4' />
@@ -75,7 +75,7 @@ export function InfiniteCanvasProjectCard({
               variant='ghost'
               size='icon'
               aria-label={actions.exportLabel}
-              className='size-8 bg-gradient-main text-main-color-foreground hover:opacity-80 rounded-lg'
+              className='size-8 bg-color-main text-white hover:bg-color-main/80 hover:text-white rounded-lg'
               onClick={actions.onExport}
             >
               <Download className='size-4' />
@@ -85,7 +85,7 @@ export function InfiniteCanvasProjectCard({
               variant='ghost'
               size='icon'
               aria-label={actions.deleteLabel}
-              className='size-8 bg-gradient-main text-main-color-foreground hover:opacity-80 rounded-lg'
+              className='size-8 bg-color-main text-white hover:bg-color-main/80 hover:text-white rounded-lg'
               onClick={actions.onDelete}
             >
               <Trash2 className='size-4' />

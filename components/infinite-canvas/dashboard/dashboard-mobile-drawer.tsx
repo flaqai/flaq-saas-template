@@ -165,7 +165,7 @@ export function DashboardMobileDrawer({
                 </Button>
                 <Button
                   type='submit'
-                  className='h-12 gap-2 rounded-xl bg-gradient-main text-gradient-main-foreground hover:opacity-90'
+                  className='h-12 gap-2 rounded-xl bg-color-main text-white hover:bg-color-main/90'
                   disabled={pending || title.trim().length === 0}
                   aria-busy={pending}
                 >

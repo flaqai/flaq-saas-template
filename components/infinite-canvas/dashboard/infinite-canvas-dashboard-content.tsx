@@ -287,7 +287,7 @@ export function InfiniteCanvasDashboardContent({
               onClick={createProject}
               disabled={isPending}
               aria-busy={isCreating}
-              className='order-1 h-12 w-full min-w-[120px] gap-2 rounded-xl bg-gradient-main px-6 text-gradient-main-foreground hover:opacity-90 sm:order-none sm:w-auto sm:rounded-lg'
+              className='order-1 h-12 w-full min-w-[120px] gap-2 rounded-xl bg-color-main px-6 text-white hover:bg-color-main/90 sm:order-none sm:w-auto sm:rounded-lg'
             >
               {isCreating ? <Loader2 className='size-4 animate-spin' aria-hidden='true' /> : null}
               {isCreating ? i18n.dashboard.creating : (mobileCopy?.create ?? i18n.dashboard.create)}
@@ -380,7 +380,7 @@ export function InfiniteCanvasDashboardContent({
               onClick={createProject}
               disabled={isPending}
               aria-busy={isCreating}
-              className='mt-4 h-12 min-w-[120px] gap-2 rounded-lg bg-gradient-main px-6 text-gradient-main-foreground hover:opacity-90'
+              className='mt-4 h-12 min-w-[120px] gap-2 rounded-lg bg-color-main px-6 text-white hover:bg-color-main/90'
             >
               {isCreating ? <Loader2 className='size-4 animate-spin' aria-hidden='true' /> : null}
               {isCreating ? i18n.dashboard.creating : (mobileCopy?.create ?? i18n.dashboard.create)}
@@ -453,7 +453,7 @@ export function InfiniteCanvasDashboardContent({
               {total} {i18n.dashboard.totalProjects} · {i18n.dashboard.showingProjects} {rows.length}
             </p>
             <Pagination
-              className='justify-self-end [&_button[aria-current=page]]:border-transparent [&_button[aria-current=page]]:bg-gradient-main [&_button[aria-current=page]]:text-gradient-main-foreground'
+              className='justify-self-end [&_button[aria-current=page]]:border-transparent [&_button[aria-current=page]]:bg-color-main [&_button[aria-current=page]]:text-white'
               page={page}
               totalPages={totalPages}
               ariaLabel={i18n.accessibility.projectActions}
@@ -549,7 +549,7 @@ export function InfiniteCanvasDashboardContent({
                   <Button
                     type='submit'
                     disabled={isPending || editingTitle.trim().length === 0}
-                    className='bg-gradient-main text-gradient-main-foreground hover:opacity-90'
+                    className='bg-color-main text-white hover:bg-color-main/90'
                   >
                     {i18n.dashboard.saveChanges}
                   </Button>
