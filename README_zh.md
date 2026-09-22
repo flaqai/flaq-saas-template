@@ -1,6 +1,6 @@
 # Flaq SaaS Template（中文）
 
-免费开源的 SaaS 模板，基于 [Flaq.ai](https://flaq.ai) API 构建 AI 图片与视频生成平台。即刻开启您的 AIGC 业务。
+免费开源的 SaaS 模板，基于 [Flaq.ai](https://flaq.ai) API 构建 AI 图片与视频生成平台。提供统一的图片与视频创作工具、参考生视频流程，以及支持本地项目管理的无限 AI 画布。
 
 **选择 README 语言：** [English](./README.md) · [日本語](./README_ja.md) · [Bahasa Indonesia](./README_id.md) ·
 [Italiano](./README_it.md) · [Português (Brasil)](./README_pt.md) · [Español](./README_es.md) ·
@@ -21,7 +21,12 @@
   - [文件上传](#文件上传)
   - [Flaq.ai API Key 配置](#flaqai-api-key-配置)
 - [使用方法](#使用方法)
+  - [开发](#开发)
+  - [构建](#构建)
+  - [代码检查与格式化](#代码检查与格式化)
 - [AIGC 能力](#aigc-能力)
+  - [AI Media Creator](#ai-media-creator)
+  - [AI Canvas](#ai-canvas)
 - [Flaq.ai 联盟计划](#flaqai-联盟计划)
 - [国际化 (i18n)](#国际化-i18n)
 - [SEO 与 AI 爬虫发现](#seo-与-ai-爬虫发现)
@@ -35,12 +40,15 @@
 - 🖼️ **图生图** — 将现有图片转换为创意变体，保持风格一致性
 - 🎬 **文生视频** — 从简单的文本描述创建高质量视频
 - 📹 **图生视频** — 将静态图片动画化为动态视频内容
+- 🧩 **AI Media Creator** — 使用统一表单生成图片和视频，并按模型配置参数
+- 🎞️ **参考生视频** — 根据所选模型使用图片、视频、音频、文档或链接作为参考
+- 🗂️ **AI Canvas** — 在无限画布上连接媒体与生成节点，保存本地项目，并导入或导出 ZIP 压缩包
 - 👗 **虚拟试衣** — AI 驱动的虚拟服装试穿体验
 - 🌐 **国际化** — 内置与 Flaq.ai 对齐的 15 种语言、语言路由与 SEO 多语言链接
 - 🚀 **无需注册** — 无需创建应用账号即可浏览、修改和自行部署模板
 - 🤝 **联盟推广** — 内置响应式 Flaq.ai 联盟推荐区块，文案与跳转均随当前语言切换
 - 🔒 **安全密钥管理** — 加密的客户端存储保护您的 Flaq.ai 凭证
-- ☁️ **文件上传** — 使用 Flaq API Key 上传图片、音频和视频
+- ☁️ **文件上传** — 使用 Flaq API Key 或自有 Cloudflare R2 存储上传媒体
 - 📱 **响应式设计** — 基于 Tailwind CSS 和 Radix UI 的全响应式界面
 - 🌓 **深色模式** — 精美的深色主题 UI
 - ⚡ **极速性能** — 基于 Next.js 16，支持 Turbopack
@@ -59,7 +67,7 @@
 | 动画     | [Framer Motion](https://www.framer.com/motion/)                           |
 | 表单     | [React Hook Form](https://react-hook-form.com/) + [Zod](https://zod.dev/) |
 | 状态管理 | [Zustand](https://zustand.docs.pmnd.rs/)                                  |
-| 数据请求 | [SWR](https://swr.vercel.app/)                                            |
+| 数据请求 | [SWR](https://swr.vercel.app/) + [TanStack Query](https://tanstack.com/query) |
 | 国际化   | [next-intl](https://next-intl-docs.vercel.app/)                           |
 | 图标     | [Lucide React](https://lucide.dev/)                                       |
 | 图表     | [Recharts](https://recharts.org/)                                         |
@@ -70,8 +78,8 @@
 
 ### 环境要求
 
-- **Node.js** >= 18.x（根据 `.nvmrc` 推荐版本）
-- **pnpm** >= 10.x（项目在 `package.json` 中已声明 `packageManager`）
+- **Node.js 22**（`.nvmrc` 指定的版本）
+- **pnpm 10.5.2**（由 `package.json` 的 `packageManager` 字段固定）
 - 一个 [Flaq.ai](https://flaq.ai/) 账户及有效的 API 密钥
 
 ### 安装步骤
@@ -82,7 +90,7 @@ git clone https://github.com/flaqai/flaq-saas-template.git
 cd flaq-saas-template
 
 # 2. 安装 pnpm（如未安装）
-npm install -g pnpm
+npm install -g pnpm@10.5.2
 
 # 3. 安装依赖
 pnpm install
@@ -102,6 +110,11 @@ NEXT_PUBLIC_SITE_URL="http://localhost:3000"
 # 页脚显示的联系邮箱
 NEXT_PUBLIC_CONTACT_US_EMAIL="contact@flaq.ai"
 
+# 可选：自有 Cloudflare R2 存储（凭证仅保存在服务端）
+R2_ACCOUNT_ID=
+R2_ACCESS_KEY_ID=
+R2_SECRET_ACCESS_KEY=
+R2_BUCKET_NAME=
 ```
 
 ### 文件上传
@@ -128,55 +141,79 @@ NEXT_PUBLIC_CONTACT_US_EMAIL="contact@flaq.ai"
 
 ## 使用方法
 
+### 开发
+
 ```bash
 # 启动开发服务器（使用 Turbopack 加速热更新）
 pnpm dev:turbo
 
-# 或不使用 Turbopack
+# 或使用默认开发命令
 pnpm dev
+```
 
+在浏览器中打开 [http://localhost:3000](http://localhost:3000)。
+
+### 构建
+
+```bash
 # 生产环境构建
 pnpm build
 
-# 构建并分析打包体积
-pnpm build:analyze
-
 # 启动生产服务器
 pnpm start
+```
 
-# 代码检查
+### 代码检查与格式化
+
+```bash
+# 运行 ESLint
 pnpm lint
 
 # 自动修复代码问题
 pnpm lint:fix
 
-# 代码格式化
+# 使用 Prettier 格式化代码
 pnpm prettier
 
 # TypeScript 类型检查
 pnpm ts-check
 ```
 
-在浏览器中打开 [http://localhost:3000](http://localhost:3000)。
-
 ## AIGC 能力
 
-本模板内置五款全功能的 AI 生成工具，全部由 [Flaq.ai](https://flaq.ai) API 驱动：
+本模板通过 [Flaq.ai](https://flaq.ai) API，将独立生成页面、统一创作工具和无限画布相结合。
 
-| 能力         | 描述                                                       | 支持的模型                                                                   |
-| ------------ | ---------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| **文生图**   | 通过自然语言提示词生成图片                                 | Nano Banana Pro、Seedream 5.0、GPT Image 2、Qwen Image 2.0、Grok Imagine     |
-| **图生图**   | 利用 AI 转换或增强现有图片，保持风格和构图                 | Nano Banana Pro Edit、Seedream 5.0 Edit、GPT Image 2 Edit、Grok Imagine Edit |
-| **文生视频** | 从文本描述创建视频，支持高级运动合成                       | Veo 3.1、Wan 2.7、Kling 3.0、Seedance 2.0、Vidu Q3                           |
-| **图生视频** | 将静态图片动画化为动态视频                                 | Veo 3.1、Wan 2.7、Kling 3.0、Seedance 2.0、Vidu Q3                           |
-| **虚拟试衣** | AI 驱动的虚拟服装试穿 — 上传服装和模特照片即可查看试穿效果 | GPT Image 2 Edit、Nano Banana Pro Edit                                       |
+| 能力 | 路由 | 描述 |
+| ---- | ---- | ---- |
+| **文生图** | `/text-to-image/` | 通过文本提示词生成图片 |
+| **图生图** | `/image-to-image/` | 使用提示词和参考图编辑图片 |
+| **文生视频** | `/text-to-video/` | 通过文本提示词生成视频 |
+| **图生视频** | `/image-to-video/` | 通过图片生成视频，兼容的模型支持尾帧控制 |
+| **参考生视频** | `/reference-to-video/` | 准备参考输入，并在 AI Media Creator 中继续生成 |
+| **虚拟试衣** | `/virtual-try-on/` | 组合人物照片和服装图片，预览穿搭效果 |
+| **AI Media Creator** | `/ai-media-creator/` | 在同一工作区生成图片和视频，并浏览生成历史 |
+| **AI Canvas** | `/ai-canvas/` | 创建相互连接的可视化工作流并管理画布项目 |
 
-每个工具包含：
+模型定义位于 `lib/constants/template-models/`，按提供方和媒体类型分组。图片模型示例包括 Nano Banana Pro、Nano Banana 2、GPT Image 2、ChatGPT Images 2.5、Qwen Image 3.0 和 Seedream 5.0。视频模型示例包括 Kling 3.0、Veo 3.1、Wan 2.7、Seedance 2.0 和 Vidu Q3。可用输入与参数取决于所选模型，各表单使用对应的模型配置。
 
-- 预配置的表单，支持模型选择和参数控制
-- 实时生成状态轮询
-- 结果画廊，支持下载和分享
-- 历史生成记录
+虚拟试衣有独立的模型选择：GPT Image 2 Edit、Nano Banana Pro Edit、Nano Banana 2 Edit、Seedream 5.0 Edit 和 Seedream 4.5 Edit。
+
+### AI Media Creator
+
+在 `/ai-media-creator/` 中切换图片与视频生成、选择模型、添加输入并配置模型支持的参数。参考生视频根据所选模型支持图片、视频、音频、文档和链接，提示词编辑器中可引用参考素材。
+
+生成状态自动轮询，结果显示在创作工具的历史记录中。图片与视频历史保存在当前浏览器的本地存储中。
+
+### AI Canvas
+
+从 `/ai-canvas/` 开始，在 `/ai-canvas/projects/` 管理已保存的项目，通过 `/ai-canvas/{projectId}/` 打开单个项目。画布入口表单根据所选生成设置和输入准备项目。
+
+- 在无限画布上排列并连接媒体与生成节点
+- 使用已配置的 API 连接生成图片和视频
+- 将项目保存在本地 IndexedDB 中，并从项目面板重新打开
+- 重命名、删除、导入和导出项目，包括包含项目媒体的 ZIP 压缩包
+
+项目属于当前浏览器和站点来源，不提供基于账户的项目同步。清除浏览器数据或迁移到其他设备、域名前，请先导出项目以保留可迁移的副本。
 
 ## Flaq.ai 联盟计划
 
@@ -201,17 +238,16 @@ pnpm ts-check
 
 1. 在 `i18n/languages.ts` 中添加语言配置
 2. 在 `messages/` 目录中创建新的翻译文件
-3. 在布局文件中添加新语言的相关元数据
+3. 按现有 key 结构添加该语言的页面文案与 `Metadata` 翻译
 
 ## SEO 与 AI 爬虫发现
 
-每个公开页面都包含本地化标题和描述、绝对 canonical URL、15 种语言的 `hreflang`、Open Graph、Twitter
-Card 以及 index/follow 指令。生成的 `/sitemap.xml` 会列出所有公开页面的全部语言版本，并声明对应的语言替代关系。
+公开落地页和生成页面包含本地化标题和描述、绝对 canonical URL、15 种语言的 `hreflang`、Open Graph、Twitter Card 以及 index/follow 指令。生成的 `/sitemap.xml` 包含所有语言的首页、功能路由和政策页面，并声明对应的语言替代关系。单个本地画布项目的 URL 不包含在站点地图中。
 
-- `/robots.txt` 允许搜索引擎和 AI 助手抓取公开内容，同时屏蔽 API、回调和错误页面
+- `/robots.txt` 允许搜索引擎和 AI 助手抓取公开内容，同时屏蔽 API 和回调路由
 - `/llms.txt` 以精简结构介绍产品、页面、语言、文档和政策入口
-- `/llms-full.txt` 提供项目能力、安装方式、技术架构和免费使用边界等完整上下文
-- JSON-LD 描述网站及 MIT 授权的开源代码仓库，不再使用无法验证的评分数据
+- `/llms-full.txt` 提供项目能力、安装方式、技术架构和使用边界等完整上下文
+- JSON-LD 描述网站及 MIT 授权的开源代码仓库，不使用无法验证的评分数据
 
 部署前请将 `NEXT_PUBLIC_SITE_URL` 设置为生产环境域名，确保 canonical、sitemap 和 LLM 资源链接指向正确站点。
 
@@ -224,13 +260,15 @@ Card 以及 index/follow 指令。生成的 `/sitemap.xml` 会列出所有公开
 │   │   ├── (with-footer)/  # 带页脚的页面布局
 │   │   │   ├── (home)/     # 首页
 │   │   │   └── (ai-features)/ # AIGC 功能页面
-│   │   └── (without-footer)/ # 全屏页面（如功能页）
+│   │   └── (without-footer)/ # AI Canvas 入口、项目面板与编辑器
 │   ├── api/                # API 路由（图片代理、上传）
 │   ├── robots.ts           # Robots.txt 生成
 │   ├── sitemap.ts          # 动态站点地图生成
 │   ├── llms.txt/           # 精简的 AI 可读站点导航
 │   └── llms-full.txt/      # 完整的 AI 可读项目上下文
 ├── components/             # 可复用 React 组件
+│   ├── infinite-canvas/    # 画布编辑器、面板、集成与本地持久化
+│   ├── unified-generator/  # 共享的图片/视频表单与创作历史
 │   ├── ui/                 # shadcn/ui 风格组件（基于 Radix）
 │   ├── dialog/             # 对话框组件（API 设置等）
 │   ├── layout/             # 布局组件（页头、页脚、侧栏）
@@ -242,7 +280,7 @@ Card 以及 index/follow 指令。生成的 `/sitemap.xml` 会列出所有公开
 │   └── routing.ts          # 语言路由配置
 ├── lib/                    # 工具库
 │   ├── seo/                # 元数据、llms.txt 与爬虫辅助工具
-│   ├── constants/          # 应用常量、模型配置、导航
+│   ├── constants/          # 应用常量、按提供方划分的模型定义、导航
 │   ├── utils/              # 工具函数
 │   └── env.ts              # 环境变量辅助函数
 ├── messages/               # 每种支持语言对应一个翻译文件
@@ -250,6 +288,8 @@ Card 以及 index/follow 指令。生成的 `/sitemap.xml` 会列出所有公开
 │   ├── clientFetch.ts      # Flaq.ai API 客户端（含认证）
 │   ├── image/              # 图片生成 API 调用
 │   ├── video/              # 视频生成 API 调用
+│   ├── local-history.ts    # 浏览器本地生成历史
+│   ├── task-polling.ts     # 共享的生成状态轮询
 │   └── upload/             # Flaq 文件上传客户端
 ├── public/                 # 静态资源（图片、图标、字体）
 ├── store/                  # Zustand 状态管理
@@ -262,14 +302,15 @@ Card 以及 index/follow 指令。生成的 `/sitemap.xml` 会列出所有公开
 
 推荐通过 [Vercel](https://vercel.com) 一键部署：
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/your-username/flaq-saas-template)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/flaqai/flaq-saas-template)
 
 1. 将仓库推送到 GitHub
 2. 在 Vercel 中导入项目
-3. 在 Vercel 项目设置中添加所有环境变量（`NEXT_PUBLIC_*`）
-4. 部署！
+3. 在 Vercel 项目设置中将 `NEXT_PUBLIC_SITE_URL` 设为生产环境站点来源，并配置联系邮箱
+4. 如使用自有 R2 存储，添加四个服务端 `R2_*` 变量，并在应用中配置公共域名
+5. 部署！
 
-> 本模板也支持任何兼容 Next.js 的平台（Netlify、Cloudflare Pages、Docker 等）。
+应用包含上传和图片代理的服务端路由，因此部署需要 Next.js 服务端运行时。自行部署 Node.js 服务时，先运行 `pnpm build`，再运行 `pnpm start`。由于当前 Next.js 配置在构建时跳过 TypeScript 错误检查，部署前请单独运行 `pnpm ts-check`。
 
 ## 许可证
 
