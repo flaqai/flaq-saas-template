@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { nanoid } from 'nanoid';
 import { useDropzone, type Accept, type FileRejection } from 'react-dropzone';
 import { useTranslations } from 'next-intl';
@@ -64,7 +64,6 @@ export default function UnifiedImageStackUpload({
   onChange: (values: UnifiedGeneratorReferenceMediaAsset[]) => void;
 }) {
   const t = useTranslations('components.hero-form.reference-upload');
-  const inputRef = useRef<HTMLInputElement>(null);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [isPickerPanelHovered, setIsPickerPanelHovered] = useState(false);
   const [previewIndex, setPreviewIndex] = useState<number | null>(null);
@@ -157,7 +156,7 @@ export default function UnifiedImageStackUpload({
               event.currentTarget.value = '';
             },
           })}
-          ref={inputRef}
+          ref={dropzone.inputRef}
         />
         <ReferenceMediaPicker
           open={pickerOpen}
@@ -171,7 +170,7 @@ export default function UnifiedImageStackUpload({
           isHistoryLoading={imageHistory.isLoading}
           historyAssets={historyAssets}
           onUploadFromDevice={() => {
-            if (inputRef.current) inputRef.current.value = '';
+            if (dropzone.inputRef.current) dropzone.inputRef.current.value = '';
             dropzone.open();
           }}
           onSelectHistory={(asset) => {

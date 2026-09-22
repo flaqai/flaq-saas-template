@@ -84,9 +84,14 @@ export default function CreatorHistory() {
                       <img src={src} alt={item.prompt} loading='lazy' className='h-auto w-full' />
                     ) : (
                       <div className='flex aspect-square items-center justify-center text-white/30'>
-                        {item.status === 'processing' ? <Loader2 className='animate-spin' /> : t('no-preview')}
+                        {item.status === 'processing' ? null : t('no-preview')}
                       </div>
                     )}
+                    {item.status === 'processing' ? (
+                      <div className='pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-black/40 text-white' aria-busy='true'>
+                        <Loader2 className='size-6 animate-spin' />
+                      </div>
+                    ) : null}
                     <div className='absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 to-transparent p-3 pt-10'>
                       <p className='line-clamp-2 text-xs text-white/80'>{item.prompt}</p>
                     </div>
@@ -100,6 +105,11 @@ export default function CreatorHistory() {
                 const card = (
                   <div className='group relative aspect-video overflow-hidden rounded-xl border border-white/10 bg-white/5'>
                     <CreatorVideoPreview item={item} noPreviewLabel={t('no-preview')} />
+                    {item.status === 'processing' || item.status === 'pending' ? (
+                      <div className='pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-black/40 text-white' aria-busy='true'>
+                        <Loader2 className='size-6 animate-spin' />
+                      </div>
+                    ) : null}
                     <div className='absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 to-transparent p-3 pt-10'>
                       <p className='line-clamp-2 text-xs text-white/80'>{item.prompt}</p>
                     </div>

@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { Loader2 } from 'lucide-react';
 
 import type { VideoHistoryItem } from '@/network/video/history';
 
@@ -58,7 +57,7 @@ export default function CreatorVideoPreview({
   return (
     <div className='flex h-full items-center justify-center text-white/30'>
       {item.status === 'processing' || item.status === 'pending'
-        ? <Loader2 className='animate-spin' />
+        ? null
         : noPreviewLabel}
     </div>
   );
