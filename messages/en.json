@@ -414,7 +414,11 @@
     "happyhorse-1-1": "Happy Horse 1.1 API",
     "happyhorse-1-1-content": "Generate video with Happy Horse 1.1 API",
     "expand-sidebar": "Expand sidebar",
-    "collapse-sidebar": "Collapse sidebar"
+    "collapse-sidebar": "Collapse sidebar",
+    "nav-groups": {
+      "image-apis": "Image APIs",
+      "video-apis": "Video APIs"
+    }
   },
   "Footer": {
     "title": "AI Image & Video — Free & Open Source · No Signup Required",

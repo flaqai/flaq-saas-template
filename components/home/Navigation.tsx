@@ -56,6 +56,14 @@ export default function Navigation({ hasSidebar = false }: { hasSidebar?: boolea
   const NavLinks = NAV_LINKS.map((item) => ({
     ...item,
     label: t(`${item.code}`),
+    groups: item.groups?.map((group) => ({
+      groupLabel: t(`nav-groups.${group.groupCode}`),
+      items: group.items.map((child) => ({
+        ...child,
+        label: t(child.code),
+        description: t(`${child.code}-content`),
+      })),
+    })),
     children:
       item.children &&
       item.children
@@ -101,6 +109,7 @@ export default function Navigation({ hasSidebar = false }: { hasSidebar?: boolea
                       label={item.label}
                       isHighLight={false}
                       navDataList={item.children}
+                      navGroups={item.groups}
                       columnNumber={item.children.length > 4 ? 3 : 2}
                     />
                   ) : (

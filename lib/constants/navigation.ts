@@ -7,7 +7,10 @@ export type RouteItem = {
   hideInSitemap?: boolean;
 };
 
-export type NavLink = RouteItem & { children?: RouteItem[] };
+export type NavLink = RouteItem & {
+  children?: RouteItem[];
+  groups?: { groupCode: string; items: RouteItem[] }[];
+};
 
 export const VIDEO_CHILDREN_LIST: RouteItem[] = [
   { code: 'image-to-video', href: '/image-to-video' },
@@ -21,7 +24,7 @@ export const IMAGE_CHILDREN_LIST: RouteItem[] = [
   { code: 'virtual-try-on', href: '/virtual-try-on' },
 ];
 
-export const API_CHILDREN_LIST: RouteItem[] = [
+const IMAGE_API_CHILDREN_LIST: RouteItem[] = [
   { code: 'nano-banana-2', href: 'https://flaq.ai/models/google/nano-banana-2/' },
   { code: 'nano-banana-pro', href: 'https://flaq.ai/models/google/nano-banana-pro/' },
   { code: 'chatgpt-images-2-5', href: 'https://flaq.ai/models/openai/chatgpt-images-2-5/' },
@@ -30,6 +33,9 @@ export const API_CHILDREN_LIST: RouteItem[] = [
   { code: 'qwen-image-3-0', href: 'https://flaq.ai/models/alibaba/qwen-image-3-0/' },
   { code: 'qwen-image-3-0-pro', href: 'https://flaq.ai/models/alibaba/qwen-image-3-0-pro/' },
   { code: 'seedream-5-0-pro', href: 'https://flaq.ai/models/bytedance/seedream-5-0-pro/' },
+];
+
+const VIDEO_API_CHILDREN_LIST: RouteItem[] = [
   { code: 'veo-3-1', href: 'https://flaq.ai/models/google/veo3-1-text-to-video/' },
   { code: 'kling-4-0', href: 'https://flaq.ai/models/kuaishou/kling-4-0-text-to-video/' },
   { code: 'vidu-q3', href: 'https://flaq.ai/models/vidu/vidu-q3-turbo-text-to-video/' },
@@ -39,6 +45,8 @@ export const API_CHILDREN_LIST: RouteItem[] = [
   { code: 'minimax-h3', href: 'https://flaq.ai/models/minimax/minimax-h3-text-to-video/' },
   { code: 'happyhorse-1-1', href: 'https://flaq.ai/models/alibaba/happyhorse-1-1-text-to-video/' },
 ];
+
+export const API_CHILDREN_LIST: RouteItem[] = [...IMAGE_API_CHILDREN_LIST, ...VIDEO_API_CHILDREN_LIST];
 
 export const SUPPORT_LINKS: RouteItem[] = [
   { code: 'privacy', href: '/privacy-policy' },
@@ -60,7 +68,15 @@ export const NAV_LINKS: NavLink[] = [
   ] },
   { code: 'video-ai', href: '', children: VIDEO_CHILDREN_LIST.filter((r) => !r.hideInNav) },
   { code: 'image-ai', href: '', children: IMAGE_CHILDREN_LIST.filter((r) => !r.hideInNav) },
-  { code: 'ai-api', href: '', children: API_CHILDREN_LIST },
+  {
+    code: 'ai-api',
+    href: '',
+    children: API_CHILDREN_LIST,
+    groups: [
+      { groupCode: 'image-apis', items: IMAGE_API_CHILDREN_LIST },
+      { groupCode: 'video-apis', items: VIDEO_API_CHILDREN_LIST },
+    ],
+  },
 ];
 
 export const UTM_SOURCE = 'flaq-saas-template';
