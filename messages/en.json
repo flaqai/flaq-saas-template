@@ -1651,6 +1651,10 @@
         "mcp": {
           "title": "Flaq MCP Server",
           "description": "Connect compatible AI clients to Flaq image and video tools through MCP."
+        },
+        "workbuddy": {
+          "title": "WorkBuddy Guide",
+          "description": "Use GPT 6 Astra and Claude Fable 5.1 in WorkBuddy"
         }
       }
     }
