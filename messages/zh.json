@@ -412,7 +412,13 @@
     "minimax-h3": "MiniMax H3 API",
     "minimax-h3-content": "使用 MiniMax H3 API 生成视频",
     "happyhorse-1-1": "Happy Horse 1.1 API",
-    "happyhorse-1-1-content": "使用 Happy Horse 1.1 API 生成视频"
+    "happyhorse-1-1-content": "使用 Happy Horse 1.1 API 生成视频",
+    "expand-sidebar": "展开侧边栏",
+    "collapse-sidebar": "收起侧边栏",
+    "nav-groups": {
+      "image-apis": "图片 API",
+      "video-apis": "视频 API"
+    }
   },
   "Footer": {
     "title": "AI 图片与视频 — 免费开源 · 无需注册",
@@ -1645,6 +1651,10 @@
         "mcp": {
           "title": "Flaq MCP 服务器",
           "description": "通过 MCP 将兼容的 AI 客户端连接至 Flaq 图片和视频工具。"
+        },
+        "workbuddy": {
+          "title": "WorkBuddy 指南",
+          "description": "在 WorkBuddy 中使用 GPT 6 Astra 和 Claude Fable 5.1"
         }
       }
     }
